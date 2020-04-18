@@ -1,8 +1,8 @@
 #!/bin/sh
 
-wget http://repo.continuum.io/miniconda/Miniconda3-3.7.0-Linux-x86_64.sh -O ~/miniconda.sh
+cp 2.sh ~/2.sh
 
-cd ~
+wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -O miniconda.sh
 
 chmod 777 miniconda.sh 
 
@@ -14,13 +14,10 @@ conda --version
 
 yes | conda update conda
 
-yes | conda create --name ambiente_analyzer pandas
+yes | conda create -n analyzer pandas
 
-source activate ambiente_analyzer
-#Deu "./install.sh: 25: source: not found", como resolver?
+yes | python3 -m pip install pyautogui
 
-yes | sudo apt install python3-pip
+apt-get install python3-tk python3-dev
 
-pip3 install --upgrade pip setuptools
-
-pip3 install PyQt5
+python3 autogui.py
