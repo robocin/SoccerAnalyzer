@@ -1,6 +1,6 @@
 #!/bin/sh
 
-cp 2.sh ~/2.sh
+cp install_2.sh ~/install_2.sh
 
 wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -O miniconda.sh
 
