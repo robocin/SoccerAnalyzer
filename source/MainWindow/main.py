@@ -1,6 +1,6 @@
 import sys
 
-from PyQt5.QtWidgets import QApplication, QPushButton, QMainWindow, QWidget, QDialog, QGroupBox, QHBoxLayout, QVBoxLayout, QListWidget, QLabel, QMenuBar
+from PyQt5.QtWidgets import QApplication, QPushButton, QMainWindow, QWidget, QDialog, QGroupBox, QHBoxLayout, QVBoxLayout, QListWidget, QLabel, QMenuBar, QAction
 from PyQt5 import QtGui, QtCore
 
 STATISTICS = "EXTRACTION_FIELDS"
@@ -13,6 +13,9 @@ class Canvas(QWidget):
 class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
+
+        self.VIEW_FILLED = False
+
 
 ##################################################### SCREEN INITIALIZATION ###################################################
         #getting CURRENT monitor screen size
@@ -40,7 +43,7 @@ class MainWindow(QMainWindow):
         #creating the elements of the window
         self.init_Menu()
         self.init_List()
-        self.init_View("")
+        self.create_View("")
 
         #creating central widget and putting it int the main window as a central widget
         self.main_widget = QWidget()
@@ -58,6 +61,12 @@ class MainWindow(QMainWindow):
         viewMenu = self.mainMenu.addMenu("View")
         terminalMenu = self.mainMenu.addMenu("Terminal")
         helpMenu = self.mainMenu.addMenu("Help")
+
+        clearAction = QAction("Clear", self)
+        editMenu.addAction(clearAction)
+        clearAction.triggered.connect(self.clear_View)
+
+
 
 
     
@@ -85,42 +94,36 @@ class MainWindow(QMainWindow):
 
     def itemSelected(self, item):
         stat = item.text()
-        self.init_View(stat)
+        self.create_View(stat)
    
 
-    def init_View(self, text):
-        nullLabel = QLabel("NONE")
-                
-        if text != "":
-            if text == 'T1':
-                self.T1_SCREEN()
-            elif text == 'T2':
-                self.T2_SCREEN()
+    def create_View(self, text):
+        
+        self.view_groupBox = QGroupBox()
+        self.layout = QVBoxLayout()
+
+        if self.VIEW_FILLED == False:
+            self.view_Title = QLabel(text)
+            self.layout.addWidget(self.view_Title)
+            self.view_groupBox.setLayout(self.layout)
+            self.main_hbox.addWidget(self.view_groupBox)
+            self.VIEW_FILLED = True
         else:
-            self.main_hbox.addWidget(nullLabel)
+            self.clear_View(text)
 
-   
-   
-    def clear_View(self):
-        for widget in self.main_hbox.children():
-            if isinstance(widget, QLabel):
-                widget.deleteLater()
-
-
-    def T1_SCREEN(self):
-        label = QLabel("T1")
-        self.clear_View()
-        self.main_hbox.addWidget(label)
-
-
-    def T2_SCREEN(self):
-        label = QLabel("T2")
-        self.clear_View()
-        self.main_hbox.addWidget(label)
-
+    
+    def clear_View(self, text):
+        
+        for i in reversed(range(self.main_hbox.count())): 
+            if i > 0:
+                self.main_hbox.itemAt(i).widget().setParent(None)
+        
+        self.VIEW_FILLED = False
+        self.create_View(text)
 
     def getOut(self):
         sys.exit()
+
 
 if __name__ == "__main__":
     Application = QApplication(sys.argv)
