@@ -1,1 +1,1 @@
-rm ~/2.sh
+rm ~/install_2.sh
