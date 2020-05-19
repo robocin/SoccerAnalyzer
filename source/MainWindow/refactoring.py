@@ -46,7 +46,7 @@ class MainWindow(QMainWindow):
         #creating the elements of the window (calling custom functions)
         self.init_Menu() #menu principal no topo da tela
         self.init_List() #lista lateral esquerda
-        self.create_View("") #área do gráfico, à direita da lista
+        #self.create_View("bar") #área do gráfico, à direita da lista
 
         #creating central widget and putting it in the main window as a central widget
         self.main_widget = QWidget()
@@ -87,8 +87,8 @@ class MainWindow(QMainWindow):
         self.main_list.setMaximumWidth(181)
         self.main_list.setMinimumWidth(180)
         # cria os itens da lista 
-        self.main_list.insertItem(0,"Saldo de gols")
-        self.main_list.insertItem(1,"T2")
+        self.main_list.insertItem(0,"pie")
+        self.main_list.insertItem(1,"bar")
         self.main_list.insertItem(2,STATISTICS)
         self.main_list.insertItem(3,STATISTICS)
         self.main_list.insertItem(4,STATISTICS)
@@ -102,13 +102,11 @@ class MainWindow(QMainWindow):
         # ao clicar num item, manda sinal para a função itemSelected
         self.main_list.itemClicked.connect(self.itemSelected)
 
-    #TODO: essa função:
     def itemSelected(self, item):
-        pass 
-        #stat = intem.text()
-        #self.create_View(stat)
+        stat = item.text()
+        self.create_View(stat)
 
-    def create_View(self, text):  
+    def create_View(self, title):  
         '''
         Cria a região, à direita da tela, onde o gráfico será plotado.
         
@@ -117,33 +115,31 @@ class MainWindow(QMainWindow):
         self.view_groupBox = QGroupBox()
         # cria o layout do view_groupBox 
         self.layout = QVBoxLayout()
-        if self.VIEW_FILLED == False:
-            # cria a área do gráfico
-            self.plot_Area = self.create_Plot()
-            #TODO: o que é? tira? 
-            #self.view_Title = QLabel(text)
-            #self.layout.addWidget(self.plot_Area)
-            # define o layout do view_groupBox 
-            self.view_groupBox.setLayout(self.plot_Area)
-            # adiciona o view_groupBox à main_hbox 
-            self.main_hbox.addWidget(self.view_groupBox) 
-            self.VIEW_FILLED = True
-        else:
-            #TODO: tirar o pass e descomentar linha abaixo 
-            pass 
-            #self.clear_View(text)
+        # limpa a área do gráfico se já houver sendo mostrado 
+        if self.VIEW_FILLED == True:
+            self.clear_View(title)
+        # cria a área do gráfico
+        self.plot_Area = self.create_Plot(title)
+                                        #TODO: o que é? tira? 
+                                        #self.view_Title = QLabel(title)
+                                        #self.layout.addWidget(self.plot_Area)
+        # define o layout do view_groupBox 
+        self.view_groupBox.setLayout(self.plot_Area)
+        # adiciona o view_groupBox à main_hbox 
+        self.main_hbox.addWidget(self.view_groupBox) 
+        self.VIEW_FILLED = True
 
 
 
-    #TODO: ENTENDER CLEAR_VIEW
-    def clear_View(self, text):  
+    #TODO: ENTENDER O FUNCIONAMENTO INERNO DE CLEAR_VIEW
+    def clear_View(self, title):  
         for i in reversed(range(self.main_hbox.count())): 
             if i > 0:
                 self.main_hbox.itemAt(i).widget().setParent(None)  
         self.VIEW_FILLED = False
-        self.create_View(text)
+        #self.create_View(title)
 
-    def create_Plot(self):
+    def create_Plot(self, title):
         '''
         Cria o figure, o canvas, a barra de ferramentas de navegação,
         e organiza o layout.
@@ -169,7 +165,10 @@ class MainWindow(QMainWindow):
         space.addWidget(self.canvas) 
 
         # chama a função que vai plotar o gráfico  
-        self.plot_Bar()
+        if(title == "pie"):
+            self.plot_Pie()
+        elif(title == "bar"):
+            self.plot_Bar()
 
         return space
 
