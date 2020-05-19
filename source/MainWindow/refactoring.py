@@ -1,7 +1,9 @@
 import sys
 
 from PyQt5.QtWidgets import QApplication, QPushButton, QMainWindow, QWidget, QDialog, QGroupBox, QHBoxLayout, QVBoxLayout, QListWidget, QLabel, QMenuBar, QAction
+from PyQt5 import QtWidgets
 from PyQt5 import QtGui, QtCore
+from PyQt5.QtCore import Qt
 
 from matplotlib.figure import Figure
 from matplotlib.backends.backend_qt4agg import FigureCanvasQTAgg as FigureCanvas
@@ -17,7 +19,6 @@ class MainWindow(QMainWindow):
         super().__init__()
 
         self.VIEW_FILLED = False
-
 
         ##### SCREEN INILIALIZATION #####
         #getting CURRENT monitor screen size
@@ -46,7 +47,7 @@ class MainWindow(QMainWindow):
         #creating the elements of the window (calling custom functions)
         self.init_Menu() #menu principal no topo da tela
         self.init_List() #lista lateral esquerda
-        self.create_View("empty") #área do gráfico, à direita da lista
+        self.create_View("Escolha uma das opções na lista à esquerda") #área do gráfico, à direita da lista
 
         #creating central widget and putting it in the main window as a central widget
         self.main_widget = QWidget()
@@ -121,9 +122,6 @@ class MainWindow(QMainWindow):
             self.clear_View(title)
         # cria a área do gráfico
         self.plot_Area = self.create_Plot(title)
-                                        #TODO: o que é? tira? 
-                                        #self.view_Title = QLabel(title)
-                                        #self.layout.addWidget(self.plot_Area)
         # define o layout do view_groupBox 
         self.view_groupBox.setLayout(self.plot_Area)
         # adiciona o view_groupBox à main_hbox 
@@ -140,7 +138,7 @@ class MainWindow(QMainWindow):
         self.VIEW_FILLED = False
         #Se quem chamou a função foi o sinal da opção MenuPrincipal -> edit -> clear 
         if (title == 0):
-            self.create_View("empty")
+            self.create_View("Escolha uma das opções na lista à esquerda")
     
     def create_Plot(self, title):
         '''
@@ -154,8 +152,14 @@ class MainWindow(QMainWindow):
         # cria o widget canvas, que "segura" o figure
         self.canvas = FigureCanvas(self.figure)
 
+        # cria e configura o título do gráfico
+        self.view_title = QLabel(title) 
+        #self.view_title.setSizePolicy(QtWidgets.QSizePolicy.Preferred,QtWidgets.QSizePolicy.Minimum) 
+        self.view_title.setAlignment(Qt.AlignCenter)
+        self.view_title.setFont(QtGui.QFont("Arial",25,QtGui.QFont.Bold))
+
         # cria o widget da barra de ferramentas de navegação
-        if(title != "empty"): 
+        if(title != "Escolha uma das opções na lista à esquerda"): 
             self.toolbar = NavigationToolbar(self.canvas, self)
 
         #(Bloco de código p/ se quiser plotar atravéz de um botão)
@@ -165,7 +169,9 @@ class MainWindow(QMainWindow):
 
         # organiza o layout do toolbar e do canvas 
         space = QVBoxLayout()
-        if(title != "empty"):
+
+        space.addWidget(self.view_title)
+        if(title != "Escolha uma das opções na lista à esquerda"):
             space.addWidget(self.toolbar)
         space.addWidget(self.canvas) 
 
