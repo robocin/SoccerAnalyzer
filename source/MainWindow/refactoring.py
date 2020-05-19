@@ -46,7 +46,7 @@ class MainWindow(QMainWindow):
         #creating the elements of the window (calling custom functions)
         self.init_Menu() #menu principal no topo da tela
         self.init_List() #lista lateral esquerda
-        #self.create_View("bar") #área do gráfico, à direita da lista
+        self.create_View("empty") #área do gráfico, à direita da lista
 
         #creating central widget and putting it in the main window as a central widget
         self.main_widget = QWidget()
@@ -72,9 +72,10 @@ class MainWindow(QMainWindow):
         #cria a ação "clear" na opção "edit" do menu principal
         clearAction = QAction("Clear", self)
         editMenu.addAction(clearAction)
-            #conecta a ação "clear" à função clear_View()     
-        clearAction.triggered.connect(self.clear_View)
-    
+        #conecta a ação "clear" à função clear_View()     
+        clearAction.triggered.connect(self.clear_View) # Ao chamar clear_View sem especificar parâmetros, o title fica igual a 0
+ 
+
     def init_List(self):
         '''
         Cria a lista de seleção da esquerda
@@ -101,7 +102,7 @@ class MainWindow(QMainWindow):
         self.main_hbox.addWidget(self.main_list)
         # ao clicar num item, manda sinal para a função itemSelected
         self.main_list.itemClicked.connect(self.itemSelected)
-
+    
     def itemSelected(self, item):
         stat = item.text()
         self.create_View(stat)
@@ -132,13 +133,15 @@ class MainWindow(QMainWindow):
 
 
     #TODO: ENTENDER O FUNCIONAMENTO INERNO DE CLEAR_VIEW
-    def clear_View(self, title):  
+    def clear_View(self, title):
         for i in reversed(range(self.main_hbox.count())): 
             if i > 0:
                 self.main_hbox.itemAt(i).widget().setParent(None)  
         self.VIEW_FILLED = False
-        #self.create_View(title)
-
+        #Se quem chamou a função foi o sinal da opção MenuPrincipal -> edit -> clear 
+        if (title == 0):
+            self.create_View("empty")
+    
     def create_Plot(self, title):
         '''
         Cria o figure, o canvas, a barra de ferramentas de navegação,
@@ -152,7 +155,8 @@ class MainWindow(QMainWindow):
         self.canvas = FigureCanvas(self.figure)
 
         # cria o widget da barra de ferramentas de navegação
-        self.toolbar = NavigationToolbar(self.canvas, self)
+        if(title != "empty"): 
+            self.toolbar = NavigationToolbar(self.canvas, self)
 
         #(Bloco de código p/ se quiser plotar atravéz de um botão)
         # Just some button connected to `plot` method
@@ -161,7 +165,8 @@ class MainWindow(QMainWindow):
 
         # organiza o layout do toolbar e do canvas 
         space = QVBoxLayout()
-        space.addWidget(self.toolbar)
+        if(title != "empty"):
+            space.addWidget(self.toolbar)
         space.addWidget(self.canvas) 
 
         # chama a função que vai plotar o gráfico  
@@ -169,6 +174,8 @@ class MainWindow(QMainWindow):
             self.plot_Pie()
         elif(title == "bar"):
             self.plot_Bar()
+        elif(title == "empty"):
+            pass
 
         return space
 
