@@ -184,6 +184,7 @@ class MainWindow(QMainWindow):
 
         return space
 
+
     def plot_Bar(self):
         
         data = [50,50]
@@ -199,6 +200,7 @@ class MainWindow(QMainWindow):
 
         # refresh canvas
         self.canvas.draw()
+
 
     def plot_Pie(self):
 
@@ -220,10 +222,13 @@ class MainWindow(QMainWindow):
     def define_Log(self):
         self.log = pd.read_csv('./t1.rcg.csv1')
 
-    #TODO: essa função:
-    def get_Score(self):
-        pass
-
+    def get_Score(self): 
+        placar = [self.log['team_score_l'].max(),self.log['team_score_r'].max()]
+        team_left = self.log.iloc[0].team_name_l
+        team_right = self.log.iloc[0].team_name_r
+        equipes = [team_left,team_right]
+        eixox = np.arange(len(equipes))
+    
     def getOut(self):
         sys.exit()
 
