@@ -45,9 +45,9 @@ class MainWindow(QMainWindow):
         self.main_hbox = QHBoxLayout()
 
         #creating the elements of the window (calling custom functions)
-        self.init_Menu() #menu principal no topo da tela
-        self.init_List() #lista lateral esquerda
-        self.create_View("Escolha uma das opções na lista à esquerda") #área do gráfico, à direita da lista
+        self.init_Menu() # main menu at the top of the screen
+        self.init_List() # left side list
+        self.create_View("Escolha uma das opções na lista à esquerda") # right side graph area
 
         #creating central widget and putting it in the main window as a central widget
         self.main_widget = QWidget()
@@ -60,10 +60,10 @@ class MainWindow(QMainWindow):
     ##### Definition of custom functions #####
     def init_Menu(self):
         '''
-        Cria o menu principal e conecta suas ações às 
-        chamadas de funções respectivas
+        Creates the main menu and connects its actions to
+        the respective function calls
         '''
-        #cria o menu principal no topo da janela
+        #creates the main menu at the top 
         self.mainMenu = self.menuBar()
         fileMenu = self.mainMenu.addMenu("File")
         editMenu = self.mainMenu.addMenu("Edit")
@@ -71,25 +71,25 @@ class MainWindow(QMainWindow):
         viewMenu = self.mainMenu.addMenu("View")
         terminalMenu = self.mainMenu.addMenu("Terminal")
         helpMenu = self.mainMenu.addMenu("Help")
-        #cria a ação "clear" na opção "edit" do menu principal
+        #creates the "clear" action inside the "edit" option on the main menu 
         clearAction = QAction("Clear", self)
         editMenu.addAction(clearAction)
-        #conecta a ação "clear" à função clear_View()     
-        clearAction.triggered.connect(self.clear_View) # Ao chamar clear_View sem especificar parâmetros, o title fica igual a 0
+        #connects the "clear" action to the clear_View() function 
+        clearAction.triggered.connect(self.clear_View) # when calling clear_View without specifying parameters, title hold a '0' int value
  
 
     def init_List(self):
         '''
-        Cria a lista de seleção da esquerda
+        Creates the selection list
         '''
-        # cria a lista da esquerda 
+        # creates the selection list
         self.main_list = QListWidget()
-        # define as dimensões máximas e mínimas da lista 
+        # defines the maximum and minimum dimensions of the list
         self.main_list.setMinimumHeight(300)
         self.main_list.setMaximumHeight(600)
         self.main_list.setMaximumWidth(181)
         self.main_list.setMinimumWidth(180)
-        # cria os itens da lista 
+        # creates the list items
         self.main_list.insertItem(0,"pie")
         self.main_list.insertItem(1,"bar")
         self.main_list.insertItem(2,STATISTICS)
@@ -100,9 +100,9 @@ class MainWindow(QMainWindow):
         self.main_list.insertItem(7,STATISTICS)
         self.main_list.insertItem(8,STATISTICS)
         self.main_list.insertItem(9,STATISTICS)
-        # adiciona a lista à main_hbox 
+        # adds the list to the main_hbox
         self.main_hbox.addWidget(self.main_list)
-        # ao clicar num item, manda sinal para a função itemSelected
+        # when an item is clicked on, sends a signal to the itemSelected() function 
         self.main_list.itemClicked.connect(self.itemSelected)
     
     def itemSelected(self, item):
@@ -111,21 +111,20 @@ class MainWindow(QMainWindow):
 
     def create_View(self, title):  
         '''
-        Cria a região, à direita da tela, onde o gráfico será plotado.
-        
+        Creates the area, on the right side of the screen, where the plot the graphs on.
         '''
-        # cria o view_groupBox  (região do gráfico)
+        # creates the view_groupBox (area where to plot the graphs on)
         self.view_groupBox = QGroupBox()
-        # cria o layout do view_groupBox 
+        # creates the layout of view_groupBox 
         self.layout = QVBoxLayout()
-        # limpa a área do gráfico se já houver sendo mostrado 
+        # cleans the graph area, if there's already a graph being displayed  
         if self.VIEW_FILLED == True:
             self.clear_View(title)
-        # cria a área do gráfico
+        # creates the area where to plot the graphs
         self.plot_Area = self.create_Plot(title)
-        # define o layout do view_groupBox 
+        # defines the layout of view_groupBox
         self.view_groupBox.setLayout(self.plot_Area)
-        # adiciona o view_groupBox à main_hbox 
+        # adds the view_groupBox to the main_hbox 
         self.main_hbox.addWidget(self.view_groupBox) 
         self.VIEW_FILLED = True
 
@@ -137,38 +136,37 @@ class MainWindow(QMainWindow):
             if i > 0:
                 self.main_hbox.itemAt(i).widget().setParent(None)  
         self.VIEW_FILLED = False
-        #Se quem chamou a função foi o sinal da opção MenuPrincipal -> edit -> clear 
+        # if the clear_View function was called by a signal from: MainMenu -> edit -> clear, 
         if (title == 0):
             self.create_View("Escolha uma das opções na lista à esquerda")
     
     def create_Plot(self, title):
         '''
-        Cria o figure, o canvas, a barra de ferramentas de navegação,
-        e organiza o layout.
-        Chama a função de plotar o gráfico
+        Creates figure, cavas, navigationToolbar, and configures the layout.
+        Calls the function to plot the graph.
         '''
-        # cria uma 'figure', onde o gráfico será plotado
+        # creates a 'figure', where to plot the graphs on 
         self.figure = Figure()
 
-        # cria o widget canvas, que "segura" o figure
+        # creates a canvas widget, which displays the figure 
         self.canvas = FigureCanvas(self.figure)
 
-        # cria e configura o título do gráfico
+        # creates and customize the graph title
         self.view_title = QLabel(title) 
         #self.view_title.setSizePolicy(QtWidgets.QSizePolicy.Preferred,QtWidgets.QSizePolicy.Minimum) 
         self.view_title.setAlignment(Qt.AlignCenter)
         self.view_title.setFont(QtGui.QFont("Arial",25,QtGui.QFont.Bold))
 
-        # cria o widget da barra de ferramentas de navegação
+        # creates the navigationToolbar widget  
         if(title != "Escolha uma das opções na lista à esquerda"): 
             self.toolbar = NavigationToolbar(self.canvas, self)
 
-        #(Bloco de código p/ se quiser plotar atravéz de um botão)
+        #(code snippet to plot a graph by pressing a button) 
         # Just some button connected to `plot` method
         #self.button = QPushButton('Plot')
         #self.button.clicked.connect(self.plot)
 
-        # organiza o layout do toolbar e do canvas 
+        # customizes the toolbar and canvas layout 
         space = QVBoxLayout()
 
         space.addWidget(self.view_title)
@@ -176,7 +174,7 @@ class MainWindow(QMainWindow):
             space.addWidget(self.toolbar)
         space.addWidget(self.canvas) 
 
-        # chama a função que vai plotar o gráfico  
+        # calls the function responsable of plotting the graph 
         if(title == "pie"):
             self.plot_Pie()
         elif(title == "bar"):
