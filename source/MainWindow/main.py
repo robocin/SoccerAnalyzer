@@ -106,7 +106,6 @@ class MainWindow(QMainWindow):
         self.main_list.itemClicked.connect(self.itemSelected)
     
     def itemSelected(self, item):
-        print(item)
         stat = item.text()
         self.create_View(stat)
 
