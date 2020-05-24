@@ -189,10 +189,14 @@ class MainWindow(QMainWindow):
                     faltasTeamR += 1
             # defines the data list based on the graphType, absolute or relative(percentage)
             if(graphType == "Faltas absolutas"):
-                data = [2,teamL,teamR,faltasTeamL,faltasTeamR]
+                xLabel = "Nome do time"
+                yLabel = "Total de faltas cometidas"
+                data = [2,teamL,teamR,faltasTeamL,faltasTeamR,xLabel,yLabel]
             else:
+                xLabel = "Nome do time"
+                yLabel = "Porcentagem de faltas cometidas"
                 faltasTotal = faltasTeamL + faltasTeamR
-                data = [2,teamL,teamR,(100*faltasTeamL)/faltasTotal,(100*faltasTeamR)/faltasTotal]  
+                data = [2,teamL,teamR,(100*faltasTeamL)/faltasTotal,(100*faltasTeamR)/faltasTotal,xLabel,yLabel]  
             # calls the function to plot the graph 
             self.plot_Bar(title,data)
         
@@ -204,32 +208,45 @@ class MainWindow(QMainWindow):
         elif(graphType == "TEST PIE"):
             self.plot_Pie("TEST PIE - APENAS PARA REFERÊNCIA ")
         elif(graphType == "TEST BAR"):
-            self.plot_Bar("TEST BAR - APENAS PARA REFERÊNCIA",[2,2,2,10,20])
+            self.plot_Bar("TEST BAR - APENAS PARA REFERÊNCIA",[2,2,2,10,20,"xLabel","yLabel"])
         '''(...)'''
         
         return space
 
 
-    #TODO: implementar, xlabel, ylabel 3 labels individuais de cada bar e imbutir esses dados em `data`
+    #TODO: implementar, xlabel, ylabel e labels individuais de cada bar e imbutir esses dados em `data`
     def plot_Bar(self, title, data):
        
         # TODO: documentar o funcionamento disto daqui
         # treating the data list to pass to the matplotlib methods
+            
+            # gets the xAxis values and yAxis values  
         xAxis = []
         yAxis = []
-        mid = 0 
+        cursor = 0 
         for i in range (1,data[0]+1):
             xAxis.append(data[i])
-            mid = i
-        for i in range (mid+1,len(data)):
+            cursor = i
+        NUMBER_OF_FEATURES = 2
+        for i in range (cursor+1,len(data)-NUMBER_OF_FEATURES):
             yAxis.append(data[i])
+            cursor = i 
+            
+            # gets the xLabel and yLabel from the data list
+        xLabel = data[cursor+1]
+        yLabel = data[cursor+2]
+        cursor += 2
        
-        # create an axis
+        # setting the graph  
+            # create an axis
         ax = self.figure.add_subplot(111) 
-        # plot data
+            # sets the axis labels
+        ax.set_xlabel(xLabel) 
+        ax.set_ylabel(yLabel)
+            # plot data
         bar1 = ax.bar(xAxis[0],yAxis[0],label = "label1")
         bar2 = ax.bar(xAxis[1],yAxis[1],label = "label1")
-        # set title
+            # set title
         ax.set_title(title)
 
 
