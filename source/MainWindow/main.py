@@ -13,6 +13,10 @@ import numpy as np
 import pandas as pd
 
 STATISTICS = "EXTRACTION_FIELDS"
+LIST_MINIMUM_HEIGHT = 300
+LIST_MAXIMUM_HEIGHT = 600
+LIST_MINIMUM_WIDTH = 181
+LIST_MAXIMUM_WIDTH = 180
 
 class MainWindow(QMainWindow):
     def __init__(self):
@@ -85,10 +89,10 @@ class MainWindow(QMainWindow):
         # creates the selection list
         self.main_list = QListWidget()
         # defines the maximum and minimum dimensions of the list
-        self.main_list.setMinimumHeight(300)
-        self.main_list.setMaximumHeight(600)
-        self.main_list.setMaximumWidth(181)
-        self.main_list.setMinimumWidth(180)
+        self.main_list.setMinimumHeight(LIST_MINIMUM_HEIGHT)
+        self.main_list.setMaximumHeight(LIST_MAXIMUM_HEIGHT)
+        self.main_list.setMaximumWidth(LIST_MAXIMUM_WIDTH)
+        self.main_list.setMinimumWidth(LIST_MINIMUM_WIDTH)
         # creates the list items
         self.main_list.insertItem(0,"TEST PIE")
         self.main_list.insertItem(1,"TEST BAR")
