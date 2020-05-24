@@ -1,8 +1,12 @@
 ## RoboCIn - 2D Log Analyzer
 
-- Arquitetura (V1.03)
+- Arquitetura (V1)
 
 ![Screenshot](la.jpg)
+
+- Diagrama de Classes (V1)
+
+![Screenshot](classes.png)
 
 - Generalização de campos/atributos
 
