@@ -47,7 +47,7 @@ class MainWindow(QMainWindow):
         #creating the elements of the window (calling custom functions)
         self.init_Menu() # main menu at the top of the screen
         self.init_List() # left side list
-        self.create_View("Escolha uma das opções na lista à esquerda") # right side graph area
+        self.create_View(False,"Escolha uma das opções na lista à esquerda") # right side graph area
 
         #creating central widget and putting it in the main window as a central widget
         self.main_widget = QWidget()
@@ -75,7 +75,7 @@ class MainWindow(QMainWindow):
         clearAction = QAction("Clear", self)
         editMenu.addAction(clearAction)
         #connects the "clear" action to the clear_View() function 
-        clearAction.triggered.connect(self.clear_View) # when calling clear_View without specifying parameters, title hold a '0' int value
+        clearAction.triggered.connect(self.clear_View) # when calling clear_View without specifying parameters, False is given as parameter to graphType
  
 
     def init_List(self):
@@ -106,11 +106,10 @@ class MainWindow(QMainWindow):
         self.main_list.itemClicked.connect(self.itemSelected)
     
     def itemSelected(self, item):
-        print(item)
         stat = item.text()
-        self.create_View(stat)
+        self.create_View(stat, stat)
 
-    def create_View(self, title):  
+    def create_View(self, graphType, title):  
         '''
         Creates the area, on the right side of the screen, where the plot the graphs on.
         '''
@@ -122,7 +121,7 @@ class MainWindow(QMainWindow):
         if self.VIEW_FILLED == True:
             self.clear_View(title)
         # creates the area where to plot the graphs
-        self.plot_Area = self.create_Plot(title)
+        self.plot_Area = self.create_Plot(graphType, title)
         # defines the layout of view_groupBox
         self.view_groupBox.setLayout(self.plot_Area)
         # adds the view_groupBox to the main_hbox 
@@ -132,16 +131,17 @@ class MainWindow(QMainWindow):
 
 
     #TODO: ENTENDER O FUNCIONAMENTO INERNO DE CLEAR_VIEW
-    def clear_View(self, title):
+    def clear_View(self, graphType):
+        print(graphType) 
         for i in reversed(range(self.main_hbox.count())): 
             if i > 0:
                 self.main_hbox.itemAt(i).widget().setParent(None)  
         self.VIEW_FILLED = False
         # if the clear_View function was called by a signal from: MainMenu -> edit -> clear, 
-        if (title == 0):
-            self.create_View("Escolha uma das opções na lista à esquerda")
+        if (graphType == False):
+            self.create_View(False,"Escolha uma das opções na lista à esquerda")
     
-    def create_Plot(self, title):
+    def create_Plot(self, graphType, title):
         '''
         Creates figure, cavas, navigationToolbar, and configures the layout.
         Calls the function to plot the graph.
@@ -152,58 +152,55 @@ class MainWindow(QMainWindow):
         # creates a canvas widget, which displays the figure 
         self.canvas = FigureCanvas(self.figure)
 
-        # creates and customize the graph title
-        self.view_title = QLabel(title) 
-        #self.view_title.setSizePolicy(QtWidgets.QSizePolicy.Preferred,QtWidgets.QSizePolicy.Minimum) 
-        self.view_title.setAlignment(Qt.AlignCenter)
-        self.view_title.setFont(QtGui.QFont("Arial",25,QtGui.QFont.Bold))
-
         # creates the navigationToolbar widget  
-        if(title != "Escolha uma das opções na lista à esquerda"): 
+        if(graphType != False): 
             self.toolbar = NavigationToolbar(self.canvas, self)
 
-        #(code snippet to plot a graph by pressing a button) 
-        # Just some button connected to `plot` method
-        #self.button = QPushButton('Plot')
-        #self.button.clicked.connect(self.plot)
-
         # customizes the toolbar and canvas layout 
+        
         space = QVBoxLayout()
-
-        space.addWidget(self.view_title)
-        if(title != "Escolha uma das opções na lista à esquerda"):
+             
+        if(graphType != False): #if graphType is not none
             space.addWidget(self.toolbar)
+        else:
+            # creates the encouraging message at the top 
+            self.view_title = QLabel(title) 
+            self.view_title.setAlignment(Qt.AlignCenter)
+            self.view_title.setFont(QtGui.QFont("Arial",25,QtGui.QFont.Bold))
+            space.addWidget(self.view_title) 
         space.addWidget(self.canvas) 
 
         # calls the function responsable of plotting the graph 
-        if(title == "pie"):
-            self.plot_Pie()
-        elif(title == "bar"):
-            self.plot_Bar()
-        elif(title == "empty"):
-            pass
-
+        if(graphType == "pie"):
+            self.plot_Pie(title)
+        elif(graphType == "bar"):
+            self.plot_Bar(title)
         return space
 
 
-    def plot_Bar(self):
+    def plot_Bar(self, title):
         
         data = [50,50]
 
         # create an axis
         ax = self.figure.add_subplot(111)
-
-        # discards the old graph
-        ax.clear()
-
+       
         # plot data
         ax.bar(data,2)
+       
+        # set title
+        ax.set_title(title)
 
+        #TODO: is this necessary?
+        # discards the old graph
+        #ax.clear()
+ 
+        #TODO: is this necessary?
         # refresh canvas
-        self.canvas.draw()
+        #self.canvas.draw()
+        
 
-
-    def plot_Pie(self):
+    def plot_Pie(self, title):
 
         data = [50,50]
         label = ["A", "B"]
@@ -211,14 +208,19 @@ class MainWindow(QMainWindow):
         # create an axis
         ax = self.figure.add_subplot(111)
 
-        # discards the old graph
-        ax.clear()
-
         # plot data
         ax.pie(data, labels = label)
 
+        # set title
+        ax.set_title(title)
+
+        #TODO: is this necessary?
+        # discards the old graph
+        #ax.clear()
+ 
+        #TODO: is this necessary?
         # refresh canvas
-        self.canvas.draw()
+        #self.canvas.draw()
    
     def define_Log(self):
         self.log = pd.read_csv('./t1.rcg.csv1')
