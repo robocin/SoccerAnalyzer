@@ -175,21 +175,27 @@ class MainWindow(QMainWindow):
 
         # calls the function responsable of plotting the graph 
         if(graphType == "Faltas absolutas" or graphType == "Faltas relativas"):
+            # get the names of the teams 
             teamL = self.log.iloc[0,2]
             teamR = self.log.iloc[0,3]
+            # creates the variables which will hold the number of foul_charge
             faltasTeamL = 0
             faltasTeamR = 0
+            # increments the number of foul_charge for team for every "block" of foul_charge in the log
             for i in range(self.log.shape[0]):
                 if(self.log.iloc[i,1] == "foul_charge_l" and self.log.iloc[i+1,1] != "foul_charge_l"):
                     faltasTeamL += 1
                 elif(self.log.iloc[i,1] == "foul_charge_r" and self.log.iloc[i+1,1] != "foul_charge_r"):
                     faltasTeamR += 1
+            # defines the data list based on the graphType, absolute or relative(percentage)
             if(graphType == "Faltas absolutas"):
                 data = [2,teamL,teamR,faltasTeamL,faltasTeamR]
             else:
                 faltasTotal = faltasTeamL + faltasTeamR
-                data = [2,teamL,teamR,(100*faltasTeamL)/faltasTotal,(100*faltasTeamR)/faltasTotal]
+                data = [2,teamL,teamR,(100*faltasTeamL)/faltasTotal,(100*faltasTeamR)/faltasTotal]  
+            # calls the function to plot the graph 
             self.plot_Bar(title,data)
+        
         elif(graphType == "Quantidade absoluta de gols"):
             pass
         elif(graphType == "Quantidade relativa de gols"):
@@ -208,7 +214,7 @@ class MainWindow(QMainWindow):
     def plot_Bar(self, title, data):
        
         # TODO: documentar o funcionamento disto daqui
-        # treating the data to pass to the matplotlib methods
+        # treating the data list to pass to the matplotlib methods
         xAxis = []
         yAxis = []
         mid = 0 
@@ -217,10 +223,9 @@ class MainWindow(QMainWindow):
             mid = i
         for i in range (mid+1,len(data)):
             yAxis.append(data[i])
-        
+       
         # create an axis
         ax = self.figure.add_subplot(111) 
-
         # plot data
         bar1 = ax.bar(xAxis[0],yAxis[0],label = "label1")
         bar2 = ax.bar(xAxis[1],yAxis[1],label = "label1")
