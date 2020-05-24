@@ -190,7 +190,7 @@ class MainWindow(QMainWindow):
             pass
         elif(graphType == "Quantidade relativa de gols"):
             pass
-        #TEST PIE e TEST BAR deverão ser excluídos, inclusive da lista, estão aqui apenas para servir de referência durante o desenvolvimento
+        #TEST PIE e TEST BAR deverão ser excluídos, inclusive da lista, estão aqui apenas para servir de referência durante o desenvolvimento.
         elif(graphType == "TEST PIE"):
             self.plot_Pie("TEST PIE - APENAS PARA REFERÊNCIA ")
         elif(graphType == "TEST BAR"):
