@@ -21,40 +21,15 @@ class Team:
         self.__side = side
 
     #set methods
-    def setName(self, name = "RoboCIn"):
-       
-        if name != "RoboCIn":
-           
-            team_left = LOG.iloc[0].team_name_l
-            
-            if team_left != "RoboCIn":
-                self.__name = team_left
-            else:
-                self.__name = LOG.iloc[0].team_name_r
-        else:
-            self.__name = name
-    
-    def setSide(self):
-
-        team_left = LOG.iloc[0].team_name_l
+    def setName(self, name):
+        self.__name = name
         
-        if team_left == self.getName():
-            self.__side = "left"
-        else:
-            self.__side = "right"
+    def setSide(self, side):
+        self.__side = side
 
-    def setGoalsPro(self):
+    def setGoalsPro(self, goalsPro):
+        self.__goalsPro = goalsPro
 
-        end_row = LOG.loc[LOG["playmode"] == "time_over"]
-
-        if self.getSide == "left":
-            score = end_row.team_score_l.to_list()
-            return score[0]
-        else:
-            score = end_row.team_score_r.to_list()
-            return score[0]
-
-        
     def setGoalsAgainst(self):
         pass
     def setFaultsPro(self):
