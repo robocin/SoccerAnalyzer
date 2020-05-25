@@ -12,28 +12,14 @@ class Robocin(teamClass.Team):
         #initialization of values from the dataframe
     def start_values(self):
         pass
-    
+
     #these implementations are not correct!
     def init_RBCNName(self):
-            if name != "RoboCIn":
-               
-            team_left = LOG.iloc[0].team_name_l
-            
-            if team_left != "RoboCIn":
-                self.__name = team_left
-            else:
-                self.__name = LOG.iloc[0].team_name_r
-        else:
-            self.__name = name
+        pass
 
     def init_RBCNSide(self):
-                team_left = LOG.iloc[0].team_name_l
-        
-        if team_left == self.getName():
-            self.__side = "left"
-        else:
-            self.__side = "right"
-
+        pass
+    
     def init_RBCNGoalsPro(self):
         end_row = LOG.loc[LOG["playmode"] == "time_over"]
 
