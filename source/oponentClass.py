@@ -2,6 +2,8 @@ import numpy as np
 import pandas as pd
 
 import teamClass
+import positionClass
+import eventClass
 
 LOG = pd.read_csv('./files/t1.rcg.csv')
 

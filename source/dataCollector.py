@@ -1,6 +1,13 @@
 import numpy as np 
 import pandas as pd
 
+import eventClass
+import positionClass
+import oponentClass
+import robocinClass
+import teamClass
+import playerClass
+
 class DataCollector:
     def __init__(self, teamsArray = None, gameFaults = 0, gamePenaltis = 0, category = "unknown"):
         self.__teams = teamsArray

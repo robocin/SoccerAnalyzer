@@ -1,10 +1,13 @@
 import numpy as numpy
 import pandas as pd
 
+import positionClass
+
 class Player:
-    def __init__(self, number = 0, pos = "No position", f_pro = 0, f_commited = 0,
+    def __init__(self, team = "No team", number = 0, pos = "No position", f_pro = 0, f_commited = 0,
     f_shot = 0, goals = 0, tries = 0, good_try = 0, tackles = 0):
 
+        self.__team = team
         self.__number = number
         self.__pos = pos
         self.__f_pro = f_pro
@@ -15,7 +18,11 @@ class Player:
         self.__good_try = good_try
         self.__tackles = tackles
 
+
     #set methods
+    def setTeam(self, team):
+        self.__team = team
+
     def setNumber(self, n):
         self.__number = n
     
@@ -44,6 +51,9 @@ class Player:
         self.__tackles
 
     #get methods
+    def getTeam(self):
+        return self.__team
+
     def getNumber(self):
         return self.__number
 
