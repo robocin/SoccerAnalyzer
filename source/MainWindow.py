@@ -36,10 +36,10 @@ class MainWindow(QMainWindow):
         
         #declaring variables that holds the screen title and dimensions   
         self.title = 'RobôCIn statistics extractor'
-        self.width = self.rect.width()
-        self.height = self.rect.height()
-        self.top = (self.rect.height()/2) - (self.height/2) 
-        self.left = (self.rect.width()/2) -  (self.width/2) 
+        self.width = int(self.rect.width())
+        self.height = int(self.rect.height())
+        self.top = int((self.rect.height()/2) - (self.height/2))
+        self.left = int((self.rect.width()/2) -  (self.width/2))
         
         #setting the title, icon image, dimensions(geometry), statusBar
         self.setWindowTitle(self.title)
