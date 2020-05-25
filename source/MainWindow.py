@@ -12,7 +12,10 @@ from matplotlib.backends.backend_qt4agg import NavigationToolbar2QT as Navigatio
 import numpy as np
 import pandas as pd
 
-STATISTICS = "EXTRACTION_FIELDS"
+#import teamClass
+#import robocinClass
+
+STATISTICS = "EXTRACTIONS FIELDS" 
 LIST_MINIMUM_HEIGHT = 300
 LIST_MAXIMUM_HEIGHT = 600
 LIST_MINIMUM_WIDTH = 181
@@ -40,7 +43,7 @@ class MainWindow(QMainWindow):
         
         #setting the title, icon image, dimensions(geometry), statusBar
         self.setWindowTitle(self.title)
-        self.setWindowIcon(QtGui.QIcon('robocin-03-small.png'))
+        self.setWindowIcon(QtGui.QIcon('./files/robocin-03-small.png'))
         self.setGeometry(self.left,self.top,self.width,self.height)
         self.statusBar().showMessage("Statusbar - awaiting user control")
         ##### END OF SCREEN INITIALIZATION #####
@@ -187,6 +190,7 @@ class MainWindow(QMainWindow):
                     faltasTeamL += 1
                 elif(self.log.iloc[i,1] == "foul_charge_r" and self.log.iloc[i+1,1] != "foul_charge_r"):
                     faltasTeamR += 1
+            
             # defines the data list based on the graphType, absolute or relative(percentage)
             if(graphType == "Faltas absolutas"):
                 xLabel = "Nome do time"
@@ -282,7 +286,7 @@ class MainWindow(QMainWindow):
         #self.canvas.draw()
    
     def define_Log(self):
-        self.log = pd.read_csv('./t1.rcg.csv')
+        self.log = pd.read_csv('./files/t1.rcg.csv')
 
     def get_Score(self): 
         placar = [self.log['team_score_l'].max(),self.log['team_score_r'].max()]

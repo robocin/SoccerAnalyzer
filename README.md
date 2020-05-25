@@ -4,7 +4,7 @@
 
 ![Screenshot](la.jpg)
 
-- Diagrama de Classes (V1)
+- Diagrama de classes (V1)
 
 ![Screenshot](classes.png)
 
