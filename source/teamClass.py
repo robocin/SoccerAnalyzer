@@ -20,9 +20,19 @@ class Team:
         self.__substitutions = substitutions
         self.__side = side
 
-    #set methods (interface)
-    def setName(self, name):
-        self.__name = name
+    #set methods
+    def setName(self, name = "RoboCIn"):
+       
+        if name != "RoboCIn":
+           
+            team_left = LOG.iloc[0].team_name_l
+            
+            if team_left != "RoboCIn":
+                self.__name = team_left
+            else:
+                self.__name = LOG.iloc[0].team_name_r
+        else:
+            self.__name = name
     
     def setSide(self):
 
@@ -35,7 +45,7 @@ class Team:
 
     def setGoalsPro(self):
 
-        end_row = LOG.loc[LOG["playmode"] == "time_over"].team_score_r.to_list()
+        end_row = LOG.loc[LOG["playmode"] == "time_over"]
 
         if self.getSide == "left":
             score = end_row.team_score_l.to_list()

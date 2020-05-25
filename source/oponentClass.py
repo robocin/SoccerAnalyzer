@@ -5,10 +5,10 @@ import teamClass
 
 LOG = pd.read_csv('./files/t1.rcg.csv')
 
-class Robocin(teamClass.Team):
+class Oponent(teamClass.Team):
     def __init__(self):
         super().__init__()
         
-        #initialization of values from the dataframe
     def start_values(self):
         pass
+    
