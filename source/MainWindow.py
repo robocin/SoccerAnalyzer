@@ -12,8 +12,8 @@ from matplotlib.backends.backend_qt4agg import NavigationToolbar2QT as Navigatio
 import numpy as np
 import pandas as pd
 
-import teamClass
-
+#import teamClass
+#import robocinClass
 
 STATISTICS = "EXTRACTIONS FIELDS" 
 LIST_MINIMUM_HEIGHT = 300
