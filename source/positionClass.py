@@ -2,7 +2,7 @@ import numpy as np
 import pandas as pd
 
 class Position:
-    def __init__(self, x, y, timestamp):
+    def __init__(self, x = 0, y = 0, timestamp = 0):
         self.__x = x
         self.__y = y
         self.__timestamp = timestamp

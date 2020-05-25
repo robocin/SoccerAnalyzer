@@ -23,7 +23,7 @@ class Team:
     #set methods
     def setName(self, name):
         self.__name = name
-        
+
     def setSide(self, side):
         self.__side = side
 
@@ -73,6 +73,3 @@ class Team:
     def getSide(self):
         return self.__side
 
-
-teste = Team()
-teste.setGoalsPro()
