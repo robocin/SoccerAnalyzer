@@ -2,6 +2,7 @@ import numpy as numpy
 import pandas as pd
 
 import positionClass
+import eventClass
 
 class Player:
     def __init__(self, team = "No team", number = 0, pos = "No position", f_pro = 0, f_commited = 0,

@@ -20,7 +20,7 @@ class Position:
         self.__x = x
         self.__y = y
 
-    def setEvent(self, x, y, timestamp):
+    def setMoment(self, x, y, timestamp):
         self.setPosition(x,y)
         self.setTime(timestamp)
 
@@ -37,6 +37,6 @@ class Position:
         pos = [self.__x, self.__y]
         return pos
     
-    def getEvent(self):
+    def getMoment(self):
         e = [self.__x, self.__y, self.__timestamp]
         return e

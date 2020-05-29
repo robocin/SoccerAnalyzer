@@ -2,11 +2,11 @@
 
 - Arquitetura (V1)
 
-![Screenshot](la.jpg)
+![Screenshot](./DOC/la.jpg)
 
-- Diagrama de classes (V1)
+- Diagrama de classes (V1.1)
 
-![Screenshot](classes.png)
+![Screenshot](./DOC/classes_v1_1.png)
 
 - Generalização de campos/atributos
 
