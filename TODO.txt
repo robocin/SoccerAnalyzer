@@ -1,0 +1,7 @@
+- refatorar scatter plottin function
+- refatorar pir plot
+- debugar faltas absolutas representarem o .csv
+- refatorar faltas relativas
+- completar classe faults com position
+- debugar goals made
+

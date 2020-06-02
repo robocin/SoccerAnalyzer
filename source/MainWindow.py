@@ -12,6 +12,8 @@ from matplotlib.backends.backend_qt4agg import NavigationToolbar2QT as Navigatio
 import numpy as np
 import pandas as pd
 
+import dataCollector 
+import plotBarData
 #import teamClass
 #import robocinClass
 
@@ -51,11 +53,13 @@ class MainWindow(QMainWindow):
         #setting the main layout to be horizontal
         self.main_hbox = QHBoxLayout()
 
-        #creating the elements of the window (calling custom functions)
+        #creating the elements of the window and calling some computing functions
         self.init_Menu() # main menu at the top of the screen
         self.init_List() # left side list
         self.create_View(False,"Escolha uma das opções na lista à esquerda") # right side graph area
         self.define_Log()
+        self.dataCollector = dataCollector.DataCollector(self.log)
+
         #creating central widget and putting it in the main window as a central widget
         self.main_widget = QWidget()
         self.main_widget.setLayout(self.main_hbox)
@@ -84,7 +88,6 @@ class MainWindow(QMainWindow):
         #connects the "clear" action to the clear_View() function 
         clearAction.triggered.connect(self.clear_View) # when calling clear_View without specifying parameters, False is given as parameter to graphType
  
-
     def init_List(self):
         '''
         Creates the selection list
@@ -101,7 +104,7 @@ class MainWindow(QMainWindow):
         self.main_list.insertItem(1,"TEST BAR")
         self.main_list.insertItem(2,"Faltas absolutas")
         self.main_list.insertItem(3,"Faltas relativas")
-        self.main_list.insertItem(4,STATISTICS)
+        self.main_list.insertItem(4,"Posição das faltas")
         self.main_list.insertItem(5,STATISTICS)
         self.main_list.insertItem(6,STATISTICS)
         self.main_list.insertItem(7,STATISTICS)
@@ -135,8 +138,6 @@ class MainWindow(QMainWindow):
         self.main_hbox.addWidget(self.view_groupBox) 
         self.VIEW_FILLED = True
 
-
-
     #TODO: ENTENDER O FUNCIONAMENTO INERNO DE CLEAR_VIEW
     def clear_View(self, graphType):
         for i in reversed(range(self.main_hbox.count())): 
@@ -146,7 +147,7 @@ class MainWindow(QMainWindow):
         # if the clear_View function was called by a signal from: MainMenu -> edit -> clear, 
         if (graphType == False):
             self.create_View(False,"Escolha uma das opções na lista à esquerda")
-    
+   
     def create_Plot(self, graphType, title):
         '''
         Creates figure, cavas, navigationToolbar, and configures the layout.
@@ -176,34 +177,54 @@ class MainWindow(QMainWindow):
             space.addWidget(self.view_title) 
         space.addWidget(self.canvas) 
 
+        # TODO: check with 2D-veterans if the metod of getting the foul positinos is precise 
         # calls the function responsable of plotting the graph 
-        if(graphType == "Faltas absolutas" or graphType == "Faltas relativas"):
-            # get the names of the teams 
-            teamL = self.log.iloc[0,2]
-            teamR = self.log.iloc[0,3]
-            # creates the variables which will hold the number of foul_charge
-            faltasTeamL = 0
-            faltasTeamR = 0
-            # increments the number of foul_charge for team for every "block" of foul_charge in the log
-            for i in range(self.log.shape[0]):
-                if(self.log.iloc[i,1] == "foul_charge_l" and self.log.iloc[i+1,1] != "foul_charge_l"):
-                    faltasTeamL += 1
-                elif(self.log.iloc[i,1] == "foul_charge_r" and self.log.iloc[i+1,1] != "foul_charge_r"):
-                    faltasTeamR += 1
-            
+        if(graphType == "Faltas absolutas" or graphType == "Faltas relativas" or graphType == "Posição das faltas"):
             # defines the data list based on the graphType, absolute or relative(percentage)
             if(graphType == "Faltas absolutas"):
-                xLabel = "Nome do time"
-                yLabel = "Total de faltas cometidas"
-                data = [2,teamL,teamR,faltasTeamL,faltasTeamR,xLabel,yLabel]
-            else:
-                xLabel = "Nome do time"
-                yLabel = "Porcentagem de faltas cometidas"
-                faltasTotal = faltasTeamL + faltasTeamR
-                data = [2,teamL,teamR,(100*faltasTeamL)/faltasTotal,(100*faltasTeamR)/faltasTotal,xLabel,yLabel]  
-            # calls the function to plot the graph 
-            self.plot_Bar(title,data)
-        
+                #xLabel = "Nome do time"
+                #yLabel = "Total de faltas cometidas"
+                #data = [2,teamL,teamR,faltasTeamL,faltasTeamR,xLabel,yLabel]
+                data_to_plot = plotBarData.PlotBarData()
+                    # set data for graph
+                data_to_plot.setXLabel(self.dataCollector.getTeam("l").getName())
+                data_to_plot.setYLabel(self.dataCollector.getTeam("r").getName())
+                data_to_plot.appendBars(2,["team_l_absolute_faults","team_r_absolute_faults"])                    
+
+
+                    # set data for bar 1 
+                bar1 =  data_to_plot.getBar(0)
+                bar1.setName(self.dataCollector.getTeam("l").getName())
+                bar1.setValue(self.dataCollector.getTeam("l").getNumberOfFaultsCommited()) 
+                    # set data for bar 2 
+                bar2 = data_to_plot.getBar(1) 
+                bar2.setName(self.dataCollector.getTeam("r").getName())
+                bar2.setValue(self.dataCollector.getTeam("r").getNumberOfFaultsCommited()) 
+                
+                # calls the function to plot the graph 
+                self.plot_Bar(title,data_to_plot) 
+
+            elif(graphType == "Faltas relativas"):
+                pass 
+                #TODO: refactor 
+                #xLabel = "Nome do time"
+                #yLabel = "Porcentagem de faltas cometidas"
+                #faltasTotal = faltasTeamL + faltasTeamR
+                #data = [2,teamL,teamR,(100*faltasTeamL)/faltasTotal,(100*faltasTeamR)/faltasTotal,xLabel,yLabel]  
+                # calls the function to plot the graph 
+                #self.plot_Bar(title,data)
+            elif(graphType == "Posição das faltas"):
+                pass 
+                #TODO: refactor 
+                xLabel = "x"
+                yLabel = "y" 
+                #(HARDCODED TO DEBUG) 
+                data = [20,10,10,14,15,37,46,24,25,26,19,33]
+                #data = [team1NumberOfFouls,team2NumberOfFouls,x1,x2,y1,y2,X1,X2,X3,Y1,Y2,Y3,]
+                #data = [team1NumberOfFouls,team2NumberOfFouls,fatalsPostitions=[[team,x,y],[team,x,y] ... ]
+                #data = [faltasTeamL,faltasTeamR,faltasPositions]
+                self.plot_Scatter(title)
+
         elif(graphType == "Quantidade absoluta de gols"):
             pass
         elif(graphType == "Quantidade relativa de gols"):
@@ -212,45 +233,35 @@ class MainWindow(QMainWindow):
         elif(graphType == "TEST PIE"):
             self.plot_Pie("TEST PIE - APENAS PARA REFERÊNCIA ")
         elif(graphType == "TEST BAR"):
-            self.plot_Bar("TEST BAR - APENAS PARA REFERÊNCIA",[2,2,2,10,20,"xLabel","yLabel"])
+            data = plotBarData.PlotBarData()
+            data.appendBars(1,["test bar"])
+            data.setXLabel("x label")
+            data.setYLabel("y label")
+            bar = data.getBar(0) 
+            bar.setName("Bar name")
+            bar.setValue(100) 
+            bar.setLabel("Bar label")
+            self.plot_Bar("TEST BAR - APENAS PARA REFERÊNCIA",data)
         '''(...)'''
         
         return space
 
-
-    #TODO: implementar, xlabel, ylabel e labels individuais de cada bar e imbutir esses dados em `data`
+    #TODO: generalizar função
+    #TODO: labels individuais de cada bar e imbutir esses dados em `data`
     def plot_Bar(self, title, data):
-       
-        # TODO: documentar o funcionamento disto daqui
-        # treating the data list to pass to the matplotlib methods
-            
-            # gets the xAxis values and yAxis values  
-        xAxis = []
-        yAxis = []
-        cursor = 0 
-        for i in range (1,data[0]+1):
-            xAxis.append(data[i])
-            cursor = i
-        NUMBER_OF_FEATURES = 2
-        for i in range (cursor+1,len(data)-NUMBER_OF_FEATURES):
-            yAxis.append(data[i])
-            cursor = i 
-            
-            # gets the xLabel and yLabel from the data list
-        xLabel = data[cursor+1]
-        yLabel = data[cursor+2]
-        cursor += 2
        
         # setting the graph  
             # create an axis
         ax = self.figure.add_subplot(111) 
             # sets the axis labels
-        ax.set_xlabel(xLabel) 
-        ax.set_ylabel(yLabel)
+        #print(type(data))
+        ax.set_xlabel(data.getXLabel()) 
+        ax.set_ylabel(data.getYLabel())
             # plot data
-        bar1 = ax.bar(xAxis[0],yAxis[0],label = "label1")
-        bar2 = ax.bar(xAxis[1],yAxis[1],label = "label1")
-            # set title
+        bars = [] 
+        for barIndex in range(0,len(data.getBars())):
+            bars.append(ax.bar(data.getBar(barIndex).getName(), data.getBar(barIndex).getValue(), label = data.getBar(barIndex).getLabel()))
+        # set title
         ax.set_title(title)
 
 
@@ -261,8 +272,7 @@ class MainWindow(QMainWindow):
         #TODO: is this necessary?
         # refresh canvas
         #self.canvas.draw()
-        
-
+    
     def plot_Pie(self, title):
 
         data = [50,50]
@@ -284,7 +294,64 @@ class MainWindow(QMainWindow):
         #TODO: is this necessary?
         # refresh canvas
         #self.canvas.draw()
-   
+
+    #TODO: generalizar função
+    def plot_Scatter(self, title):
+        #TODO: Terminar esta implementação
+
+        #data = [team1NumberOfFouls,team2NumberOfFouls,fatalsPostitions=[[team,x,y],[team,x,y] ... ]
+        #data = [team1NumberOfFouls,team2NumberOfFouls,x1,x2,y1,y2,X1,X2,X3,Y1,Y2,Y3,]
+        
+        team1NumberOfFouls = 2
+        team2NumberOfFouls = 3
+     
+        data = [team1NumberOfFouls,team2NumberOfFouls,10,15,10,15,35,40,45,35,40,45]
+        
+        #xPositionsTeam1 = [10,15]
+        #yPositionsTeam1 = [10,15]
+        #xPositionsTeam2 = [35,40,45]
+        #yPositionsTeam2 = [35,40,45]
+
+        xPositionsTeam1 = []
+        yPositionsTeam1 = []
+        xPositionsTeam2 = []
+        yPositionsTeam2 = []
+
+
+        for i in range(0, data[0]):
+            xPositionsTeam1.append(data[i+2])
+            yPositionsTeam1.append(data[i+4])
+        for i in range(6, data[1]+6):
+            xPositionsTeam2.append(data[i])
+            yPositionsTeam2.append(data[i+3])
+
+        team1 = (xPositionsTeam1,yPositionsTeam1) 
+        team2 = (xPositionsTeam2,yPositionsTeam2)
+        data = (team1,team2)
+        
+        colorTeam1 = "green"
+        colorTeam2 = "red"
+        colors = (colorTeam1,colorTeam2)
+        
+        team1Name = "team1"
+        team2Name = "team2"
+        groups = (team1Name,team2Name)
+
+        # create an axis
+        ax = self.figure.add_subplot(111)        
+        
+        
+       
+        for data, color, group in zip(data, colors, groups):
+            x, y = data
+            ax.scatter(x, y, alpha=1, c=color, edgecolors="none", s=30, label=group)
+        
+        # set title
+        ax.set_title(title) 
+
+        # set legend
+        ax.legend(loc=2)
+
     def define_Log(self):
         self.log = pd.read_csv('./files/t1.rcg.csv')
 
@@ -297,6 +364,11 @@ class MainWindow(QMainWindow):
     
     def getOut(self):
         sys.exit()
+
+    ##### Computing #####
+
+
+    ##### Showing #####
 
 
 if __name__ == "__main__":
