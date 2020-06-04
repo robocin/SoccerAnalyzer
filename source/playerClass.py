@@ -6,7 +6,7 @@ import computingFunctions as computing
 import fault
 
 
-class Player():
+class Player:
     def __init__(self, log, teamName, teamSide, player_id): 
         self.__team_name = teamName #name of the team this player belongs to
         self.__team_side = teamSide 
@@ -20,8 +20,8 @@ class Player():
         self.__f_shot = []
         self.__goals = []
         self.__tries = []
-        #self.__good_try #TODO: oq é?
-        #self.__tackles #TODO: oq é?
+        #self.__good_try
+        #self.__tackles 
 
         #calls for computing
         self.compute()
@@ -49,7 +49,6 @@ class Player():
     def setGoodTry(self, goodTry):
         self.__good_try = goodTry
    
-    #TODO: oq é? 
     def setTackles(self, tackles):
         self.__tackles
 
@@ -66,10 +65,6 @@ class Player():
     def getFaultsPro(self):
         return self.__f_pro
 
-    #TODO: delete
-    #def getFaultsCommited(self):
-    #    return self.__f_commited
-    
     def getFaultsCommited(self):
         return self.__f_shot
 
@@ -88,7 +83,6 @@ class Player():
     def getGoodTries(self):
         return self.__good_try
     
-    #TODO: oq é? 
     def getTacklesMade(self):
         return self.__tackles_made
 
@@ -96,17 +90,7 @@ class Player():
         '''
         Here is where all the reading and computing of data stored in the given .csv file happens
         '''
-
-        #TODO: debugar bloco a baixo 
-        '''
-        # increments the number of foul_charge for team for every "block" of foul_charge in the log
-        faults = [] 
-        for row in range(self.__log.shape[0]): #for each row in the log
-            if(self.__log.iloc[row,1] == ("foul_charge_" + self.getTeamSide()) and self.__log.iloc[row-1,1] != ("foul_charge_" + self.getTeamSide())): #if it's team has made a goal
-                if(computing.getMostRecentTacklerAndPosition(self.__log, row)): # and this player was the one who made it
-                    faults.append(fault.Fault())
-        '''
-        #TODO: delte this block, is just here for debuggin process 
+              #TODO: delete this block when computingFaults(inside dataCollector) is implemented. (is just here for debuggin process)
         if(self.getTeamSide() == "l"):
             self.setFaultsCommited([fault.Fault()])
             #self.setNumberOfFaultsCommited(20)

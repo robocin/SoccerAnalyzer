@@ -15,6 +15,9 @@ class DataCollector():
 		self.__teams.append(self.__team_l)
 		self.__teams.append(self.__team_r)
 
+		#self.__allEvents = []
+		#self.__numberOfEvents = []
+
 		self.__all_goals = None
 		self.__total_number_of_goals = None
 

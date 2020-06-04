@@ -4,10 +4,11 @@ import positionClass
 BALL_X_POS_COLUMN = 10 
 BALL_Y_POS_COLUMN = 11
 
-class Goal():
+
+class Goal:
 	def __init__(self, logDataFrame, teams, row, goalId):
 		self.__teams = teams
-		self.__log_data_frame = logDataFrame
+		self.__logDataFrame = logDataFrame
 		self.__row = row	
 		self.__id = goalId
 		self.__team_tackler_side
@@ -47,7 +48,7 @@ class Goal():
 	def compute(self):
 		
 		# the tackler and the time of the tackle			
-		tackle_informations = computing.getMostRecentTacklerAndPosition(self.__log_data_frame, self.__teams, self.__row)	
+		tackle_informations = computing.getMostRecentTacklerAndPosition(self.__logDataFrame, self.__teams, self.__row)	
 		tackler = tackle_informations[0]
 		tackle_position = tackle_informations[1]	
 			# tackler (player who made the goal)
@@ -59,8 +60,8 @@ class Goal():
 		setTeamTacklerSide(getTackler().getTeamSide)
 
 		# position the goal was made
-		goal_x_pos = self.__log_data_frame.iloc(self.__row, BALL_X_POS_COLUMN) 
-		goal_y_pos = self.__log_data_frame.iloc(self.__row, BALL_Y_POS_COLUMN) 
-		goal_timestamp = self.__log_data_frame.iloc(self.__row, 0)
+		goal_x_pos = self.__logDataFrame.iloc(self.__row, BALL_X_POS_COLUMN) 
+		goal_y_pos = self.__logDataFrame.iloc(self.__row, BALL_Y_POS_COLUMN) 
+		goal_timestamp = self.__logDataFrame.iloc(self.__row, 0)
 		self.setGoalPosition(positionClass.Position(goal_x_pos,goal_y_pos,goal_timestamp))
 

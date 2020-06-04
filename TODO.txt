@@ -1,7 +1,37 @@
-- refatorar scatter plottin function
-- refatorar pir plot
-- debugar faltas absolutas representarem o .csv
-- refatorar faltas relativas
+fazer:
+
+
+
+- em dataCollector:
+	- implementar cálculo das faltas
+	- mudar a forma como computingGoals pega dados do .csv
+
+- em computingFuncionts:
+	-em ver como retornar dois valores de uma vez
+	-debugar position dentro de getMostRecentTacklerAndPosition
+	-repensar nomes de constantes (deixar menor)
+
+- em MainWindow:
+	- refatorar pir plot
+	- refatorar faltas relativas (como gŕafico pir)
+	- refatorar scatter plotting function
+
+- em teamClass:
+	- descomentar e debugar o bloco de código que seta os goals made
+
+- em playerClass:
+
 - completar classe faults com position
 - debugar goals made
+- tirar os "class" dos nomes das classes.py
+
+- generalizar faltas, gols, pênaltis na classe event
+
+- generalizar plotBarData, plotScatterData, plotPieBarData e qq outro tipo de gráfico para uma só classe
+- perguntar a veteranos sobre aninhar métodos ou criar funcões para cada combinação 
+- mesclar computing functions com dataCollector
+
+
+conferir:
+- debugar faltas absolutas representarem o .csv
 

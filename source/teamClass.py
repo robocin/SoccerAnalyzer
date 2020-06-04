@@ -44,8 +44,8 @@ class Team:
         self.__faults_commited = []
         self.__number_of_faults_commited = 0
         self.__penaltisMade = []
-        #self.__seenOn #TODO: o que é isso?
-        #self.__substitutions #TODO: o que é isso?
+        #self.__seenOn 
+        #self.__substitutions 
 
         #calls for computation of data
         self.compute()
@@ -78,13 +78,11 @@ class Team:
     def appendGoal(self, goal):
         self.__goals_made.append(goal)
         
-        #TODO: implement 
-    #def setSeenOn(self, seenOn):
-    #    self.__seenOn = seenOn
+    def setSeenOn(self, seenOn):
+        self.__seenOn = seenOn
     
-        #TODO: implement 
-    #def setSubstitutions(self, substitutions):
-    #    self.__substitutions = substitutions
+    def setSubstitutions(self, substitutions):
+        self.__substitutions = substitutions
 
     #get methods
     def getLog(self):
@@ -132,7 +130,7 @@ class Team:
             self.appendPlayer(playerClass.Player(self.getLog(), self.getName(), self.getSide(), i))
             #self.appendPlayer(playerClass.Player( "", "", "", 1))
 
-        #TODO: tirar comentários 
+        #TODO: tirar comentários (debugar?) 
         '''  
         # sets the goals made, by appending the goals made by each of the team players
         for player_id in range(1,NUMBER_OF_PLAYERS_PER_TEAM): #for each player,

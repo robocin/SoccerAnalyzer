@@ -138,8 +138,8 @@ class MainWindow(QMainWindow):
         self.main_hbox.addWidget(self.view_groupBox) 
         self.VIEW_FILLED = True
 
-    #TODO: ENTENDER O FUNCIONAMENTO INERNO DE CLEAR_VIEW
     def clear_View(self, graphType):
+        #for widget in main_hbox,
         for i in reversed(range(self.main_hbox.count())): 
             if i > 0:
                 self.main_hbox.itemAt(i).widget().setParent(None)  
@@ -177,7 +177,6 @@ class MainWindow(QMainWindow):
             space.addWidget(self.view_title) 
         space.addWidget(self.canvas) 
 
-        # TODO: check with 2D-veterans if the metod of getting the foul positinos is precise 
         # calls the function responsable of plotting the graph 
         if(graphType == "Faltas absolutas" or graphType == "Faltas relativas" or graphType == "Posição das faltas"):
             # defines the data list based on the graphType, absolute or relative(percentage)
@@ -189,10 +188,12 @@ class MainWindow(QMainWindow):
                     # set data for graph
                 data_to_plot.setXLabel(self.dataCollector.getTeam("l").getName())
                 data_to_plot.setYLabel(self.dataCollector.getTeam("r").getName())
+                
                 data_to_plot.appendBars(2,["team_l_absolute_faults","team_r_absolute_faults"])                    
 
 
                     # set data for bar 1 
+                
                 bar1 =  data_to_plot.getBar(0)
                 bar1.setName(self.dataCollector.getTeam("l").getName())
                 bar1.setValue(self.dataCollector.getTeam("l").getNumberOfFaultsCommited()) 
@@ -234,20 +235,23 @@ class MainWindow(QMainWindow):
             self.plot_Pie("TEST PIE - APENAS PARA REFERÊNCIA ")
         elif(graphType == "TEST BAR"):
             data = plotBarData.PlotBarData()
+            
             data.appendBars(1,["test bar"])
+            
             data.setXLabel("x label")
             data.setYLabel("y label")
+            
             bar = data.getBar(0) 
+            
             bar.setName("Bar name")
             bar.setValue(100) 
             bar.setLabel("Bar label")
+            
             self.plot_Bar("TEST BAR - APENAS PARA REFERÊNCIA",data)
         '''(...)'''
         
         return space
 
-    #TODO: generalizar função
-    #TODO: labels individuais de cada bar e imbutir esses dados em `data`
     def plot_Bar(self, title, data):
        
         # setting the graph  
@@ -295,13 +299,12 @@ class MainWindow(QMainWindow):
         # refresh canvas
         #self.canvas.draw()
 
-    #TODO: generalizar função
     def plot_Scatter(self, title):
-        #TODO: Terminar esta implementação
+        #TODO: refatorar
 
         #data = [team1NumberOfFouls,team2NumberOfFouls,fatalsPostitions=[[team,x,y],[team,x,y] ... ]
         #data = [team1NumberOfFouls,team2NumberOfFouls,x1,x2,y1,y2,X1,X2,X3,Y1,Y2,Y3,]
-        
+
         team1NumberOfFouls = 2
         team2NumberOfFouls = 3
      

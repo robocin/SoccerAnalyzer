@@ -1,4 +1,4 @@
-class PlotBarData():
+class PlotBarData:
 	def __init__(self):
 		self.__bars = []	
 
@@ -24,7 +24,7 @@ class PlotBarData():
 		return self.__xLabel
 	def getYLabel(self):
 		return self.__yLabel
-class Bar():
+class Bar:
 	def __init__(self, referenceName):
 		self.__reference_name = referenceName
 		self.__name = None

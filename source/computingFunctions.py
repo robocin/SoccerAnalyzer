@@ -6,6 +6,7 @@ TOTAL_NUMBER_OF_PLAYERS = 22
 NUMBER_OF_PLAYERS_PER_TEAM = TOTAL_NUMBER_OF_PLAYERS/2
 
 PLAYER_L1_COUNTING_KICK_LOG_DATA_FRAME_COLUMN_POSITION = 34
+FIRST_COUNTING_KICK_COLUMN_L = 34
 
 NUMBER_OF_COLUMNS_BETWEEN_COUNTING_KICKS_PLUS_ONE = 31
 NUMBER_OF_COLUMNS_BETWEEN_PLAYER_X_POS_AND_PLAYER_COUNTING_KICKS_PLUS_ONE = 16
@@ -18,10 +19,13 @@ def statChanged(logDataFrame, rowNumber, columnNumber):
 		return True	
 #												, teams, rowNumber):
 def getMostRecentTacklerAndPosition(logDataFrame, rowNumber):
+	#TODO: ver como funciona retornar dois valores de uma vez para esta função
 	'''
 	Return a list containing the most recent tackler's id, and the position (int time and space) of where the tackle was made
 	return << [int:recent_tackler_id, positionClass.Position: recent_tackler_tackle_position]	
 	'''
+
+
 	tackler_and_position = []
 	recent_tackler_tackle_position = None
 	recent_tackler_id = None
