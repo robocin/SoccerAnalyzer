@@ -2,36 +2,35 @@ fazer:
 
 
 
-- em dataCollector:
-	- implementar cálculo das faltas
-	- mudar a forma como computingGoals pega dados do .csv
-
-- em computingFuncionts:
-	-em ver como retornar dois valores de uma vez
-	-debugar position dentro de getMostRecentTacklerAndPosition
-	-repensar nomes de constantes (deixar menor)
-
+Mateus 
+- generalizar plotBarData, plotScatterData, plotPieBarData e qq outro tipo de gráfico para uma só classe
+- mesclar computing functions com dataCollector
 - em MainWindow:
 	- refatorar pir plot
 	- refatorar faltas relativas (como gŕafico pir)
 	- refatorar scatter plotting function
-
 - em teamClass:
 	- descomentar e debugar o bloco de código que seta os goals made
+-repensar nomes de constantes (deixar menor)
 
-- em playerClass:
 
-- completar classe faults com position
-- debugar goals made
-- tirar os "class" dos nomes das classes.py
-
+Nunes
 - generalizar faltas, gols, pênaltis na classe event
+- tirar os "class" dos nomes das classes.py
+- em dataCollector:
+	- implementar cálculo das faltas
+	- mudar a forma como computingGoals pega dados do .csv
+- em computingFuncionts:
+	-debugar position dentro de getMostRecentTacklerAndPosition	
+- em faultsClass
+	- completar classe faults com position
 
-- generalizar plotBarData, plotScatterData, plotPieBarData e qq outro tipo de gráfico para uma só classe
+
+
+
+
+DURANTE REUNIÃO 2D
 - perguntar a veteranos sobre aninhar métodos ou criar funcões para cada combinação 
-- mesclar computing functions com dataCollector
 
-
-conferir:
-- debugar faltas absolutas representarem o .csv
-
+DEPOIS
+-em ver como retornar dois valores de uma vez
