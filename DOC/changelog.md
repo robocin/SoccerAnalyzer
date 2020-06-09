@@ -6,7 +6,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
-- refactoring
+- Major Code Refactoring (added focus on Object Oriented Programing)
 - Category selector dialog
 - VSS log implementation
 - SSL log implementation
