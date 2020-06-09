@@ -11,6 +11,20 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - VSS log implementation
 - SSL log implementation
 
+## [0.3.2] - 2020-06-04
+
+## Added
+
+- getMostRecentTaclerAndPosition function implementation
+- statChanged function implementation
+- computeAllGoals implementation
+- plotBarData class "data structure" implementation
+
+## Modified
+
+- Underlying code structure changed to be more oop centered (classes instead of single .py)
+
+
 ## [0.3.1] - 2020-05-25
 
 ## Modified
