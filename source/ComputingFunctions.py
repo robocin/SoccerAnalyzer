@@ -1,6 +1,9 @@
 import pandas
-import positionClass
-import goalClass
+import Team
+import Event
+import Player
+import Position
+
 
 TOTAL_NUMBER_OF_PLAYERS = 22
 NUMBER_OF_PLAYERS_PER_TEAM = TOTAL_NUMBER_OF_PLAYERS/2

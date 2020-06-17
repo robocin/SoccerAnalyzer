@@ -1,8 +1,11 @@
 import numpy as numpy
 import pandas as pandas
 
-import computingFunctions as computing
-import teamClass
+import ComputingFunctions as computing
+import Team
+import Event
+import Player
+import Position
 
 class DataCollector():
 	def __init__(self,log):
@@ -10,8 +13,8 @@ class DataCollector():
 		self.__teams = []
 
 		#instaciates the teams
-		self.__team_l = teamClass.Team(log,"l") # By instanciating the team, all the computing is made inside the __init__ of the class Team()
-		self.__team_r = teamClass.Team(log,"r") # ||
+		self.__team_l = Team.Team(log,"l") # By instanciating the team, all the computing is made inside the __init__ of the class Team()
+		self.__team_r = Team.Team(log,"r") # ||
 		self.__teams.append(self.__team_l)
 		self.__teams.append(self.__team_r)
 

@@ -22,9 +22,9 @@ class MainWindow(QMainWindow):
 import numpy as np
 import pandas as pd
 
-import playerClass
-import positionClass
-import eventClass
+import Player
+import Position
+import Event
 
 LOG = pd.read_csv('./files/t1.rcg.csv')
 
@@ -113,7 +113,7 @@ class Team:
         return self.__substitutions
 
     def getPlayer(self, playerId):
-        return __players[playerId-1] 
+        return self.__players[playerId-1] 
 
     #the compute() function 
     def compute(self): 
@@ -127,7 +127,7 @@ class Team:
         
         # instanciates the players of the team passing the team name to all, and giving each one a integer id from 1 to NUMBER_OF_PLAYERS_PER_TEAM
         for i in range(1,NUMBER_OF_PLAYERS_PER_TEAM):
-            self.appendPlayer(playerClass.Player(self.getLog(), self.getName(), self.getSide(), i))
+            self.appendPlayer(Player.entity(self.getLog(), self.getName(), self.getSide(), i))
             #self.appendPlayer(playerClass.Player( "", "", "", 1))
 
         #TODO: tirar comentários (debugar?) 
