@@ -1,8 +1,8 @@
 import pandas
-import Team
-import Event
-import Player
-import Position
+from Team import Team
+from Event import Event
+from Player import Player
+from Posititon import Position
 
 
 TOTAL_NUMBER_OF_PLAYERS = 22
@@ -54,7 +54,7 @@ def getMostRecentTacklerAndPosition(logDataFrame, rowNumber):
 				#recent_tackler_tackle_xPos = logDataFrame.iloc[rowCursor, columnCursor - NUMBER_OF_COLUMNS_BETWEEN_PLAYER_X_POS_AND_PLAYER_COUNTING_KICKS_PLUS_ONE] # x position  
 				#recent_tackler_tackle_yPos = logDataFrame.iloc[rowCursor, columnCursor - NUMBER_OF_COLUMNS_BETWEEN_PLAYER_Y_POS_AND_PLAYER_COUNTING_KICKS_PLUS_ONE] # y position
 				#recent_tackler_tackle_position = positionClass.Position(recent_tackler_tackle_xPos, recent_tackler_tackle_yPos, None)#TODO: trocar Nonerecent_tackler_tackle_time) # instaciates a position object of the most recent tackle made
-				recent_tackler_tackle_position = positionClass.Position(0, 0, None)#TODO: trocar Nonerecent_tackler_tackle_time) # instaciates a position object of the most recent tackle made
+				recent_tackler_tackle_position = Position(0, 0, None)#TODO: trocar Nonerecent_tackler_tackle_time) # instaciates a position object of the most recent tackle made
 				break
 			playerId += 1
 			if(playerId > NUMBER_OF_PLAYERS_PER_TEAM):
@@ -69,7 +69,7 @@ def getMostRecentTacklerAndPosition(logDataFrame, rowNumber):
 		recent_tackler_id = teams[1].getPlayer(playerId)	
 	'''
 
-	recet_tackler_id = self.playerId
+	recent_tackler_id = self.playerId
 
 	# puts the id in the tackler_and_time list
 	tackler_and_time.append(recent_tackler_id)
@@ -81,7 +81,6 @@ def getMostRecentTacklerAndPosition(logDataFrame, rowNumber):
 	return tackler_and_time 
 
 			
-
 
 	while ("kick" not in showTime): 
 		rowCursor -= 1
@@ -103,7 +102,7 @@ def computeAllGoals(logDataFrame, teams):
 		showTime = logDataFrame.iloc[0,600] #TODO: 600 ERA PRA SER row 
 		if (showTime == "goal_l" or showTime == "goal_r"): #if a goal was made
 			total_number_of_goals_made += 1
-			allGoals.append(goalClass.Goal(logDataFrame, teams, row, total_number_of_goals_made))#creates an instace representative of this goal with all the informations about it, and appends it to the allGoals list
+			allGoals.append(Event(logDataFrame, teams, row, total_number_of_goals_made))#creates an instace representative of this goal with all the informations about it, and appends it to the allGoals list
    		
 	teams[(0 if showTime=="goal_l" else 1)].setGoalsMade(allGoals)#passes this goalObject reference to the team and player that made it 
 

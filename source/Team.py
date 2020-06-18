@@ -22,33 +22,34 @@ class MainWindow(QMainWindow):
 import numpy as np
 import pandas as pd
 
-import Player
-import Position
-import Event
+from Player import Player
+from Position import Position
+from Event import Event
 
 LOG = pd.read_csv('./files/t1.rcg.csv')
 
 NUMBER_OF_PLAYERS_PER_TEAM = 11 
 
 class Team:
-    def __init__(self, log, side):
+    def __init__(self, data_frame, side):
         
         # initializes variables that will hold the values taken from de log (.csv file)
         self.__name = ""
-        self.__side = side
-        self.__log = log 
+        self.__data_frame = data_frame
         self.__side = side
         self.__players = [] 
-        self.__goals_made = []
-        self.__number_of_goals_made = 0
-        self.__faults_commited = []
-        self.__number_of_faults_commited = 0
+        self.__goalsMade = []
+        self.__numberOfGoalsMade = 0
+        self.__freeKicks = []
+        self.__numberOfFreeKicks = 0
+        self.__faultsCommited = []
+        self.__numberOfFaultsCommited = 0
         self.__penaltisMade = []
-        #self.__seenOn 
+        self.__seenOn = []
         #self.__substitutions 
 
         #calls for computation of data
-        self.compute()
+        self.team_init()
 
     # set methods
     def setName(self, name):
@@ -57,17 +58,23 @@ class Team:
     def setSide(self, side):
         self.__side = side
 
-    def setGoalsMade(self, goals):
-        self.__goals_made = goals
+    def setGoalsMade(self, goalsMade):
+        self.__goalsMade = goalsMade
 
     def setNumberOfGoalsMade(self, numberOfGoals):
-        self.__number_of_goals_made = numberOfGoals
+        self.__numberOfGoals = numberOfGoals
 
-    def setFaultsCommited(self, faultsPro):
-        self.__faultsPro = faultsPro
+    def setFreKicks(self, freeKicks):
+        self.__freeKicks = freeKicks
+
+    def setNumberOfFreeKicks(self, numberOfFreeKicks):
+        self.__numberOfFreeKicks = numberOfFreeKicks
+
+    def setFaultsCommited(self, faultsCommited):
+        self.__faultsCommited = faultsCommited
     
     def setNumberOfFaultsCommited(self, numberOfFaults):
-        self.__number_of_faults_commited = numberOfFaults
+        self.__numberOfFaultsCommited = numberOfFaults
     
     def setPenaltisMade(self, penaltisPro):
         self.__penaltisPro = penaltisPro
@@ -76,7 +83,7 @@ class Team:
         self.__players.append(player)
 
     def appendGoal(self, goal):
-        self.__goals_made.append(goal)
+        self.__goalsMade.append(goal)
         
     def setSeenOn(self, seenOn):
         self.__seenOn = seenOn
@@ -84,9 +91,8 @@ class Team:
     def setSubstitutions(self, substitutions):
         self.__substitutions = substitutions
 
+    
     #get methods
-    def getLog(self):
-        return self.__log
 
     def getName(self):
         return self.__name
@@ -95,19 +101,22 @@ class Team:
         return self.__side
 
     def getGoalsMade(self):
-        return self.__goals_made
+        return self.__goalsMade
 
     def getNumberOfGoalsMade(self):
-        return self.__number_of_goals_made
+        return self.__numberOfGoalsMade
     
     def getFaultsCommited(self):
-        return self.__faults_commited
+        return self.__faultsCommited
 
     def getNumberOfFaultsCommited(self):
-        return self.__number_of_faults_commited
+        return self.__numberOfFaultsCommited
 
     def getPenaltisMade(self):
         return self.__penaltisMade
+    
+    def getPlayers(self):
+        return self.__players
 
     def getSubstitutions(self):
         return self.__substitutions
@@ -115,9 +124,15 @@ class Team:
     def getPlayer(self, playerId):
         return self.__players[playerId-1] 
 
-    #the compute() function 
+
+    # Initialization of Players and names
+
+    def team_init(self):
+        pass
+
+'''    #the compute() function 
     def compute(self): 
-        ''' Here is where all the reading and computing of data stored in the given .csv file happens '''
+Here is where all the reading and computing of data stored in the given .csv file happens 
 
         # sets the team name based on the log data 
         if(self.__side == "l"):
@@ -127,11 +142,11 @@ class Team:
         
         # instanciates the players of the team passing the team name to all, and giving each one a integer id from 1 to NUMBER_OF_PLAYERS_PER_TEAM
         for i in range(1,NUMBER_OF_PLAYERS_PER_TEAM):
-            self.appendPlayer(Player.entity(self.getLog(), self.getName(), self.getSide(), i))
+            self.appendPlayer(Player(self.getLog(), self.getName(), self.getSide(), i))
             #self.appendPlayer(playerClass.Player( "", "", "", 1))
 
         #TODO: tirar comentários (debugar?) 
-        '''  
+    
         # sets the goals made, by appending the goals made by each of the team players
         for player_id in range(1,NUMBER_OF_PLAYERS_PER_TEAM): #for each player,
             player_goals = self.__player[i].getGoals #gets all the goals made by this player
@@ -140,17 +155,16 @@ class Team:
                     self.appendGoal(player_goals[i])#append this goal to the team goals list
         # sets the number of goals made
         self.setNumberOfGoalsMade(len(self.getGoalsMade()))
-        '''
 
         # sets the faults commited, by appending the faults of each of the team players
-        ''' 
+
         aux = [] 
         for i in range(1,NUMBER_OF_PLAYERS_PER_TEAM-1):
             aux.append(self.__players[i].getFaultsCommited())
         self.setFaultsCommited(aux)
         print("FAULTS COMMITED:")
         print(self.getFaultsCommited())
-        ''' 
+
 
          
         #self.setNumberOfFaultsCommited(len(self.getFaultsCommited())) 
@@ -161,3 +175,4 @@ class Team:
         print(len(aux2))
         self.setNumberOfFaultsCommited(len(aux2))
         
+        '''

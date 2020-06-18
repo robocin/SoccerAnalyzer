@@ -11,11 +11,23 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - VSS log implementation
 - SSL log implementation
 
+## [0.3.3] - 2020-06-18
+
+## Added
+
+- Teams now have a attribute called "free kicks".
+
+## Modified 
+
+- The information gathered from the data frame is now collected with dataCollector with a top-down approach. 
+- Faults, Goals, Penalty or any other event can now be generalizated by the Event class.
+- The discrete number of faults and goals is now obtained using Pandas instead of custom functions
+
 ## [0.3.2] - 2020-06-04
 
 ## Added
 
-- getMostRecentTaclerAndPosition function implementation
+- getMostRecentTacklerAndPosition function implementation
 - statChanged function implementation
 - computeAllGoals implementation
 - plotBarData class "data structure" implementation

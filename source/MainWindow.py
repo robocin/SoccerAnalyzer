@@ -12,10 +12,12 @@ from matplotlib.backends.backend_qt4agg import NavigationToolbar2QT as Navigatio
 import numpy as np
 import pandas as pd
 
-import dataCollector 
+from DataCollector import DataCollector 
 import plotBarData
-#import teamClass
-#import robocinClass
+from Team import Team 
+from Event import Event
+from Player import Player
+from Position import Position
 
 STATISTICS = "EXTRACTIONS FIELDS" 
 LIST_MINIMUM_HEIGHT = 300
@@ -57,8 +59,8 @@ class MainWindow(QMainWindow):
         self.init_Menu() # main menu at the top of the screen
         self.init_List() # left side list
         self.create_View(False,"Escolha uma das opções na lista à esquerda") # right side graph area
-        self.define_Log()
-        self.dataCollector = dataCollector.DataCollector(self.log)
+        self.define_log()
+        self.dataCollector = DataCollector(self.log_path)
 
         #creating central widget and putting it in the main window as a central widget
         self.main_widget = QWidget()
@@ -355,8 +357,8 @@ class MainWindow(QMainWindow):
         # set legend
         ax.legend(loc=2)
 
-    def define_Log(self):
-        self.log = pd.read_csv('./files/t1.rcg.csv')
+    def define_log(self):
+        self.log_path = './files/t1.rcg.csv'
 
     def get_Score(self): 
         placar = [self.log['team_score_l'].max(),self.log['team_score_r'].max()]

@@ -46,9 +46,8 @@ class Event:
         self.__yellowcard = yellowcard
         self.__redcard = redcard
 
-
-
     #set methods
+
     def set_event(self, etype):
         self.__etype = etype
 
@@ -75,6 +74,7 @@ class Event:
 
 
     #get methods
+
     def getEventType(self):
         return self.__etype
 
@@ -82,13 +82,13 @@ class Event:
         return self.__etime
 
     def getKicker(self):
-        return self.__kicker
+        return self.__ekicker
 
     def getOffender(self):
-        return self.__offender
+        return self.__eoffender
     
     def getDefender(self):
-        return self.__defender
+        return self.__edefender
 
     def getEPosition(self):
         return self.__eposition

@@ -1,10 +1,8 @@
 import numpy as numpy
 import pandas as pd
 
-import positionClass
-import computingFunctions as computing
-import fault
-
+from Position import Position
+from Event import Event
 
 class Player:
     def __init__(self, log, teamName, teamSide, player_id): 
@@ -20,11 +18,11 @@ class Player:
         self.__f_shot = []
         self.__goals = []
         self.__tries = []
-        #self.__good_try
-        #self.__tackles 
+        self.__good_try = []
+        self.__tackles = []
 
         #calls for computing
-        self.compute()
+        #self.compute()
 
     #set methods
    
@@ -36,9 +34,6 @@ class Player:
     
     def setNumberOfFaultsCommited(self, numberOfFaults):
         self.__number_of_faults_commited = numberOfFaults   
-    
-    def setFaultsCommited(self, faulstShot):
-        self.__f_shot = faulstShot
     
     def setGoals(self, goals):
         self.__goals = goals
@@ -72,7 +67,11 @@ class Player:
         return self.__number_of_faults_commited
 
     def getGoalsMade(self):
-        return (self.__goals_made if len(self.__goals_made)>0 else None)
+        
+        if len(self.__goals) > 0:
+            return self.__goals
+        else:
+            return None        
 
     def getNumberOfGoalsMade(self):
         return self.__number_of_goals_made
