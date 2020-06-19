@@ -144,35 +144,4 @@ Here is where all the reading and computing of data stored in the given .csv fil
         for i in range(1,NUMBER_OF_PLAYERS_PER_TEAM):
             self.appendPlayer(Player(self.getLog(), self.getName(), self.getSide(), i))
             #self.appendPlayer(playerClass.Player( "", "", "", 1))
-
-        #TODO: tirar comentários (debugar?) 
-    
-        # sets the goals made, by appending the goals made by each of the team players
-        for player_id in range(1,NUMBER_OF_PLAYERS_PER_TEAM): #for each player,
-            player_goals = self.__player[i].getGoals #gets all the goals made by this player
-            if(player_goals != None): #if this player has made at least one goal,
-                for i in range(0,len(player_goals)): #for each goal made by this player, 
-                    self.appendGoal(player_goals[i])#append this goal to the team goals list
-        # sets the number of goals made
-        self.setNumberOfGoalsMade(len(self.getGoalsMade()))
-
-        # sets the faults commited, by appending the faults of each of the team players
-
-        aux = [] 
-        for i in range(1,NUMBER_OF_PLAYERS_PER_TEAM-1):
-            aux.append(self.__players[i].getFaultsCommited())
-        self.setFaultsCommited(aux)
-        print("FAULTS COMMITED:")
-        print(self.getFaultsCommited())
-
-
-         
-        #self.setNumberOfFaultsCommited(len(self.getFaultsCommited())) 
-        aux2 = [] 
-        for i in range(0, NUMBER_OF_PLAYERS_PER_TEAM-1):
-            for fault in range(0, len(self.__players[i].getFaultsCommited())):
-                aux2.append(self.__players[i].getFaultsCommited()[fault])
-        print(len(aux2))
-        self.setNumberOfFaultsCommited(len(aux2))
-        
-        '''
+'''

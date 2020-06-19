@@ -13,7 +13,7 @@ import numpy as np
 import pandas as pd
 
 from DataCollector import DataCollector 
-import plotBarData
+import plotData
 from Team import Team 
 from Event import Event
 from Player import Player
@@ -186,23 +186,25 @@ class MainWindow(QMainWindow):
                 #xLabel = "Nome do time"
                 #yLabel = "Total de faltas cometidas"
                 #data = [2,teamL,teamR,faltasTeamL,faltasTeamR,xLabel,yLabel]
-                data_to_plot = plotBarData.PlotBarData()
+
+                data_to_plot = plotData.PlotData("bar",2)
+                    
                     # set data for graph
                 data_to_plot.setXLabel(self.dataCollector.getTeam("l").getName())
                 data_to_plot.setYLabel(self.dataCollector.getTeam("r").getName())
-                
-                data_to_plot.appendBars(2,["team_l_absolute_faults","team_r_absolute_faults"])                    
-
-
+                    
                     # set data for bar 1 
-                
-                bar1 =  data_to_plot.getBar(0)
-                bar1.setName(self.dataCollector.getTeam("l").getName())
-                bar1.setValue(self.dataCollector.getTeam("l").getNumberOfFaultsCommited()) 
+                bar1 =  data_to_plot.getEntry(0)
+                print("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA")
+                print(self.dataCollector.getTeam("l").getName())
+                print("BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB")
+                bar1.setXCoordinate(self.DataCollector.getTeam("l").getName())
+                bar1.setValue(self.DataCollector.getTeam(self,"l").getNumberOfFaultsCommited()) 
+                    
                     # set data for bar 2 
-                bar2 = data_to_plot.getBar(1) 
-                bar2.setName(self.dataCollector.getTeam("r").getName())
-                bar2.setValue(self.dataCollector.getTeam("r").getNumberOfFaultsCommited()) 
+                bar2 = data_to_plot.getEntry(1) 
+                bar2.setXCoordinate(self.DataCollector.getTeam("r").getName())
+                bar2.setValue(self.DataCollector.getTeam(self,"r").getNumberOfFaultsCommited()) 
                 
                 # calls the function to plot the graph 
                 self.plot_Bar(title,data_to_plot) 
@@ -236,7 +238,7 @@ class MainWindow(QMainWindow):
         elif(graphType == "TEST PIE"):
             self.plot_Pie("TEST PIE - APENAS PARA REFERÊNCIA ")
         elif(graphType == "TEST BAR"):
-            data = plotBarData.PlotBarData()
+            data = plotData.PlotData()
             
             data.appendBars(1,["test bar"])
             
@@ -259,17 +261,15 @@ class MainWindow(QMainWindow):
         # setting the graph  
             # create an axis
         ax = self.figure.add_subplot(111) 
-            # sets the axis labels
-        #print(type(data))
+            # sets axis labels
         ax.set_xlabel(data.getXLabel()) 
         ax.set_ylabel(data.getYLabel())
-            # plot data
-        bars = [] 
-        for barIndex in range(0,len(data.getBars())):
-            bars.append(ax.bar(data.getBar(barIndex).getName(), data.getBar(barIndex).getValue(), label = data.getBar(barIndex).getLabel()))
-        # set title
+            # set title
         ax.set_title(title)
-
+            # plot each bar
+        for barIndex in range(0,len(data.getEntries())):
+            ax.bar(data.getEntry(barIndex).getXCoordinate(), data.getEntry(barIndex).getValue())
+        
 
         #TODO: is this necessary?
         # discards the old graph
