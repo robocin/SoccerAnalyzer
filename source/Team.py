@@ -67,13 +67,13 @@ class Team:
     def setFreKicks(self, freeKicks):
         self.__freeKicks = freeKicks
 
-    def setNumberOfFreeKicks(self, numberOfFreeKicks):
+    def set_number_of_free_kicks(self, numberOfFreeKicks):
         self.__numberOfFreeKicks = numberOfFreeKicks
 
-    def setFaultsCommited(self, faultsCommited):
+    def set_faults_commited(self, faultsCommited):
         self.__faultsCommited = faultsCommited
     
-    def setNumberOfFaultsCommited(self, numberOfFaults):
+    def set_number_of_faults_commited(self, numberOfFaults):
         self.__numberOfFaultsCommited = numberOfFaults
     
     def setPenaltisMade(self, penaltisPro):
