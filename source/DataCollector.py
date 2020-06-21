@@ -23,7 +23,7 @@ class DataCollector():
             #instaciates the teams
 	
 
-		self.__team_l = None # By instanciating the team, all the computing is made inside the __init__ of the class Team()
+		self.__team_l = None # By instanciating the team, all the computing is scored inside the __init__ of the class Team()
 		self.__team_r = None
 		self.__teams = []
 		self.__all_events = []
@@ -74,11 +74,11 @@ class DataCollector():
 
 		self.__score = [self.__data_frame['team_score_l'].max(),self.__data_frame['team_score_r'].max()]
 		
-		self.__team_l.set_goals_made = [] # need implementation
-		self.__team_r.set_goals_made = [] # need implementation
+		self.__team_l.set_goals_scored = [] # need implementation
+		self.__team_r.set_goals_scored = [] # need implementation
 
-		self.__team_l.set_number_of_goals_made(self.__score[0])
-		self.__team_r.set_number_of_goals_made(self.__score[1])
+		self.__team_l.set_number_of_goals_scored(self.__score[0])
+		self.__team_r.set_number_of_goals_scored(self.__score[1])
 
 		# Faults:
 		
@@ -106,21 +106,21 @@ class DataCollector():
 		#
 		#	code here
 
-		# parse the __all_goals list, giving, for each goal, it's reference to the team and player that made it
+		# parse the __all_goals list, giving, for each goal, it's reference to the team and player that scored it
 
 	# Definition of computing functions
 
-	def statChanged(logDataFrame, rowNumber, columnNumber):
+	def statChanged(self, logDataFrame, rowNumber, columnNumber):
 		if(logDataFrame.iloc[rowNumber, columnNumber] == logDataFrame.iloc[rowNumber-1, columnNumber]):
 			return False
 		else:
 			return True
 
 	#												, teams, rowNumber):
-	def getMostRecentTacklerAndPosition(logDataFrame, rowNumber):
+	def getMostRecentTacklerAndPosition(sellf, logDataFrame, rowNumber):
 		#TODO: ver como funciona retornar dois valores de uma vez para esta função
 		'''
-		Return a list containing the most recent tackler's id, and the position (int time and space) of where the tackle was made
+		Return a list containing the most recent tackler's id, and the position (int time and space) of where the tackle was scored
 		return << [int:recent_tackler_id, positionClass.Position: recent_tackler_tackle_position]	
 		'''
 
@@ -149,8 +149,8 @@ class DataCollector():
 					#recent_tackler_tackle_time = int(logDataFrame.iloc[rowCursor, 0]) # timestamp
 					#recent_tackler_tackle_xPos = logDataFrame.iloc[rowCursor, columnCursor - NUMBER_OF_COLUMNS_BETWEEN_PLAYER_X_POS_AND_PLAYER_COUNTING_KICKS_PLUS_ONE] # x position  
 					#recent_tackler_tackle_yPos = logDataFrame.iloc[rowCursor, columnCursor - NUMBER_OF_COLUMNS_BETWEEN_PLAYER_Y_POS_AND_PLAYER_COUNTING_KICKS_PLUS_ONE] # y position
-					#recent_tackler_tackle_position = positionClass.Position(recent_tackler_tackle_xPos, recent_tackler_tackle_yPos, None)#TODO: trocar Nonerecent_tackler_tackle_time) # instaciates a position object of the most recent tackle made
-					recent_tackler_tackle_position = Position(0, 0, None)#TODO: trocar Nonerecent_tackler_tackle_time) # instaciates a position object of the most recent tackle made
+					#recent_tackler_tackle_position = positionClass.Position(recent_tackler_tackle_xPos, recent_tackler_tackle_yPos, None)#TODO: trocar Nonerecent_tackler_tackle_time) # instaciates a position object of the most recent tackle scored
+					recent_tackler_tackle_position = Position(0, 0, None)#TODO: trocar Nonerecent_tackler_tackle_time) # instaciates a position object of the most recent tackle scored
 					break
 				playerId += 1
 				if(playerId > NUMBER_OF_PLAYERS_PER_TEAM):
@@ -160,9 +160,9 @@ class DataCollector():
 		'''
 		# gets the most recent tackler id
 		if (playerTeam == "l"):
-			recent_tackler_id = teams[0].getPlayer(playerId)
+			recent_tackler_id = teams[0].get_player(playerId)
 		elif (playerTeam == "r"):
-			recent_tackler_id = teams[1].getPlayer(playerId)	
+			recent_tackler_id = teams[1].get_player(playerId)	
 		'''
 
 		recent_tackler_id = self.playerId
@@ -186,25 +186,25 @@ class DataCollector():
 	def computeAllGoals(logDataFrame, teams):
 		'''
 		Computes all the goals and instaciates an object of the goal class for each, storing all the information about it.
-		Returns a list: [goalClass.Goal: allGoals[], total_number_of_goals_made]		
+		Returns a list: [goalClass.Goal: allGoals[], total_number_of_goals_scored]		
 		Gives to the tackle player and its team a reference for this goal object
 		'''
 
 		all_goals_and_total_number = []
 		allGoals = []
-		total_number_of_goals_made = 0
+		total_number_of_goals_scored = 0
 		print(logDataFrame.index.stop)
 		for row in range(0,len(logDataFrame.index)): #for each row of the .csv file,
 			showTime = logDataFrame.iloc[0,600] #TODO: 600 ERA PRA SER row 
-			if (showTime == "goal_l" or showTime == "goal_r"): #if a goal was made
-				total_number_of_goals_made += 1
-				allGoals.append(Event(logDataFrame, teams, row, total_number_of_goals_made))#creates an instace representative of this goal with all the informations about it, and appends it to the allGoals list
+			if (showTime == "goal_l" or showTime == "goal_r"): #if a goal was scored
+				total_number_of_goals_scored += 1
+				allGoals.append(Event(logDataFrame, teams, row, total_number_of_goals_scored))#creates an instace representative of this goal with all the informations about it, and appends it to the allGoals list
 			
-		teams[(0 if showTime=="goal_l" else 1)].setGoalsMade(allGoals)#passes this goalObject reference to the team and player that made it 
+		teams[(0 if showTime=="goal_l" else 1)].set_goals_scored(allGoals)#passes this goalObject reference to the team and player that scored it 
 
 		# appends the list with all goals and the total number of goals to the all_goals_and_total_number variable (which will be returned!)
 		all_goals_and_total_number.append(allGoals)	
-		all_goals_and_total_number.append(total_number_of_goals_made)		
+		all_goals_and_total_number.append(total_number_of_goals_scored)		
 		
 		return all_goals_and_total_number
 

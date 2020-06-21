@@ -7,7 +7,7 @@ class MainWindow(QMainWindow):
         (...)
             #other initializations
         (...)
-            # call define_log() and instaciates a dataCollector() 
+            # call define_log() and instaciates a DataCollector() 
         (...)
             #definition of custom functions
         (...)
@@ -38,90 +38,90 @@ class Team:
         self.__data_frame = data_frame
         self.__side = side
         self.__players = [] 
-        self.__goalsMade = []
-        self.__numberOfGoalsMade = 0
-        self.__freeKicks = []
-        self.__numberOfFreeKicks = 0
-        self.__faultsCommited = []
-        self.__numberOfFaultsCommited = 0
-        self.__penaltisMade = []
-        self.__seenOn = []
+        self.__goals_scored = []
+        self.__number_of_goals_scored = 0
+        self.__free_kicks = []
+        self.__number_of_free_kicks = 0
+        self.__faults_commited = []
+        self.__number_of_faults_commited = 0
+        self.__penaltis_commited = []
+        self.__seen_on = []
         #self.__substitutions 
 
         #calls for computation of data
         self.team_init()
 
     # set methods
-    def setName(self, name):
+    def set_name(self, name):
         self.__name = name
 
-    def setSide(self, side):
+    def set_side(self, side):
         self.__side = side
 
-    def setGoalsMade(self, goalsMade):
-        self.__goalsMade = goalsMade
+    def set_goals_scored(self, goals_scored):
+        self.__goalsscored = goals_scored
 
-    def setNumberOfGoalsMade(self, numberOfGoals):
-        self.__numberOfGoals = numberOfGoals
+    def set_number_of_goals_scored(self, number_of_goals_scored):
+        self.__number_of_goals_scored = number_of_goals_scored
 
-    def setFreKicks(self, freeKicks):
-        self.__freeKicks = freeKicks
+    def setFreKicks(self, free_kicks):
+        self.__free_kicks = free_kicks
 
-    def set_number_of_free_kicks(self, numberOfFreeKicks):
-        self.__numberOfFreeKicks = numberOfFreeKicks
+    def set_number_of_free_kicks(self, number_of_free_kicks):
+        self.__number_of_free_kicks = number_of_free_kicks
 
-    def set_faults_commited(self, faultsCommited):
-        self.__faultsCommited = faultsCommited
+    def set_faults_commited(self, faults_commited):
+        self.__faults_commited = faults_commited
     
-    def set_number_of_faults_commited(self, numberOfFaults):
-        self.__numberOfFaultsCommited = numberOfFaults
+    def set_number_of_faults_commited(self, number_of_faults_commited):
+        self.__number_of_faults_commited = number_of_faults_commited
     
-    def setPenaltisMade(self, penaltisPro):
-        self.__penaltisPro = penaltisPro
+    def set_penaltis_commited(self, penaltis_commited):
+        self.__penaltis_commited = penaltis_commited
 
-    def appendPlayer(self, player):
+    def append_player(self, player):
         self.__players.append(player)
 
-    def appendGoal(self, goal):
-        self.__goalsMade.append(goal)
+    def append_goal(self, goal):
+        self.__goalsscored.append(goal)
         
-    def setSeenOn(self, seenOn):
-        self.__seenOn = seenOn
+    def set_seen_on(self, seen_on):
+        self.__seen_on = seen_on
     
-    def setSubstitutions(self, substitutions):
+    def set_substitutions(self, substitutions):
         self.__substitutions = substitutions
 
     
     #get methods
 
-    def getName(self):
+    def get_name(self):
         return self.__name
 
-    def getSide(self):
+    def get_side(self):
         return self.__side
 
-    def getGoalsMade(self):
-        return self.__goalsMade
+    def get_goals_scored(self):
+        return self.__goalsscored
 
-    def getNumberOfGoalsMade(self):
-        return self.__numberOfGoalsMade
+    def get_number_of_goals_scored(self):
+        return self.__number_of_goals_scored
     
-    def getFaultsCommited(self):
-        return self.__faultsCommited
+    def get_faults_commited(self):
+        return self.__faults_commited
 
-    def getNumberOfFaultsCommited(self):
-        return self.__numberOfFaultsCommited
+    def get_number_of_faults_commited(self):
+        return self.__number_of_faults_commited
 
-    def getPenaltisMade(self):
-        return self.__penaltisMade
+    def get_penaltis_commited(self):
+        return self.__penaltis_commited
     
-    def getPlayers(self):
+    def get_players(self):
         return self.__players
 
-    def getSubstitutions(self):
+    def get_substitutions(self):
         return self.__substitutions
 
-    def getPlayer(self, playerId):
+    def get_player(self, playerId):
         return self.__players[playerId-1] 
 
 
@@ -136,12 +136,12 @@ Here is where all the reading and computing of data stored in the given .csv fil
 
         # sets the team name based on the log data 
         if(self.__side == "l"):
-            self.setName(self.__log.iloc[0,2])
+            self.set_name(self.__log.iloc[0,2])
         elif(self.__side =="r"):
-            self.setName(self.__log.iloc[0,3]) 
+            self.set_name(self.__log.iloc[0,3]) 
         
         # instanciates the players of the team passing the team name to all, and giving each one a integer id from 1 to NUMBER_OF_PLAYERS_PER_TEAM
         for i in range(1,NUMBER_OF_PLAYERS_PER_TEAM):
-            self.appendPlayer(Player(self.getLog(), self.getName(), self.getSide(), i))
-            #self.appendPlayer(playerClass.Player( "", "", "", 1))
+            self.append_player(Player(self.getLog(), self.get_name(), self.get_side(), i))
+            #self.append_player(playerClass.Player( "", "", "", 1))
 '''

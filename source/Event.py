@@ -161,16 +161,16 @@ class Goal:
 		tackler = tackle_informations[0]
 		tackle_position = tackle_informations[1]	
 		
-        # tackler (player who made the goal)
+        # tackler (player who scored the goal)
 		self.setTackler(tackler)	
 		
-        # position the tackle was made
+        # position the tackle was scored
 		self.setTacklePosition(tackle_position)	
 
 		# the team whose the player is the tackler
 		setTeamTacklerSide(getTackler().getTeamSide)
 
-		# position the goal was made
+		# position the goal was scored
 		goal_x_pos = self.__logDataFrame.iloc(self.__row, BALL_X_COLUMN) 
 		goal_y_pos = self.__logDataFrame.iloc(self.__row, BALL_Y_COLUMN) 
 		goal_timestamp = self.__logDataFrame.iloc(self.__row, 0)

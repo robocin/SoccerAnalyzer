@@ -13,7 +13,7 @@ import numpy as np
 import pandas as pd
 
 from DataCollector import DataCollector 
-import plotData
+from PlotData import PlotData
 from Team import Team 
 from Event import Event
 from Player import Player
@@ -58,9 +58,9 @@ class MainWindow(QMainWindow):
         #creating the elements of the window and calling some computing functions
         self.init_Menu() # main menu at the top of the screen
         self.init_List() # left side list
-        self.create_View(False,"Escolha uma das opções na lista à esquerda") # right side graph area
+        self.create_view(False,"Escolha uma das opções na lista à esquerda") # right side graph area
         self.define_log()
-        self.dataCollector = DataCollector(self.log_path)
+        self.game_info = DataCollector(self.log_path)
 
         #creating central widget and putting it in the main window as a central widget
         self.main_widget = QWidget()
@@ -84,11 +84,13 @@ class MainWindow(QMainWindow):
         viewMenu = self.mainMenu.addMenu("View")
         terminalMenu = self.mainMenu.addMenu("Terminal")
         helpMenu = self.mainMenu.addMenu("Help")
+        
         #creates the "clear" action inside the "edit" option on the main menu 
         clearAction = QAction("Clear", self)
         editMenu.addAction(clearAction)
+        
         #connects the "clear" action to the clear_View() function 
-        clearAction.triggered.connect(self.clear_View) # when calling clear_View without specifying parameters, False is given as parameter to graphType
+        clearAction.triggered.connect(self.clear_View) # when calling clear_View without specifying parameters, False is given as parameter to graph_type
  
     def init_List(self):
         '''
@@ -101,6 +103,7 @@ class MainWindow(QMainWindow):
         self.main_list.setMaximumHeight(LIST_MAXIMUM_HEIGHT)
         self.main_list.setMaximumWidth(LIST_MAXIMUM_WIDTH)
         self.main_list.setMinimumWidth(LIST_MINIMUM_WIDTH)
+        
         # creates the list items
         self.main_list.insertItem(0,"TEST PIE")
         self.main_list.insertItem(1,"TEST BAR")
@@ -112,16 +115,18 @@ class MainWindow(QMainWindow):
         self.main_list.insertItem(7,STATISTICS)
         self.main_list.insertItem(8,STATISTICS)
         self.main_list.insertItem(9,STATISTICS)
+        
         # adds the list to the main_hbox
         self.main_hbox.addWidget(self.main_list)
+        
         # when an item is clicked on, sends a signal to the itemSelected() function 
         self.main_list.itemClicked.connect(self.itemSelected)
     
     def itemSelected(self, item):
         stat = item.text()
-        self.create_View(stat, stat)
+        self.create_view(stat, stat)
 
-    def create_View(self, graphType, title):  
+    def create_view(self, graph_type, title):  
         '''
         Creates the area, on the right side of the screen, where the plot the graphs on.
         '''
@@ -133,24 +138,24 @@ class MainWindow(QMainWindow):
         if self.VIEW_FILLED == True:
             self.clear_View(title)
         # creates the area where to plot the graphs
-        self.plot_Area = self.create_Plot(graphType, title)
+        self.plot_Area = self.create_Plot(graph_type, title)
         # defines the layout of view_groupBox
         self.view_groupBox.setLayout(self.plot_Area)
         # adds the view_groupBox to the main_hbox 
         self.main_hbox.addWidget(self.view_groupBox) 
         self.VIEW_FILLED = True
 
-    def clear_View(self, graphType):
+    def clear_View(self, graph_type):
         #for widget in main_hbox,
         for i in reversed(range(self.main_hbox.count())): 
             if i > 0:
                 self.main_hbox.itemAt(i).widget().setParent(None)  
         self.VIEW_FILLED = False
         # if the clear_View function was called by a signal from: MainMenu -> edit -> clear, 
-        if (graphType == False):
-            self.create_View(False,"Escolha uma das opções na lista à esquerda")
+        if (graph_type == False):
+            self.create_view(False,"Escolha uma das opções na lista à esquerda")
    
-    def create_Plot(self, graphType, title):
+    def create_Plot(self, graph_type, title):
         '''
         Creates figure, cavas, navigationToolbar, and configures the layout.
         Calls the function to plot the graph.
@@ -162,14 +167,14 @@ class MainWindow(QMainWindow):
         self.canvas = FigureCanvas(self.figure)
 
         # creates the navigationToolbar widget  
-        if(graphType != False): 
+        if(graph_type != False): 
             self.toolbar = NavigationToolbar(self.canvas, self)
 
         # customizes the toolbar and canvas layout 
         
         space = QVBoxLayout()
              
-        if(graphType != False): #if graphType is not none
+        if(graph_type != False): #if graph_type is not none
             space.addWidget(self.toolbar)
         else:
             # creates the encouraging message at the top 
@@ -180,49 +185,49 @@ class MainWindow(QMainWindow):
         space.addWidget(self.canvas) 
 
         # calls the function responsable of plotting the graph 
-        if(graphType == "Faltas absolutas" or graphType == "Faltas relativas" or graphType == "Posição das faltas"):
-            # defines the data list based on the graphType, absolute or relative(percentage)
-            if(graphType == "Faltas absolutas"):
-                #xLabel = "Nome do time"
-                #yLabel = "Total de faltas cometidas"
-                #data = [2,teamL,teamR,faltasTeamL,faltasTeamR,xLabel,yLabel]
+        if(graph_type == "Faltas absolutas" or graph_type == "Faltas relativas" or graph_type == "Posição das faltas"):
+            # defines the data list based on the graph_type, absolute or relative(percentage)
+            if(graph_type == "Faltas absolutas"):
+                #x_label = "Nome do time"
+                #y_label = "Total de faltas cometidas"
+                #data = [2,teamL,teamR,faltasTeamL,faltasTeamR,x_label,y_label]
 
-                data_to_plot = plotData.PlotData("bar",2)
+                data_to_plot = PlotData("bar",2)
                     
                     # set data for graph
-                data_to_plot.setXLabel(self.dataCollector.getTeam("l").getName())
-                data_to_plot.setYLabel(self.dataCollector.getTeam("r").getName())
+                data_to_plot.set_x_label(self.game_info.get_team("l").get_name())
+                data_to_plot.set_y_label(self.game_info.get_team("r").get_name())
                     
                     # set data for bar 1 
-                bar1 =  data_to_plot.getEntry(0)
+                bar1 =  data_to_plot.get_entry(0)
                 print("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA")
-                print(self.dataCollector.getTeam("l").getName())
+                print(self.game_info.get_team("l").get_name())
                 print("BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB")
-                bar1.setXCoordinate(self.DataCollector.getTeam("l").getName())
-                bar1.setValue(self.DataCollector.getTeam(self,"l").getNumberOfFaultsCommited()) 
+                bar1.set_x_coordinate(self.game_info.get_team("l").get_name())
+                bar1.set_value(self.game_info.get_team("l").get_number_of_faults_commited()) 
                     
                     # set data for bar 2 
-                bar2 = data_to_plot.getEntry(1) 
-                bar2.setXCoordinate(self.DataCollector.getTeam("r").getName())
-                bar2.setValue(self.DataCollector.getTeam(self,"r").getNumberOfFaultsCommited()) 
+                bar2 = data_to_plot.get_entry(1) 
+                bar2.set_x_coordinate(self.game_info.get_team("r").get_name())
+                bar2.set_value(self.game_info.get_team("r").get_number_of_faults_commited()) 
                 
                 # calls the function to plot the graph 
                 self.plot_Bar(title,data_to_plot) 
 
-            elif(graphType == "Faltas relativas"):
+            elif(graph_type == "Faltas relativas"):
                 pass 
                 #TODO: refactor 
-                #xLabel = "Nome do time"
-                #yLabel = "Porcentagem de faltas cometidas"
+                #x_label = "Nome do time"
+                #y_label = "Porcentagem de faltas cometidas"
                 #faltasTotal = faltasTeamL + faltasTeamR
-                #data = [2,teamL,teamR,(100*faltasTeamL)/faltasTotal,(100*faltasTeamR)/faltasTotal,xLabel,yLabel]  
+                #data = [2,teamL,teamR,(100*faltasTeamL)/faltasTotal,(100*faltasTeamR)/faltasTotal,x_label,y_label]  
                 # calls the function to plot the graph 
                 #self.plot_Bar(title,data)
-            elif(graphType == "Posição das faltas"):
+            elif(graph_type == "Posição das faltas"):
                 pass 
                 #TODO: refactor 
-                xLabel = "x"
-                yLabel = "y" 
+                x_label = "x"
+                y_label = "y" 
                 #(HARDCODED TO DEBUG) 
                 data = [20,10,10,14,15,37,46,24,25,26,19,33]
                 #data = [team1NumberOfFouls,team2NumberOfFouls,x1,x2,y1,y2,X1,X2,X3,Y1,Y2,Y3,]
@@ -230,26 +235,32 @@ class MainWindow(QMainWindow):
                 #data = [faltasTeamL,faltasTeamR,faltasPositions]
                 self.plot_Scatter(title)
 
-        elif(graphType == "Quantidade absoluta de gols"):
+        elif(graph_type == "Quantidade absoluta de gols"):
             pass
-        elif(graphType == "Quantidade relativa de gols"):
+        elif(graph_type == "Quantidade relativa de gols"):
             pass
         #TEST PIE e TEST BAR deverão ser excluídos, inclusive da lista, estão aqui apenas para servir de referência durante o desenvolvimento.
-        elif(graphType == "TEST PIE"):
+        elif(graph_type == "TEST PIE"):
             self.plot_Pie("TEST PIE - APENAS PARA REFERÊNCIA ")
-        elif(graphType == "TEST BAR"):
-            data = plotData.PlotData()
+        elif(graph_type == "TEST BAR"):
             
-            data.appendBars(1,["test bar"])
+            data = PlotData() # COMENTÁRIOS (Felipe)
+                              # não está sendo inicializado, falta parâmetros
+                              # Opção: 1
+                              #     Parametrizar
+                              # Opção: 2
+                              #     Inicializar com parâmetros default na própria classe 
             
-            data.setXLabel("x label")
-            data.setYLabel("y label")
+            data.appendBars(1,["test bar"]) # Este método não está definido no PlotData
             
-            bar = data.getBar(0) 
+            data.set_x_label("x label")
+            data.set_y_label("y label")
             
-            bar.setName("Bar name")
-            bar.setValue(100) 
-            bar.setLabel("Bar label")
+            bar = data.getBar(0) # ESta método não está definida no PlotData
+            
+            bar.set_name("Bar name")
+            bar.set_value(100) 
+            bar.set_label("Bar label")
             
             self.plot_Bar("TEST BAR - APENAS PARA REFERÊNCIA",data)
         '''(...)'''
@@ -262,13 +273,13 @@ class MainWindow(QMainWindow):
             # create an axis
         ax = self.figure.add_subplot(111) 
             # sets axis labels
-        ax.set_xlabel(data.getXLabel()) 
-        ax.set_ylabel(data.getYLabel())
+        ax.set_x_label(data.get_x_label()) 
+        ax.set_y_label(data.get_y_label())
             # set title
         ax.set_title(title)
             # plot each bar
-        for barIndex in range(0,len(data.getEntries())):
-            ax.bar(data.getEntry(barIndex).getXCoordinate(), data.getEntry(barIndex).getValue())
+        for barIndex in range(0,len(data.get_entries())):
+            ax.bar(data.get_entry(barIndex).get_x_coordinate(), data.get_entry(barIndex).get_value())
         
 
         #TODO: is this necessary?
