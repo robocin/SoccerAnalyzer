@@ -207,7 +207,7 @@ class MainWindow(QMainWindow):
                 bar2.setValue(self.DataCollector.getTeam(self,"r").getNumberOfFaultsCommited()) 
                 
                 # calls the function to plot the graph 
-                self.plot_Bar(title,data_to_plot) 
+                self.plot_graph(title,data_to_plot) 
 
             elif(graphType == "Faltas relativas"):
                 pass 
@@ -217,7 +217,7 @@ class MainWindow(QMainWindow):
                 #faltasTotal = faltasTeamL + faltasTeamR
                 #data = [2,teamL,teamR,(100*faltasTeamL)/faltasTotal,(100*faltasTeamR)/faltasTotal,xLabel,yLabel]  
                 # calls the function to plot the graph 
-                #self.plot_Bar(title,data)
+                #self.plot_graph(title,data)
             elif(graphType == "Posição das faltas"):
                 pass 
                 #TODO: refactor 
@@ -236,7 +236,7 @@ class MainWindow(QMainWindow):
             pass
         #TEST PIE e TEST BAR deverão ser excluídos, inclusive da lista, estão aqui apenas para servir de referência durante o desenvolvimento.
         elif(graphType == "TEST PIE"):
-            self.plot_Pie("TEST PIE - APENAS PARA REFERÊNCIA ")
+            self.plot_graph("TEST PIE - APENAS PARA REFERÊNCIA ")
         elif(graphType == "TEST BAR"):
             data = plotData.PlotData()
             
@@ -251,60 +251,48 @@ class MainWindow(QMainWindow):
             bar.setValue(100) 
             bar.setLabel("Bar label")
             
-            self.plot_Bar("TEST BAR - APENAS PARA REFERÊNCIA",data)
+            self.plot_graph("TEST BAR - APENAS PARA REFERÊNCIA",data)
         '''(...)'''
         
         return space
 
-    def plot_Bar(self, title, data):
-       
-        # setting the graph  
-            # create an axis
-        ax = self.figure.add_subplot(111) 
-            # sets axis labels
-        ax.set_xlabel(data.getXLabel()) 
-        ax.set_ylabel(data.getYLabel())
-            # set title
-        ax.set_title(title)
-            # plot each bar
-        for barIndex in range(0,len(data.getEntries())):
-            ax.bar(data.getEntry(barIndex).getXCoordinate(), data.getEntry(barIndex).getValue())
+    def plot_graph(self, title, data):
+        # create the axis  
+        axes = self.figure.add_subplot(111) 
         
+        # set the axis labels
+        axes.set_xlabel(data.getXLabel()) 
+        axes.set_ylabel(data.getYLabel())
+        
+        # set title
+        axes.set_title(title)  
 
-        #TODO: is this necessary?
+        # Depending on the type of graph
+        if(data.get_plot_type() == "bar"):
+            # plot each bar
+            for barIndex in range(0,len(data.getEntries())):
+                axes.bar(data.getEntry(barIndex).getXCoordinate(), data.getEntry(barIndex).getValue())
+        if(data.get_plot_type() == "pir"):
+             
+            data = [50,50]
+            label = ["A","B"]
+            
+            # plot pir
+            ax.pie(data, labels = label)
+        
+        if(data.get_plot_type() == "scatter"):
+            pass
+        
+        #TODO: is this two below necessary?
         # discards the old graph
         #ax.clear()
  
-        #TODO: is this necessary?
         # refresh canvas
         #self.canvas.draw()
     
-    def plot_Pie(self, title):
-
-        data = [50,50]
-        label = ["A","B"]
-
-        # create an axis
-        ax = self.figure.add_subplot(111)
-
-        # plot data
-        ax.pie(data, labels = label)
-
-        # set title
-        ax.set_title(title)
-
-        #TODO: is this necessary?
-        # discards the old graph
-        #ax.clear()
- 
-        #TODO: is this necessary?
-        # refresh canvas
-        #self.canvas.draw()
-
     def plot_Scatter(self, title):
         #TODO: refatorar
 
-        #data = [team1NumberOfFouls,team2NumberOfFouls,fatalsPostitions=[[team,x,y],[team,x,y] ... ]
         #data = [team1NumberOfFouls,team2NumberOfFouls,x1,x2,y1,y2,X1,X2,X3,Y1,Y2,Y3,]
 
         team1NumberOfFouls = 2
@@ -351,9 +339,6 @@ class MainWindow(QMainWindow):
             x, y = data
             ax.scatter(x, y, alpha=1, c=color, edgecolors="none", s=30, label=group)
         
-        # set title
-        ax.set_title(title) 
-
         # set legend
         ax.legend(loc=2)
 

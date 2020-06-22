@@ -1,6 +1,7 @@
 class PlotData:
     def __init__(self, plotType, numberOfEntries):
         # All types
+        self.__plot_type = plotType 
         self.__name = None
         self.__entries = []
         self.__xLabel = None
@@ -23,14 +24,15 @@ class PlotData:
         self.__xLabel = label
     def setYLabel(self, label):
         self.__yLabel = label
-    
+   
+    def get_plot_type(self):
+        return self.__plot_type
     def getXLabel(self):
         return self.__xLabel
     def getYLabel(self):
         return self.__yLabel
     def getEntries(self):
         return self.__entries
-
     def getEntry(self, entryId):
         print("--------------------------------------------------->")
         print(self.__entries)
