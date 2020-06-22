@@ -35,7 +35,7 @@ import Position
 
 class Event:
     def __init__(self, etype = "No type", etime = 0, ekicker = None, 
-    eoffender = None, edefender = None, eposition = None, yellowcard = False, redcard = False):
+    eoffender = None, edefender = None, eposition = None, yellow_card = False, red_card = False):
 
         self.__etype = etype #type is a reserved word
         self.__etime = etime
@@ -43,61 +43,61 @@ class Event:
         self.__eoffender = eoffender
         self.__edefender = edefender 
         self.__eposition = eposition
-        self.__yellowcard = yellowcard
-        self.__redcard = redcard
+        self.__yellow_card = yellow_card
+        self.__red_card = red_card
 
     #set methods
 
-    def set_event(self, etype):
+    def set_event_type(self, etype):
         self.__etype = etype
 
-    def setETime(self, etime):
+    def set_etime(self, etime):
         self.__etime = etime
     
-    def setKicker(self, kicker):
+    def set_kicker(self, kicker):
         self.__kicker = kicker
 
-    def setOffender(self, offender):
+    def set_offender(self, offender):
         self.__offender = offender
 
-    def setDefender(self, defender):
+    def set_defender(self, defender):
         self.__defender = defender
 
-    def setEPosition(self, eposition):
+    def set_eposition(self, eposition):
         self.__eposition = eposition
 
-    def setYellowCard(self, yellowcard):
-        self.__yellowcard = yellowcard
+    def set_yellow_card(self, yellow_card):
+        self.__yellow_card = yellow_card
 
-    def setRedCard(self, redcard):
-        self.__redcard = redcard
+    def set_red_card(self, red_card):
+        self.__redcard = red_card
 
 
     #get methods
 
-    def getEventType(self):
+    def get_event_type(self):
         return self.__etype
 
-    def getETime(self):
+    def get_etime(self):
         return self.__etime
 
-    def getKicker(self):
+    def get_kicker(self):
         return self.__ekicker
 
-    def getOffender(self):
+    def get_offender(self):
         return self.__eoffender
     
-    def getDefender(self):
+    def get_defender(self):
         return self.__edefender
 
-    def getEPosition(self):
+    def get_eposition(self):
         return self.__eposition
 
-    def getYellowCard(self, yellowcard):
-        return self.__yellowcard
+    def get_yellow_card(self):
+        return self.__yellow_card
 
-    def getRedCard(self, redcard):
-        return self.__redcard
+    def get_red_card(self):
+        return self.__red_card
 
 
 
@@ -161,16 +161,16 @@ class Goal:
 		tackler = tackle_informations[0]
 		tackle_position = tackle_informations[1]	
 		
-        # tackler (player who made the goal)
+        # tackler (player who scored the goal)
 		self.setTackler(tackler)	
 		
-        # position the tackle was made
+        # position the tackle was scored
 		self.setTacklePosition(tackle_position)	
 
 		# the team whose the player is the tackler
 		setTeamTacklerSide(getTackler().getTeamSide)
 
-		# position the goal was made
+		# position the goal was scored
 		goal_x_pos = self.__logDataFrame.iloc(self.__row, BALL_X_COLUMN) 
 		goal_y_pos = self.__logDataFrame.iloc(self.__row, BALL_Y_COLUMN) 
 		goal_timestamp = self.__logDataFrame.iloc(self.__row, 0)

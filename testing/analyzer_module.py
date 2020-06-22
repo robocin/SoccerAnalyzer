@@ -22,8 +22,8 @@ def placar(log):
     eixox = np.arange(len(equipes))
     plt.bar(eixox,placar)
     plt.title('PLACAR')
-    plt.xlabel('TIMES')
-    plt.ylabel('GOLS')
+    plt.x_label('TIMES')
+    plt.y_label('GOLS')
     plt.ylim(0,5)
     plt.xticks(eixox,equipes)
     plt.show()
@@ -43,8 +43,8 @@ def faltas(log):
     plt.bar(y_pos, vetor)
 
     plt.title('foul_charge_l x foul_charge_r')
-    plt.xlabel('teams')
-    plt.ylabel('values')
+    plt.x_label('teams')
+    plt.y_label('values')
     plt.ylim(0,faltas_l+50)
     plt.xticks(y_pos, eixox)
     plt.show()
@@ -55,8 +55,8 @@ def penalidades(log):
 
     plt.bar(eixox,penaltis)
     plt.title('PENALTIS')
-    plt.xlabel('TIMES')
-    plt.ylabel('GOLS')
+    plt.x_label('TIMES')
+    plt.y_label('GOLS')
     plt.ylim(0,10)
     plt.xticks(eixox,equipes)
     plt.show()
@@ -123,7 +123,7 @@ def graficoFaltas(log):
     fk_l = free_kicks[free_kicks['playmode']=='free_kick_l']
     fk_l.head()
     rx = fk_r['ball_x']
-    ry = fk_r['ball_y'
+    ry = fk_r['ball_y']
     lx = fk_l['ball_x']
     ly = fk_l['ball_y']
     plt.plot(rx,ry,'o',color='green')
@@ -139,7 +139,7 @@ def tacklesTime(log):
     plt.bar(ind + width, tck_r, width,
         label= equipes[1], color = 'red')
 
-    plt.ylabel('TACKLES')
+    plt.y_label('TACKLES')
     plt.title('TACKLES DE CADA TIME')
 
     plt.xticks(ind + width / 2, ('1', '2', '3', '4', '5','6','7','8','9','10','11'))

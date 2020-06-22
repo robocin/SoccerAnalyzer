@@ -51,6 +51,8 @@ class Entry:
             self.__xCoordinate = None
             self.__height = None
             self.__width = None
+        if(entryType == "pie"):
+            self.__sector_values = None
 
 	# Setters and Getters (all types)
     def setValue(self, value):
@@ -70,12 +72,18 @@ class Entry:
         self.__xCoordinate = xCoodinate
     def setHeight(self, height):
         self.__height = height
-
     def getXCoordinate(self):
         return self.__xCoordinate
     def getHeight(self):
         return self.__height
+        
+        #pie
+    def set_sector_values(self, values_list):
+        self.__sector_values = values_list
+    def get_sector_values(self):
+        return self.__sector_values
 
+        #scatter
 
 
 

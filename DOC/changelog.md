@@ -11,6 +11,14 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - VSS log implementation
 - SSL log implementation
 
+## [0.3.4] - 2020-06-21
+
+## Modified
+
+- Variables, class names and function names developed by the team are now padronized by PEP 8
+- Actions accomplished by the team are now called "scored" instead of "made" for clarity purposes
+- The data frame used to collect data is now called "game_info" instead of "DataCollector" for clarity purposes
+
 ## [0.3.3] - 2020-06-18
 
 ## Added
@@ -19,7 +27,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## Modified 
 
-- The information gathered from the data frame is now collected with dataCollector with a top-down approach. 
+- The information gathered from the data frame is now collected with DataCollector with a top-down approach. 
 - Faults, Goals, Penalty or any other event can now be generalizated by the Event class.
 - The discrete number of faults and goals is now obtained using Pandas instead of custom functions
 

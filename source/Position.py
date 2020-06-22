@@ -7,27 +7,27 @@ class Position:
         self.__y = y
         self.__timestamp = timestamp
 
-    def setX(self, x):
+    def set_x(self, x):
         self.__x = x
     
-    def setY(self, y):
+    def set_y(self, y):
         self.__y = y
     
-    def setTime(self, timestamp):
+    def set_time(self, timestamp):
         self.__timestamp = timestamp
     
-    def setPosition(self, x, y):
+    def set_position(self, x, y):
         self.__x = x
         self.__y = y
 
-    def setMoment(self, x, y, timestamp):
-        self.setPosition(x,y)
-        self.setTime(timestamp)
+    def set_moment(self, x, y, timestamp):
+        self.set_position(x,y)
+        self.set_time(timestamp)
 
-    def getX(self):
+    def get_x(self):
         return self.__x
 
-    def getY(self):
+    def get_y(self):
         return self.__y
 
     def getTimestamp(self):

@@ -198,8 +198,8 @@ class MainWindow(QMainWindow):
                 print("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA")
                 print(self.dataCollector.getTeam("l").getName())
                 print("BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB")
-                bar1.setXCoordinate(self.DataCollector.getTeam("l").getName())
-                bar1.setValue(self.DataCollector.getTeam(self,"l").getNumberOfFaultsCommited()) 
+                bar1.setXCoordinate(self.game_info.getTeam("l").getName())
+                bar1.setValue(self.game_info.getTeam(self,"l").getNumberOfFaultsCommited()) 
                     
                     # set data for bar 2 
                 bar2 = data_to_plot.getEntry(1) 
@@ -273,12 +273,14 @@ class MainWindow(QMainWindow):
             for barIndex in range(0,len(data.getEntries())):
                 axes.bar(data.getEntry(barIndex).getXCoordinate(), data.getEntry(barIndex).getValue())
         if(data.get_plot_type() == "pir"):
-             
-            data = [50,50]
-            label = ["A","B"]
-            
+          
+            #TODO: when is running, see if is possible to have mutiple entries instead one
+            #temp ex's:
+            #sector_values = [50,50]
+            #label = ["A","B"]
+
             # plot pir
-            ax.pie(data, labels = label)
+            ax.pie(data.getEntry(0).get_sector_values, labels = data.getEntry(0).getLabel() )
         
         if(data.get_plot_type() == "scatter"):
             pass
