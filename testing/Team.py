@@ -42,6 +42,8 @@ class Team:
         self.__penaltis_commited = []
         self.__seen_on = []
 
+        self.team_init()
+
     # set methods
     def set_name(self, name):
         self.__name = name
@@ -114,3 +116,6 @@ class Team:
 
     def get_player(self, playerId):
         return self.__players[playerId-1] 
+
+    def team_init(self):
+        print("oi")

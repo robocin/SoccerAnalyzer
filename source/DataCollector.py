@@ -18,10 +18,9 @@ NUMBER_OF_COLUMNS_BETWEEN_PLAYER_Y_POS_AND_PLAYER_COUNTING_KICKS_PLUS_ONE = 15
 
 class DataCollector():
 	def __init__(self,log_path):
+		
 		self.__log_path = log_path
-
-            #instaciates the teams
-	
+		self.__data_frame = None	
 
 		self.__team_l = None # By instanciating the team, all the computing is scored inside the __init__ of the class Team()
 		self.__team_r = None
@@ -46,13 +45,16 @@ class DataCollector():
 	def set_all_faults(self, all_faults):
 		self.__all_faults =	all_faults
 
+	def set_all_penalties(self, all_penalties):
+		self.__all_penalties = all_penalties
 	
 	# Getters
 	
 	def get_team(self, team_side):
+		
 		if(team_side == "l"):
 			return self.__team_l
-		elif(team_side == "r"):
+		else:
 			return self.__team_r
 
 	
@@ -110,6 +112,10 @@ class DataCollector():
 
 	# Definition of computing functions
 
+	def find_unique_event_count(self, event):
+		
+		simplified_dataframe = self.__data_frame[['playmode']]
+
 	def statChanged(self, logDataFrame, rowNumber, columnNumber):
 		if(logDataFrame.iloc[rowNumber, columnNumber] == logDataFrame.iloc[rowNumber-1, columnNumber]):
 			return False
@@ -117,12 +123,11 @@ class DataCollector():
 			return True
 
 	#												, teams, rowNumber):
-	def getMostRecentTacklerAndPosition(sellf, logDataFrame, rowNumber):
+	'''def getMostRecentTacklerAndPosition(sellf, logDataFrame, rowNumber):
 		#TODO: ver como funciona retornar dois valores de uma vez para esta função
-		'''
+
 		Return a list containing the most recent tackler's id, and the position (int time and space) of where the tackle was scored
 		return << [int:recent_tackler_id, positionClass.Position: recent_tackler_tackle_position]	
-		'''
 
 
 		tackler_and_position = []
@@ -157,13 +162,12 @@ class DataCollector():
 					playerTeam = "r"
 				columnCursor += 1
 
-		'''
+
 		# gets the most recent tackler id
 		if (playerTeam == "l"):
 			recent_tackler_id = teams[0].get_player(playerId)
 		elif (playerTeam == "r"):
 			recent_tackler_id = teams[1].get_player(playerId)	
-		'''
 
 		recent_tackler_id = self.playerId
 
@@ -184,11 +188,11 @@ class DataCollector():
 		# when the row where of most recent tackle (kick) is found, return the player closest to the ball
 
 	def computeAllGoals(logDataFrame, teams):
-		'''
+
 		Computes all the goals and instaciates an object of the goal class for each, storing all the information about it.
 		Returns a list: [goalClass.Goal: allGoals[], total_number_of_goals_scored]		
 		Gives to the tackle player and its team a reference for this goal object
-		'''
+
 
 		all_goals_and_total_number = []
 		allGoals = []
@@ -211,3 +215,4 @@ class DataCollector():
 
 	def computeFaults(logDataFrame):
 		pass
+	'''
