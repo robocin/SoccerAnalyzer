@@ -5,6 +5,7 @@ from Team import Team
 from Event import Event
 from Player import Player
 from Position import Position
+from PlotData import PlotData
 
 #Constants
 TOTAL_NUMBER_OF_PLAYERS = 22
@@ -123,7 +124,53 @@ class DataCollector():
 			return True
 
 	#												, teams, rowNumber):
-	'''def getMostRecentTacklerAndPosition(sellf, logDataFrame, rowNumber):
+        
+        # Functions that command the plotting of graphs
+
+        def plot_faults_quantity(self):
+            data_to_plot = PlotData("bar",2)
+                
+                # set data for graph
+            data_to_plot.set_x_label(self.get_team("l").get_name())
+            data_to_plot.set_y_label(self.get_team("r").get_name())
+                
+                # set data for bar 1 
+            bar1 =  data_to_plot.get_entry(0)
+            bar1.set_x_coordinate(self.get_team("l").get_name())
+            bar1.set_value(self.get_team("l").get_number_of_faults_commited()) 
+                
+                # set data for bar 2 
+            bar2 = data_to_plot.get_entry(1) 
+            bar2.set_x_coordinate(self.get_team("r").get_name())
+            bar2.set_value(self.get_team("r").get_number_of_faults_commited()) 
+            
+            # calls the function to plot the graph 
+            self.plot_Bar(title,data_to_plot) 
+
+        def plot_faults_percentage(self):
+        #TODO: depende da generalização 
+
+        def plot_faults_position(self):
+        #TODO: depende da generalização 
+           #IMPLEMENTAÇÃO ANTIGA:
+            #x_label = "x"
+            #y_label = "y" 
+            #(HARDCODED TO DEBUG) 
+            #data = [20,10,10,14,15,37,46,24,25,26,19,33]
+            #data = [team1NumberOfFouls,team2NumberOfFouls,x1,x2,y1,y2,X1,X2,X3,Y1,Y2,Y3,]
+            #data = [team1NumberOfFouls,team2NumberOfFouls,fatalsPostitions=[[team,x,y],[team,x,y] ... ]
+            #data = [faltasTeamL,faltasTeamR,faltasPositions]
+            #self.plot_Scatter(title)
+        
+        def plot_goals_quantity(self):
+        #TODO: depende da generalização 
+            pass
+
+        def plot_goals_percentage(self):
+        #TODO: depende da generalização 
+            pass
+
+        '''def getMostRecentTacklerAndPosition(sellf, logDataFrame, rowNumber):
 		#TODO: ver como funciona retornar dois valores de uma vez para esta função
 
 		Return a list containing the most recent tackler's id, and the position (int time and space) of where the tackle was scored

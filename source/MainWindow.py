@@ -188,58 +188,23 @@ class MainWindow(QMainWindow):
         if(graph_type == "Faltas absolutas" or graph_type == "Faltas relativas" or graph_type == "Posição das faltas"):
             # defines the data list based on the graph_type, absolute or relative(percentage)
             if(graph_type == "Faltas absolutas"):
-                #x_label = "Nome do time"
-                #y_label = "Total de faltas cometidas"
-                #data = [2,teamL,teamR,faltasTeamL,faltasTeamR,x_label,y_label]
-
-                data_to_plot = PlotData("bar",2)
-                    
-                    # set data for graph
-                data_to_plot.set_x_label(self.game_info.get_team("l").get_name())
-                data_to_plot.set_y_label(self.game_info.get_team("r").get_name())
-                    
-                    # set data for bar 1 
-                bar1 =  data_to_plot.get_entry(0)
-                print("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA")
-                print(self.game_info.get_team("l").get_name())
-                print("BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB")
-                bar1.set_x_coordinate(self.game_info.get_team("l").get_name())
-                bar1.set_value(self.game_info.get_team("l").get_number_of_faults_commited()) 
-                    
-                    # set data for bar 2 
-                bar2 = data_to_plot.get_entry(1) 
-                bar2.set_x_coordinate(self.game_info.get_team("r").get_name())
-                bar2.set_value(self.game_info.get_team("r").get_number_of_faults_commited()) 
-                
-                # calls the function to plot the graph 
-                self.plot_Bar(title,data_to_plot) 
+                self.game_info.plot_faults_quantity()                
 
             elif(graph_type == "Faltas relativas"):
-                pass 
-                #TODO: refactor 
-                #x_label = "Nome do time"
-                #y_label = "Porcentagem de faltas cometidas"
-                #faltasTotal = faltasTeamL + faltasTeamR
-                #data = [2,teamL,teamR,(100*faltasTeamL)/faltasTotal,(100*faltasTeamR)/faltasTotal,x_label,y_label]  
-                # calls the function to plot the graph 
-                #self.plot_Bar(title,data)
+                self.game_info.plot_faults_percentage()
+
             elif(graph_type == "Posição das faltas"):
-                pass 
-                #TODO: refactor 
-                x_label = "x"
-                y_label = "y" 
-                #(HARDCODED TO DEBUG) 
-                data = [20,10,10,14,15,37,46,24,25,26,19,33]
-                #data = [team1NumberOfFouls,team2NumberOfFouls,x1,x2,y1,y2,X1,X2,X3,Y1,Y2,Y3,]
-                #data = [team1NumberOfFouls,team2NumberOfFouls,fatalsPostitions=[[team,x,y],[team,x,y] ... ]
-                #data = [faltasTeamL,faltasTeamR,faltasPositions]
-                self.plot_Scatter(title)
+                self.game_info.plot_faults_position()
 
         elif(graph_type == "Quantidade absoluta de gols"):
-            pass
+            self.game_info.plot_goals_quantity()
+        
         elif(graph_type == "Quantidade relativa de gols"):
-            pass
-        #TEST PIE e TEST BAR deverão ser excluídos, inclusive da lista, estão aqui apenas para servir de referência durante o desenvolvimento.
+            self.game_info.plot_goals_percentage() 
+
+            # COMENTADO A SEGUIR, TEST PIE e TEST BAR deverão ser excluídos, inclusive da lista, estão aqui apenas para servir de referência durante o desenvolvimento.
+       
+"""
         elif(graph_type == "TEST PIE"):
             self.plot_Pie("TEST PIE - APENAS PARA REFERÊNCIA ")
         elif(graph_type == "TEST BAR"):
@@ -264,7 +229,8 @@ class MainWindow(QMainWindow):
             
             self.plot_Bar("TEST BAR - APENAS PARA REFERÊNCIA",data)
         '''(...)'''
-        
+"""
+
         return space
 
     def plot_Bar(self, title, data):

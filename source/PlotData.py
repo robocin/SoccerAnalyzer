@@ -36,6 +36,8 @@ class PlotData:
         print(self.__entries)
         return self.__entries[entry_id]
 
+    # TODO: (discuss) Free instance
+           #Python has in-built garbage collector it will delete the object as soon as reference count to the object becomes zero. 
 
 
 class Entry:
@@ -75,22 +77,3 @@ class Entry:
         return self.__height
 
 
-
-
-
-
-
-
-'''
-def getBars(self):
-        return self.__bars
-    def getBar(self, listIndex):
-        return self.__bars[listIndex]
-    def get_x_label(self):
-        return self.__x_label
-    def get_y_label(self):
-        return self.__y_label
-
-
-
-'''
