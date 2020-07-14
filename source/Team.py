@@ -55,7 +55,7 @@ class Team:
     def set_number_of_goals_scored(self, number_of_goals_scored):
         self.__number_of_goals_scored = number_of_goals_scored
 
-    def setFreKicks(self, free_kicks):
+    def set_free_kicks(self, free_kicks):
         self.__free_kicks = free_kicks
 
     def set_number_of_free_kicks(self, number_of_free_kicks):

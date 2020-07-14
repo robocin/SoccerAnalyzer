@@ -5,11 +5,10 @@ from Position import Position
 from Event import Event
 
 class Player:
-    def __init__(self, log, team_name, team_side, player_id): 
+    def __init__(self, team_name, team_side, player_id): 
         self.__team_name = team_name #name of the team this player belongs to
         self.__team_side = team_side 
         self.__player_id = player_id #id of this player (internal to the team)
-        self.__log = log
 
         self.__pos = None
         self.__f_pro = []

@@ -65,14 +65,25 @@ class DataCollector():
 		# The data will be collected from this dataframe
 		self.__data_frame = pd.read_csv(self.__log_path)
 
+        # Getting teams names from the Data Frame
+		team_left_name = self.__data_frame.iloc[0].team_name_l
+		team_right_name = self.__data_frame.iloc[0].team_name_r
+        
+        # Players are initialized before the Teams because they are an attribute of them.
+        # -> All Teams have an array of Players
+        
+        # Players
+		left_players = self.starting_players(team_left_name, "l")
+		right_players = self.starting_players(team_right_name, "r")
+        
 		# Teams:
-		
-		self.__team_l = Team(self.__data_frame,"l")
-		self.__team_r = Team(self.__data_frame,"r")
+		self.starting_teams(team_left_name, team_right_name, left_players, right_players)
+
+        # Saving both teams in this DataCollector
 		self.__teams.append(self.__team_l)
 		self.__teams.append(self.__team_r)
 
-		
+
 		# Goals:
 
 		self.__score = [self.__data_frame['team_score_l'].max(),self.__data_frame['team_score_r'].max()]
@@ -115,42 +126,72 @@ class DataCollector():
 
 	def find_unique_event_count(self, event):
 		
-		simplified_dataframe = self.__data_frame[['playmode']]
+		simplified_dataframe = self.data_frame[['playmode']]
 
 	def statChanged(self, logDataFrame, rowNumber, columnNumber):
 		if(logDataFrame.iloc[rowNumber, columnNumber] == logDataFrame.iloc[rowNumber-1, columnNumber]):
 			return False
 		else:
 			return True
+        
+    
+	def starting_teams(self, team_left_name, team_right_name, left_players, right_players):
+    
+		self.__team_l = Team()
+		self.__team_l.set_side("left")
+
+		self.__team_r = Team()
+		self.__team_r.set_side("right")
+        
+        # Setting team names from the Data Frame
+		self.__team_l.set_name(team_left_name)
+		self.__team_r.set_name(team_right_name)
+
+
+	def starting_players(self, team, side):
+		tadebrincadeirane = Player(team,side,1)        
+		players_array = [Player(team,side,1), Player(team,side,2), Player(team,side,3), Player(team,side,4), Player(team,side,5), Player(team,side,6), Player(team,side,7), Player(team,side,8), Player(team,side,9), Player(team,side,10), Player(team,side,11)]
+		i = 1
+        
+		for player in players_array:
+			column = "player_{}{}_type".format(side,i)
+			position = self.__data_frame.iloc[0][column] 
+			player.set_pos(position)
+			i = i + 1
+			print(position)
+
+		return players_array
 
 	#												, teams, rowNumber):
         
         # Functions that command the plotting of graphs
 
-        def plot_faults_quantity(self):
-            data_to_plot = PlotData("bar",2)
-                
-                # set data for graph
-            data_to_plot.set_x_label(self.get_team("l").get_name())
-            data_to_plot.set_y_label(self.get_team("r").get_name())
-                
-                # set data for bar 1 
-            bar1 =  data_to_plot.get_entry(0)
-            bar1.set_x_coordinate(self.get_team("l").get_name())
-            bar1.set_value(self.get_team("l").get_number_of_faults_commited()) 
-                
-                # set data for bar 2 
-            bar2 = data_to_plot.get_entry(1) 
-            bar2.set_x_coordinate(self.get_team("r").get_name())
-            bar2.set_value(self.get_team("r").get_number_of_faults_commited()) 
-            
-            # calls the function to plot the graph 
-            self.plot_Bar(title,data_to_plot) 
+	def plot_faults_quantity(self):
+		data_to_plot = PlotData("bar",2)
+			
+			# set data for graph
+		data_to_plot.set_x_label(self.get_team("l").get_name())
+		data_to_plot.set_y_label(self.get_team("r").get_name())
+			
+			# set data for bar 1 
+		bar1 =  data_to_plot.get_entry(0)
+		bar1.set_x_coordinate(self.get_team("l").get_name())
+		bar1.set_value(self.get_team("l").get_number_of_faults_commited()) 
+			
+			# set data for bar 2 
+		bar2 = data_to_plot.get_entry(1) 
+		bar2.set_x_coordinate(self.get_team("r").get_name())
+		bar2.set_value(self.get_team("r").get_number_of_faults_commited()) 
+		
+		# calls the function to plot the graph 
+		self.plot_Bar(title,data_to_plot) 
 
-        def plot_faults_percentage(self):
+
+	def plot_faults_percentage(self):
+		pass
         #TODO: depende da generalização 
 
-        def plot_faults_position(self):
+	def plot_faults_position(self):
         #TODO: depende da generalização 
            #IMPLEMENTAÇÃO ANTIGA:
             #x_label = "x"
@@ -161,12 +202,12 @@ class DataCollector():
             #data = [team1NumberOfFouls,team2NumberOfFouls,fatalsPostitions=[[team,x,y],[team,x,y] ... ]
             #data = [faltasTeamL,faltasTeamR,faltasPositions]
             #self.plot_Scatter(title)
-        
-        def plot_goals_quantity(self):
-        #TODO: depende da generalização 
-            pass
 
-        def plot_goals_percentage(self):
+	def plot_goals_quantity(self):
+    #TODO: depende da generalização 
+		pass
+
+    def plot_goals_percentage(self):
         #TODO: depende da generalização 
             pass
 
