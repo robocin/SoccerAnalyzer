@@ -139,12 +139,16 @@ class DataCollector():
 		self.__team_r.set_number_of_free_kicks(r_free_kicks)
 		self.__team_l.set_number_of_free_kicks(l_free_kicks)
 		
-		# Setting foul_charges
+		# Setting number of foul_charges
 		r_foul_charge = self.__data_frame['playmode'].str.count('foul_charge_l').sum()
 		l_foul_charge = self.__data_frame['playmode'].str.count('foul_charge_r').sum()
 		
 		self.__team_r.set_number_of_faults_commited(r_foul_charge)
 		self.__team_l.set_number_of_faults_commited(l_foul_charge)
+
+		# Setting foul_charges
+		
+
 		
 		# Penalties:
 		pen_r = self.__data_frame['team_pen_score_r'].max()
@@ -176,6 +180,7 @@ class DataCollector():
 	def plot_graph(self, mainWindowObject, graph_type, title, data):
 		#Create an matplotlib.axes object
 		axes = mainWindowObject.figure.add_subplot(111)
+
 		if (graph_type == "bar"):
 			# sets axis labels
 			axes.set_xlabel(data.get_x_label()) 
@@ -187,9 +192,30 @@ class DataCollector():
 				axes.bar(data.get_entry(barIndex).get_x_coordinate(), data.get_entry(barIndex).get_value())
 
 		if (graph_type == "pie"):
-			pass 
+			# set sector labels
+			axes.pie(data, labels = ["A","B"])
+			# plot the graph
+			axes.set_title(title)
+
+
 		if (graph_type == "scatter"):
-			pass
+			# set title
+			axes.set_title('Posição das faltas')
+			# set axis labels
+			axes.set_xlabel('X')
+			axes.set_ylabel('Y')
+
+			#Xrc = [20,50,70]
+			#Yrc = [20,50,70]
+			#Xother = [26,58,74]
+			#Yother = [26,58,74]
+			#axes.scatter(Xrc, Yrc, color='r')
+			#axes.scatter(Xother, Yother, color='b')
+
+			axes.scatter(data.get_entry(0).get_x_positions(), data.get_entry(0).get_y_positions(), color='r')
+			axes.scatter(data.get_entry(1).get_x_positions(), data.get_entry(1).get_y_positions(), color='b')
+
+
 
 		#TODO: is this necessary?
 		# discards the old graph
@@ -198,29 +224,6 @@ class DataCollector():
 		#TODO: is this necessary?
 		# refresh canvas
 		#self.canvas.draw()
-
-	def plot_Bar(self, mainWindowObject, title, data):
-			
-		# setting the graph  
-			# create an axis
-		ax = mainWindowObject.figure.add_subplot(111) 
-			# sets axis labels
-		ax.set_xlabel(data.get_x_label()) 
-		ax.set_ylabel(data.get_y_label())
-			# set title
-		ax.set_title(title)
-			# plot each bar
-		for barIndex in range(0,len(data.get_entries())):
-			ax.bar(data.get_entry(barIndex).get_x_coordinate(), data.get_entry(barIndex).get_value())
-
-		#TODO: is this necessary?
-		# discards the old graph
-		#ax.clear()
-
-		#TODO: is this necessary?
-		# refresh canvas
-				#self.canvas.draw()
-
 
 	def plot_Pie(self, title):
 
@@ -244,88 +247,47 @@ class DataCollector():
 		# refresh canvas
 		#self.canvas.draw()
 
-	def plot_Scatter(self, title):
-		#TODO: refatorar
-
-		#data = [team1NumberOfFouls,team2NumberOfFouls,fatalsPostitions=[[team,x,y],[team,x,y] ... ]
-		#data = [team1NumberOfFouls,team2NumberOfFouls,x1,x2,y1,y2,X1,X2,X3,Y1,Y2,Y3,]
-
-		team1NumberOfFouls = 2
-		team2NumberOfFouls = 3
-	 
-		data = [team1NumberOfFouls,team2NumberOfFouls,10,15,10,15,35,40,45,35,40,45]
-		
-		#xPositionsTeam1 = [10,15]
-		#yPositionsTeam1 = [10,15]
-		#xPositionsTeam2 = [35,40,45]
-		#yPositionsTeam2 = [35,40,45]
-
-		xPositionsTeam1 = []
-		yPositionsTeam1 = []
-		xPositionsTeam2 = []
-		yPositionsTeam2 = []
-
-
-		for i in range(0, data[0]):
-			xPositionsTeam1.append(data[i+2])
-			yPositionsTeam1.append(data[i+4])
-		for i in range(6, data[1]+6):
-			xPositionsTeam2.append(data[i])
-			yPositionsTeam2.append(data[i+3])
-
-		team1 = (xPositionsTeam1,yPositionsTeam1) 
-		team2 = (xPositionsTeam2,yPositionsTeam2)
-		data = (team1,team2)
-		
-		colorTeam1 = "green"
-		colorTeam2 = "red"
-		colors = (colorTeam1,colorTeam2)
-		
-		team1Name = "team1"
-		team2Name = "team2"
-		groups = (team1Name,team2Name)
-
-		# create an axis
-		ax = self.figure.add_subplot(111)		
-		
-		
-	   
-		for data, color, group in zip(data, colors, groups):
-			x, y = data
-			ax.scatter(x, y, alpha=1, c=color, edgecolors="none", s=30, label=group)
-		
-		# set title
-		ax.set_title(title) 
-
-		# set legend
-		ax.legend(loc=2)
-
 	def plot_faults_quantity(self, mainWindowObject, title):
 		data_to_plot = PlotData("bar",2)
 			
-			# set data for graph
+			# sets data for graph
 		data_to_plot.set_x_label(self.get_team("l").get_name())
 		data_to_plot.set_y_label(self.get_team("r").get_name())
 			
-			# set data for bar 1 
+			# sets data for bar 1 
 		bar1 =  data_to_plot.get_entry(0)
 		bar1.set_x_coordinate(self.get_team("l").get_name())
 		bar1.set_value(self.get_team("l").get_number_of_faults_commited()) 
 			
-			# set data for bar 2 
+			# sets data for bar 2 
 		bar2 = data_to_plot.get_entry(1) 
 		bar2.set_x_coordinate(self.get_team("r").get_name())
 		bar2.set_value(self.get_team("r").get_number_of_faults_commited()) 
 		
-		# calls the function to plot the graph 
-		#self.plot_Bar(mainWindowObject, title, data_to_plot) 
+			# calls the function to plot the graph 
 		self.plot_graph(mainWindowObject, "bar", title, data_to_plot)
 
 	def plot_faults_percentage(self, mainWindowObject, title):
-		pass 
+		data_to_plot = PlotData("pie")
+
+		data_to_plot.set_sector_labels(["A","B"])
+		self.plot_graph(mainWindowObject, "pie", title, 3.1)
+		data_to_plot = PLotData("scatter",2)
+
+			
 	
-	def plot_faults_positoin(self, mainWindowObject, title):
-		pass
+	def plot_faults_position(self, mainWindowObject, title):
+		data_to_plot = PlotData("scatter",2)
+		self.plot_graph(mainWindowObject, "scatter", title, data_to_plot)
+		# sets data for team1
+		team1 = data_to_plot.get_entry(0)
+			# for each fault made by team "l", appends it to the data_to_plot's entry of the team it belongs to
+		for fault in self.get_team("l").get_faults_commited():
+			team1.append_fault(fault)
+		# sets data for team 2
+		team2 = data_to_plot.get_entry(1)
+		for fault in self.get_team("r").get_faults_commited():
+			team2.append_fault(fault)
 
 	def plot_goals_quantity(self, mainWindowObject, title):
 		pass

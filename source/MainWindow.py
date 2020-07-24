@@ -106,8 +106,8 @@ class MainWindow(QMainWindow):
         
         # creates the list items
         self.main_list.insertItem(0, "Faltas absolutas")
-        self.main_list.insertItem(1, "[TODO]Faltas relativas")
-        self.main_list.insertItem(2, "[TODO]Posição das faltas")
+        self.main_list.insertItem(1, "Faltas relativas")
+        self.main_list.insertItem(2, "Posição das faltas")
         self.main_list.insertItem(3, "[TODO]Quantidade absoluta de gols")
         self.main_list.insertItem(4, "[TODO]Quantidade relativa de gols")
         #self.main_list.insertItem(5,)
@@ -191,10 +191,10 @@ class MainWindow(QMainWindow):
                 self.game_info.plot_faults_quantity(self,"Faltas absolutas")                
 
             elif(graph_type == "Faltas relativas"):
-                self.game_info.plot_faults_percentage()
+                self.game_info.plot_faults_percentage(self,"Faltas Relativas")
 
             elif(graph_type == "Posição das faltas"):
-                self.game_info.plot_faults_position()
+                self.game_info.plot_faults_position(self, "Posição das faltas")
 
         elif(graph_type == "Quantidade absoluta de gols"):
             self.game_info.plot_goals_quantity()
@@ -204,63 +204,6 @@ class MainWindow(QMainWindow):
 
         return space
     
-    
-
-    def plot_Scatter(self, title):
-        #TODO: refatorar
-
-        #data = [team1NumberOfFouls,team2NumberOfFouls,fatalsPostitions=[[team,x,y],[team,x,y] ... ]
-        #data = [team1NumberOfFouls,team2NumberOfFouls,x1,x2,y1,y2,X1,X2,X3,Y1,Y2,Y3,]
-
-        team1NumberOfFouls = 2
-        team2NumberOfFouls = 3
-     
-        data = [team1NumberOfFouls,team2NumberOfFouls,10,15,10,15,35,40,45,35,40,45]
-        
-        #xPositionsTeam1 = [10,15]
-        #yPositionsTeam1 = [10,15]
-        #xPositionsTeam2 = [35,40,45]
-        #yPositionsTeam2 = [35,40,45]
-
-        xPositionsTeam1 = []
-        yPositionsTeam1 = []
-        xPositionsTeam2 = []
-        yPositionsTeam2 = []
-
-
-        for i in range(0, data[0]):
-            xPositionsTeam1.append(data[i+2])
-            yPositionsTeam1.append(data[i+4])
-        for i in range(6, data[1]+6):
-            xPositionsTeam2.append(data[i])
-            yPositionsTeam2.append(data[i+3])
-
-        team1 = (xPositionsTeam1,yPositionsTeam1) 
-        team2 = (xPositionsTeam2,yPositionsTeam2)
-        data = (team1,team2)
-        
-        colorTeam1 = "green"
-        colorTeam2 = "red"
-        colors = (colorTeam1,colorTeam2)
-        
-        team1Name = "team1"
-        team2Name = "team2"
-        groups = (team1Name,team2Name)
-
-        # create an axis
-        ax = self.figure.add_subplot(111)        
-        
-        
-       
-        for data, color, group in zip(data, colors, groups):
-            x, y = data
-            ax.scatter(x, y, alpha=1, c=color, edgecolors="none", s=30, label=group)
-        
-        # set title
-        ax.set_title(title) 
-
-        # set legend
-        ax.legend(loc=2)
 
     def define_log(self):
         self.log_path = './files/t1.rcg.csv'
