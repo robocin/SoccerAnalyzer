@@ -1,5 +1,5 @@
 class PlotData:
-    def __init__(self, plot_type, number_of_entries):
+    def __init__(self, graph_type, number_of_entries):
         # All types
         self.__name = None
         self.__entries = []
@@ -8,14 +8,14 @@ class PlotData:
 
 
         # Specifc types 
-        if(plot_type == "bar"):
+        if(graph_type == "bar"):
             for i in range(0, number_of_entries):
                 self.__entries.append(Entry("bar"))
         
-        if(plot_type == "pir"):
+        if(graph_type == "pir"):
             pass
         
-        if(plot_type == "scatter"):
+        if(graph_type == "scatter"):
             pass
 
     # Setters and Getters
@@ -32,8 +32,6 @@ class PlotData:
         return self.__entries
 
     def get_entry(self, entry_id):
-        print("--------------------------------------------------->")
-        print(self.__entries)
         return self.__entries[entry_id]
 
     # TODO: (discuss) Free instance

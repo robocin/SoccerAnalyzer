@@ -34,8 +34,6 @@ class PlotData:
     def getEntries(self):
         return self.__entries
     def getEntry(self, entryId):
-        print("--------------------------------------------------->")
-        print(self.__entries)
         return self.__entries[entryId]
 
 
