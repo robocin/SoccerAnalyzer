@@ -19,7 +19,7 @@ NUMBER_OF_COLUMNS_BETWEEN_PLAYER_Y_POS_AND_PLAYER_COUNTING_KICKS_PLUS_ONE = 15
 class DataCollector():
 	def __init__(self): #sem log_path
 		
-		self.__log_path = './t1.rcg.csv'
+		self.__log_path = './files/t1.rcg.csv'
 		self.__data_frame = None	
 
 		self.__team_l = None # By instanciating the team, all the computing is scored inside the __init__ of the class Team()
@@ -174,7 +174,7 @@ class DataCollector():
         
         # Functions that command the plotting of graphs
 
-	def plot_faults_quantity(self):
+	def plot_faults_quantity(self, mainWindowObject, title):
 		data_to_plot = PlotData("bar",2)
 			
 			# set data for graph
@@ -192,4 +192,26 @@ class DataCollector():
 		bar2.set_value(self.get_team("r").get_number_of_faults_commited()) 
 		
 		# calls the function to plot the graph 
-		self.plot_Bar(title,data_to_plot) 
+		self.plot_Bar(mainWindowObject, title,data_to_plot) 
+
+	def plot_Bar(self, mainWindowObject, title, data):
+		
+			# setting the graph  
+				# create an axis
+			ax = mainWindowObject.figure.add_subplot(111) 
+				# sets axis labels
+			ax.set_xlabel(data.get_x_label()) 
+			ax.set_ylabel(data.get_y_label())
+				# set title
+			ax.set_title(title)
+				# plot each bar
+			for barIndex in range(0,len(data.get_entries())):
+				ax.bar(data.get_entry(barIndex).get_x_coordinate(), data.get_entry(barIndex).get_value())
+
+			#TODO: is this necessary?
+			# discards the old graph
+			#ax.clear()
+	
+			#TODO: is this necessary?
+			# refresh canvas
+			#self.canvas.draw()

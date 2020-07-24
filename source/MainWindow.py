@@ -60,7 +60,7 @@ class MainWindow(QMainWindow):
         self.init_List() # left side list
         self.create_view(False,"Escolha uma das opções na lista à esquerda") # right side graph area
         self.define_log()
-        self.game_info = DataCollector(self.log_path)
+        self.game_info = DataCollector()
 
         #creating central widget and putting it in the main window as a central widget
         self.main_widget = QWidget()
@@ -105,16 +105,16 @@ class MainWindow(QMainWindow):
         self.main_list.setMinimumWidth(LIST_MINIMUM_WIDTH)
         
         # creates the list items
-        self.main_list.insertItem(0,"TEST PIE")
-        self.main_list.insertItem(1,"TEST BAR")
-        self.main_list.insertItem(2,"Faltas absolutas")
-        self.main_list.insertItem(3,"Faltas relativas")
-        self.main_list.insertItem(4,"Posição das faltas")
-        self.main_list.insertItem(5,STATISTICS)
-        self.main_list.insertItem(6,STATISTICS)
-        self.main_list.insertItem(7,STATISTICS)
-        self.main_list.insertItem(8,STATISTICS)
-        self.main_list.insertItem(9,STATISTICS)
+        self.main_list.insertItem(0, "Faltas absolutas")
+        self.main_list.insertItem(1, "[TODO]Faltas relativas")
+        self.main_list.insertItem(2, "[TODO]Posição das faltas")
+        self.main_list.insertItem(3, "[TODO]Quantidade absoluta de gols")
+        self.main_list.insertItem(4, "[TODO]Quantidade relativa de gols")
+        #self.main_list.insertItem(5,)
+        #self.main_list.insertItem(6,)
+        #self.main_list.insertItem(7,)
+        #self.main_list.insertItem(8,)
+        #self.main_list.insertItem(9,)
         
         # adds the list to the main_hbox
         self.main_hbox.addWidget(self.main_list)
@@ -188,7 +188,7 @@ class MainWindow(QMainWindow):
         if(graph_type == "Faltas absolutas" or graph_type == "Faltas relativas" or graph_type == "Posição das faltas"):
             # defines the data list based on the graph_type, absolute or relative(percentage)
             if(graph_type == "Faltas absolutas"):
-                self.game_info.plot_faults_quantity()                
+                self.game_info.plot_faults_quantity(self,"Faltas absolutas")                
 
             elif(graph_type == "Faltas relativas"):
                 self.game_info.plot_faults_percentage()
@@ -203,51 +203,8 @@ class MainWindow(QMainWindow):
             self.game_info.plot_goals_percentage() 
 
         return space
-
-    def plot_Bar(self, title, data):
-       
-        # setting the graph  
-            # create an axis
-        ax = self.figure.add_subplot(111) 
-            # sets axis labels
-        ax.set_x_label(data.get_x_label()) 
-        ax.set_y_label(data.get_y_label())
-            # set title
-        ax.set_title(title)
-            # plot each bar
-        for barIndex in range(0,len(data.get_entries())):
-            ax.bar(data.get_entry(barIndex).get_x_coordinate(), data.get_entry(barIndex).get_value())
-        
-
-        #TODO: is this necessary?
-        # discards the old graph
-        #ax.clear()
- 
-        #TODO: is this necessary?
-        # refresh canvas
-        #self.canvas.draw()
     
-    def plot_Pie(self, title):
-
-        data = [50,50]
-        label = ["A","B"]
-
-        # create an axis
-        ax = self.figure.add_subplot(111)
-
-        # plot data
-        ax.pie(data, labels = label)
-
-        # set title
-        ax.set_title(title)
-
-        #TODO: is this necessary?
-        # discards the old graph
-        #ax.clear()
- 
-        #TODO: is this necessary?
-        # refresh canvas
-        #self.canvas.draw()
+    
 
     def plot_Scatter(self, title):
         #TODO: refatorar
@@ -317,11 +274,6 @@ class MainWindow(QMainWindow):
     
     def getOut(self):
         sys.exit()
-
-    ##### Computing #####
-
-
-    ##### Showing #####
 
 
 if __name__ == "__main__":
