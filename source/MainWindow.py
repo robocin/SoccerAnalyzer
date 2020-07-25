@@ -22,8 +22,10 @@ from Position import Position
 STATISTICS = "EXTRACTIONS FIELDS" 
 LIST_MINIMUM_HEIGHT = 300
 LIST_MAXIMUM_HEIGHT = 600
-LIST_MINIMUM_WIDTH = 181
-LIST_MAXIMUM_WIDTH = 180
+#LIST_MINIMUM_WIDTH = 181
+#LIST_MAXIMUM_WIDTH = 180
+LIST_MINIMUM_WIDTH = 210
+LIST_MAXIMUM_WIDTH = 211
 
 class MainWindow(QMainWindow):
     def __init__(self):
@@ -105,12 +107,12 @@ class MainWindow(QMainWindow):
         self.main_list.setMinimumWidth(LIST_MINIMUM_WIDTH)
         
         # creates the list items
-        self.main_list.insertItem(0, "Faltas absolutas")
-        self.main_list.insertItem(1, "Faltas relativas")
+        self.main_list.insertItem(0, "Quantidade de faltas")
+        self.main_list.insertItem(1, "Proporção de faltas")
         self.main_list.insertItem(2, "Posição das faltas")
-        self.main_list.insertItem(3, "[TODO]Quantidade absoluta de gols")
-        self.main_list.insertItem(4, "[TODO]Quantidade relativa de gols")
-        #self.main_list.insertItem(5,)
+        self.main_list.insertItem(3, "Quantidade de gols")
+        self.main_list.insertItem(4, "Proporção de gols")
+        self.main_list.insertItem(5,"Posição dos gols")
         #self.main_list.insertItem(6,)
         #self.main_list.insertItem(7,)
         #self.main_list.insertItem(8,)
@@ -185,21 +187,18 @@ class MainWindow(QMainWindow):
         space.addWidget(self.canvas) 
 
         # calls the function responsable of plotting the graph 
-        if(graph_type == "Faltas absolutas" or graph_type == "Faltas relativas" or graph_type == "Posição das faltas"):
-            # defines the data list based on the graph_type, absolute or relative(percentage)
-            if(graph_type == "Faltas absolutas"):
-                self.game_info.plot_faults_quantity(self,"Faltas absolutas")                
+        if(graph_type == "Quantidade de faltas"):
+            self.game_info.plot_faults_quantity(self,"Quantidade de faltas")                
 
-            elif(graph_type == "Faltas relativas"):
-                self.game_info.plot_faults_percentage(self,"Faltas Relativas")
+        elif(graph_type == "Proporção de faltas"):
+            self.game_info.plot_faults_percentage(self,"Proporção de faltas")
 
-            elif(graph_type == "Posição das faltas"):
-                self.game_info.plot_faults_position(self, "Posição das faltas")
-
-        elif(graph_type == "Quantidade absoluta de gols"):
-            self.game_info.plot_goals_quantity()
+        elif(graph_type == "Posição das faltas"):
+            self.game_info.plot_faults_position(self, "Posição das faltas")
+        elif(graph_type == "Quantidade de gols"):
+            self.game_info.plot_goals_quantity(self, "Quantidade de gols")
         
-        elif(graph_type == "Quantidade relativa de gols"):
+        elif(graph_type == "Proporção de gols"):
             self.game_info.plot_goals_percentage() 
 
         return space

@@ -58,6 +58,9 @@ class Entry:
             self.__width = None
         if(entry_type == "scatter"):
             self.__faults = []
+            #TODO: PALIATIVO, APAGAR DEPOIS QUE TIVER SOLUÇÃO
+            self.__x_positions = []
+            self.__y_positions = []
 
 	# Setters and Getters (all types)
     def set_value(self, value):
@@ -86,15 +89,28 @@ class Entry:
         # scatter
     def append_fault(self, fault):
         self.__faults.append(fault)
+        #TODO: PALIATIVOS, APAGAR QUANDO TIVER SOLUÇÃO
     
-    def get_x_positions():
+    #TODO: DEPENDE DA SOLUÇÃO DE QUEM COMETEU A FALTA
+    def _get_x_positions(self):
         x_positions = []
         for fault in self.__faults:
             x_positions.append(fault.get_position().get_x())
         return x_positions
-
-    def get_x_positions():
+    
+    #TODO: DEPENDE DA SOLUÇÃO DE QUEM COMETEU A FALTA
+    def _get_x_positions(self):
         y_positions = []
         for fault in self.__faults:
             y_positions.append(fault.get_position().get_y())
         return y_positions
+    
+    #TODO: FUNÇÕES PALIATIVAS(APAGAR QUANDO TIVER A SOLUÇÃO) 
+    def set_x_positions(self, x_positions):
+        self.__x_positions = x_positions
+    def set_y_positions(self, y_positions):
+        self.__y_positions = y_positions
+    def get_x_positions(self):
+        return self.__x_positions
+    def get_y_positions(self):
+        return self.__y_positions

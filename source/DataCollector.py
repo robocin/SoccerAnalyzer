@@ -129,6 +129,7 @@ class DataCollector():
 		# Setting goals scored
 		l_goals = self.__data_frame['team_score_l'].max()
 		r_goals = self.__data_frame['team_score_r'].max()
+		
 		self.__team_l.set_number_of_goals_scored(l_goals)
 		self.__team_r.set_number_of_goals_scored(r_goals)
 		
@@ -139,15 +140,29 @@ class DataCollector():
 		self.__team_r.set_number_of_free_kicks(r_free_kicks)
 		self.__team_l.set_number_of_free_kicks(l_free_kicks)
 		
-		# Setting number of foul_charges
-		r_foul_charge = self.__data_frame['playmode'].str.count('foul_charge_l').sum()
-		l_foul_charge = self.__data_frame['playmode'].str.count('foul_charge_r').sum()
-		
-		self.__team_r.set_number_of_faults_commited(r_foul_charge)
+		# Setting number of foul_charges //Não funciona, pois conta todas as linhas que tem "foul_charge", contando um mesmo
+		#								 //foul charge mais de uma vez
+			#TODO: resolver
+		#r_foul_charge = self.__data_frame['playmode'].str.count('foul_charge_l').sum()
+		#l_foul_charge = self.__data_frame['playmode'].str.count('foul_charge_r').sum()
+			#Isto deveria funcionar, pq não está funcionando?
+		#l_foul_charge = self.__data_frame['foul_charge_l'].max()
+		#r_foul_charge = self.__data_frame['foul_charge_r'].max()
+
+		#solução alternativa com output correto (mas mais lenta...)
+		l_foul_charge = 0
+		r_foul_charge = 0
+		for i in range(len(self.__data_frame)):
+			if(self.__data_frame.iloc[i,1] == "foul_charge_l" and self.__data_frame.iloc[i-1,1] != "foul_charge_l"):
+				l_foul_charge += 1
+			elif(self.__data_frame.iloc[i,1] == "foul_charge_r" and self.__data_frame.iloc[i-1,1] != "foul_charge_r"):
+				r_foul_charge += 1
+
 		self.__team_l.set_number_of_faults_commited(l_foul_charge)
+		self.__team_r.set_number_of_faults_commited(r_foul_charge)
 
 		# Setting foul_charges
-		
+			#TODO
 
 		
 		# Penalties:
@@ -197,8 +212,19 @@ class DataCollector():
 			# plot the graph
 			axes.set_title(title)
 
-
+		#TODO: SOLUÇÃO PALIATIVA
 		if (graph_type == "scatter"):
+			axes.set_title("Posição das faltas")
+			axes.set_xlabel('X')
+			axes.set_ylabel('Y')																# na solução definitiva, não fazer hardcoded assim como está aqui.
+			axes.scatter(data.get_entry(0).get_x_positions(), data.get_entry(0).get_y_positions(), color = "green", label = "RobôCin")
+			axes.scatter(data.get_entry(1).get_x_positions(), data.get_entry(1).get_y_positions(), color = "red", label = "Razi")
+			axes.legend()
+
+
+		#TODO: TERMINAR IMPLEMENTAÇÃO QUANDO O MESMO PROBLEMA DE _plot_faults_position FOR
+		#      RESOLVIDO.
+		if (graph_type == "_scatter"):
 			# set title
 			axes.set_title('Posição das faltas')
 			# set axis labels
@@ -251,8 +277,8 @@ class DataCollector():
 		data_to_plot = PlotData("bar",2)
 			
 			# sets data for graph
-		data_to_plot.set_x_label(self.get_team("l").get_name())
-		data_to_plot.set_y_label(self.get_team("r").get_name())
+		data_to_plot.set_x_label("Team name")
+		data_to_plot.set_y_label("Number of fouls commited")
 			
 			# sets data for bar 1 
 		bar1 =  data_to_plot.get_entry(0)
@@ -274,11 +300,38 @@ class DataCollector():
 		self.plot_graph(mainWindowObject, "pie", title, 3.1)
 		data_to_plot = PLotData("scatter",2)
 
-			
-	
+	#TODO: SOLUÇÃO PALIATIVA, ELIMINAR QUANDO A DE BAIXO ESTIVER
+	#	   PRONTA. (define a posição da falta pela posição da bola no momento em que a falta ocorreu)
 	def plot_faults_position(self, mainWindowObject, title):
 		data_to_plot = PlotData("scatter",2)
+		
+		teamL = data_to_plot.get_entry(0)
+		teamL_x_positions = []
+		teamL_y_positions = []
+
+		teamR = data_to_plot.get_entry(1)
+		teamR_x_positions = []
+		teamR_y_positions = []
+		
+		for i in range(len(self.__data_frame)):
+			if(self.__data_frame.iloc[i,1] == "foul_charge_l" and self.__data_frame.iloc[i-1,1] != "foul_charge_l"):
+				teamL_x_positions.append(int(self.__data_frame.iloc[i,10]))
+				teamL_y_positions.append(int(self.__data_frame.iloc[i,11]))
+			elif(self.__data_frame.iloc[i,1] == "foul_charge_r" and self.__data_frame.iloc[i-1,1] != "foul_charge_r"):
+				teamR_x_positions.append(int(self.__data_frame.iloc[i,10]))
+				teamR_y_positions.append(int(self.__data_frame.iloc[i,11]))
+
+		teamL.set_x_positions(teamL_x_positions)
+		teamL.set_y_positions(teamL_y_positions)
+		teamR.set_x_positions(teamR_x_positions)
+		teamR.set_y_positions(teamR_y_positions)
+
 		self.plot_graph(mainWindowObject, "scatter", title, data_to_plot)
+	
+	#TODO: TERMINAR IMPLEMENTAÇÃO, DEPOIS QUE RESOLVER O PROBLEMA
+	#      DE DESCOBRIR QUEM FEZ A FALTA
+	def _plot_faults_position(self, mainWindowObject, title):
+		data_to_plot = PlotData("scatter",2)
 		# sets data for team1
 		team1 = data_to_plot.get_entry(0)
 			# for each fault made by team "l", appends it to the data_to_plot's entry of the team it belongs to
@@ -288,9 +341,27 @@ class DataCollector():
 		team2 = data_to_plot.get_entry(1)
 		for fault in self.get_team("r").get_faults_commited():
 			team2.append_fault(fault)
+		self.plot_graph(mainWindowObject, "scatter", title, data_to_plot)
 
 	def plot_goals_quantity(self, mainWindowObject, title):
-		pass
+		data_to_plot = PlotData("bar",2)
+
+		# sets data for graph
+		data_to_plot.set_x_label("Team name")
+		data_to_plot.set_y_label("Number of goals scored")
+			
+			# sets data for bar 1 
+		bar1 =  data_to_plot.get_entry(0)
+		bar1.set_x_coordinate(self.get_team("l").get_name())
+		bar1.set_value(self.get_team("l").get_number_of_goals_scored()) 
+			
+			# sets data for bar 2 
+		bar2 = data_to_plot.get_entry(1) 
+		bar2.set_x_coordinate(self.get_team("r").get_name())
+		bar2.set_value(self.get_team("r").get_number_of_goals_scored()) 
+		
+			# calls the function to plot the graph 
+		self.plot_graph(mainWindowObject, "bar", title, data_to_plot)
 	
 	def plot_goals_percentage(self, mainWindowObject, title):
 		pass
