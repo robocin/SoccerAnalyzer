@@ -139,16 +139,8 @@ class DataCollector():
 		
 		self.__team_r.set_number_of_free_kicks(r_free_kicks)
 		self.__team_l.set_number_of_free_kicks(l_free_kicks)
-		
-		# Setting number of foul_charges //Não funciona, pois conta todas as linhas que tem "foul_charge", contando um mesmo
-		#								 //foul charge mais de uma vez
-			#TODO: resolver
-		#r_foul_charge = self.__data_frame['playmode'].str.count('foul_charge_l').sum()
-		#l_foul_charge = self.__data_frame['playmode'].str.count('foul_charge_r').sum()
-			#Isto deveria funcionar, pq não está funcionando?
-		#l_foul_charge = self.__data_frame['foul_charge_l'].max()
-		#r_foul_charge = self.__data_frame['foul_charge_r'].max()
 
+		#TODO: IMPLEMENTAR FUNÇÃO find_unique_event_count, e usá-la no lugar disto:
 		#solução alternativa com output correto (mas mais lenta...)
 		l_foul_charge = 0
 		r_foul_charge = 0
@@ -224,7 +216,7 @@ class DataCollector():
 		if (graph_type == "scatter"):
 			axes.set_title("Posição das faltas")
 			axes.set_xlabel('X')
-			axes.set_ylabel('Y')																# na solução definitiva, não fazer hardcoded assim como está aqui.
+			axes.set_ylabel('Y')																# TODO: na solução definitiva, não fazer hardcoded assim como está aqui.
 			axes.scatter(data.get_entry(0).get_x_positions(), data.get_entry(0).get_y_positions(), color = "#7da67d", label = "RobôCin")
 			axes.scatter(data.get_entry(1).get_x_positions(), data.get_entry(1).get_y_positions(), color = "#ffa1a1", label = "Razi")
 			axes.legend()
@@ -253,28 +245,6 @@ class DataCollector():
 		# discards the old graph
 		#axes.clear()
 
-		#TODO: is this necessary?
-		# refresh canvas
-		#self.canvas.draw()
-
-	def plot_Pie(self, title):
-
-		data = [50,50]
-		label = ["A","B"]
-
-		# create an axis
-		ax = self.figure.add_subplot(111)
-
-		# plot data
-		ax.pie(data, labels = label)
-
-		# set title
-		ax.set_title(title)
-
-		#TODO: is this necessary?
-		# discards the old graph
-		#ax.clear()
- 
 		#TODO: is this necessary?
 		# refresh canvas
 		#self.canvas.draw()
