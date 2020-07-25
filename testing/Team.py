@@ -36,13 +36,13 @@ class Team:
         self.__goals_scored = []
         self.__number_of_goals_scored = 0
         self.__free_kicks = []
-        self.__number_of_free_kicks = 0
+        self.__number_of_free_kicks = 0 
         self.__faults_commited = []
-        self.__number_of_faults_commited = 0
+        self.__number_of_faults_commited = 0 
         self.__penaltis_commited = []
+        self.__penaltis_scored = 0
         self.__seen_on = []
 
-        self.team_init()
 
     # set methods
     def set_name(self, name):
@@ -54,10 +54,13 @@ class Team:
     def set_goals_scored(self, goals_scored):
         self.__goalsscored = goals_scored
 
+    def set_penaltis_scored(self, penaltis_scored):
+        self.__penaltis_scored = penaltis_scored
+
     def set_number_of_goals_scored(self, number_of_goals_scored):
         self.__number_of_goals_scored = number_of_goals_scored
 
-    def setFreKicks(self, free_kicks):
+    def set_free_kicks(self, free_kicks):
         self.__free_kicks = free_kicks
 
     def set_number_of_free_kicks(self, number_of_free_kicks):
@@ -72,8 +75,8 @@ class Team:
     def set_penaltis_commited(self, penaltis_commited):
         self.__penaltis_commited = penaltis_commited
 
-    def append_player(self, player):
-        self.__players.append(player)
+    def set_players(self, players):
+        self.__players = players
 
     def append_goal(self, goal):
         self.__goalsscored.append(goal)
@@ -95,9 +98,18 @@ class Team:
 
     def get_goals_scored(self):
         return self.__goalsscored
+  
+    def get_penaltis_scored(self):
+        return self.__penaltis_scored
 
     def get_number_of_goals_scored(self):
         return self.__number_of_goals_scored
+
+    def get_free_kicks(self):
+        return self.__free_kicks
+
+    def get_number_of_free_kicks(self):
+        return self.__number_of_free_kicks
     
     def get_faults_commited(self):
         return self.__faults_commited
@@ -116,6 +128,3 @@ class Team:
 
     def get_player(self, playerId):
         return self.__players[playerId-1] 
-
-    def team_init(self):
-        print("oi")
