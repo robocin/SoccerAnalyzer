@@ -200,25 +200,33 @@ class DataCollector():
 			# sets axis labels
 			axes.set_xlabel(data.get_x_label()) 
 			axes.set_ylabel(data.get_y_label())
+			colors = ["#7da67d","#ffa1a1"]
 			# set title
 			axes.set_title(title)
 			# plot each bar
 			for barIndex in range(0,len(data.get_entries())):
-				axes.bar(data.get_entry(barIndex).get_x_coordinate(), data.get_entry(barIndex).get_value())
+				axes.bar(data.get_entry(barIndex).get_x_coordinate(), data.get_entry(barIndex).get_value(), width = data.get_entry(barIndex).get_width(), color = colors[barIndex])
+		
+			#Attach a text label above each bar in *rects*, displaying its height.
+			#adapted from matplotlib documentation
+			aux = 0
+			for entry in data.get_entries():
+				height = entry.get_value()
+				axes.annotate('{}'.format(height), xy=(aux, height), xytext=(0, 3), textcoords="offset points", ha='center', va='bottom')
+				aux += 1
 
 		if (graph_type == "pie"):
-			# set sector labels
-			axes.pie(data, labels = ["A","B"])
-			# plot the graph
 			axes.set_title(title)
+			# plot the graph
+			axes.pie([data.get_entry(0).get_value(), data.get_entry(1).get_value()], explode =(0.06, 0), labels = data.get_sector_labels(), colors = ["#7da67d", "#ffa1a1"], autopct='%1.1f%%', shadow=True, startangle=90)
 
 		#TODO: SOLUÇÃO PALIATIVA
 		if (graph_type == "scatter"):
 			axes.set_title("Posição das faltas")
 			axes.set_xlabel('X')
 			axes.set_ylabel('Y')																# na solução definitiva, não fazer hardcoded assim como está aqui.
-			axes.scatter(data.get_entry(0).get_x_positions(), data.get_entry(0).get_y_positions(), color = "green", label = "RobôCin")
-			axes.scatter(data.get_entry(1).get_x_positions(), data.get_entry(1).get_y_positions(), color = "red", label = "Razi")
+			axes.scatter(data.get_entry(0).get_x_positions(), data.get_entry(0).get_y_positions(), color = "#7da67d", label = "RobôCin")
+			axes.scatter(data.get_entry(1).get_x_positions(), data.get_entry(1).get_y_positions(), color = "#ffa1a1", label = "Razi")
 			axes.legend()
 
 
@@ -238,10 +246,8 @@ class DataCollector():
 			#axes.scatter(Xrc, Yrc, color='r')
 			#axes.scatter(Xother, Yother, color='b')
 
-			axes.scatter(data.get_entry(0).get_x_positions(), data.get_entry(0).get_y_positions(), color='r')
-			axes.scatter(data.get_entry(1).get_x_positions(), data.get_entry(1).get_y_positions(), color='b')
-
-
+			axes.scatter(data.get_entry(0).get_x_positions(), data.get_entry(0).get_y_positions(), color="#7da67d")
+			axes.scatter(data.get_entry(1).get_x_positions(), data.get_entry(1).get_y_positions(), color="#ffa1a1")
 
 		#TODO: is this necessary?
 		# discards the old graph
@@ -294,11 +300,27 @@ class DataCollector():
 		self.plot_graph(mainWindowObject, "bar", title, data_to_plot)
 
 	def plot_faults_percentage(self, mainWindowObject, title):
-		data_to_plot = PlotData("pie")
+		data_to_plot = PlotData("pie",2)
 
-		data_to_plot.set_sector_labels(["A","B"])
-		self.plot_graph(mainWindowObject, "pie", title, 3.1)
-		data_to_plot = PLotData("scatter",2)
+		# sets labels for each sector
+			#TODO: está hardcoded, corrigir depois.
+		data_to_plot.set_sector_labels(["RobôCin","Razi"])
+
+		# aux variables for readability
+		fouls_commited_by_l = self.get_team("l").get_number_of_faults_commited()
+		fouls_commited_by_r = self.get_team("r").get_number_of_faults_commited()
+		total_number_of_fouls = fouls_commited_by_l + fouls_commited_by_r
+
+		# sets data for sector 1
+		sector1 = data_to_plot.get_entry(0)
+		sector1.set_value( (fouls_commited_by_l*100)/total_number_of_fouls)
+
+		# sets data for sector 2
+		sector2 = data_to_plot.get_entry(1)
+		sector2.set_value( (fouls_commited_by_r*100)/total_number_of_fouls)
+
+
+		self.plot_graph(mainWindowObject, "pie", title, data_to_plot)
 
 	#TODO: SOLUÇÃO PALIATIVA, ELIMINAR QUANDO A DE BAIXO ESTIVER
 	#	   PRONTA. (define a posição da falta pela posição da bola no momento em que a falta ocorreu)
@@ -364,5 +386,51 @@ class DataCollector():
 		self.plot_graph(mainWindowObject, "bar", title, data_to_plot)
 	
 	def plot_goals_percentage(self, mainWindowObject, title):
-		pass
+		data_to_plot = PlotData("pie",2)
 		
+		data_to_plot.set_sector_labels(["RobôCin","Razi"])
+
+		# aux variables for readability
+		goals_scored_l = self.get_team("l").get_number_of_goals_scored()
+		goals_scored_r = self.get_team("r").get_number_of_goals_scored()
+		total_number_of_goals = goals_scored_l + goals_scored_r
+		print(total_number_of_goals)
+
+		# sets data for sector 1
+		sector1 = data_to_plot.get_entry(0)
+		sector1.set_value( (goals_scored_l*100)/total_number_of_goals)
+
+		# sets data for sector 2
+		sector2 = data_to_plot.get_entry(1)
+		sector2.set_value( (goals_scored_r*100)/total_number_of_goals)
+
+		self.plot_graph(mainWindowObject, "pie", title, data_to_plot)
+
+
+	#TODO: ESTE É O LOCAL, NO GOL, ONDE A BOLA ENTROU (LEMBRAR DE FAZER O GRÁFICO DA POSIÇÃO DE QUEM CHUTOU A BOLA Q RESULTOU EM GOL)
+	def plot_goals_position(self, mainWindowObject, title):
+
+		data_to_plot = PlotData("scatter",2)
+		
+		teamL = data_to_plot.get_entry(0)
+		teamL_x_positions = []
+		teamL_y_positions = []
+
+		teamR = data_to_plot.get_entry(1)
+		teamR_x_positions = []
+		teamR_y_positions = []
+		
+		for i in range(len(self.__data_frame)):
+			if(self.__data_frame.iloc[i,1] == "goal_l" and self.__data_frame.iloc[i-1,1] != "goal_l"):
+				teamL_x_positions.append(int(self.__data_frame.iloc[i,10]))
+				teamL_y_positions.append(int(self.__data_frame.iloc[i,11]))
+			elif(self.__data_frame.iloc[i,1] == "goal_r" and self.__data_frame.iloc[i-1,1] != "goal_r"):
+				teamR_x_positions.append(int(self.__data_frame.iloc[i,10]))
+				teamR_y_positions.append(int(self.__data_frame.iloc[i,11]))
+
+		teamL.set_x_positions(teamL_x_positions)
+		teamL.set_y_positions(teamL_y_positions)
+		teamR.set_x_positions(teamR_x_positions)
+		teamR.set_y_positions(teamR_y_positions)
+
+		self.plot_graph(mainWindowObject, "scatter", title, data_to_plot)
