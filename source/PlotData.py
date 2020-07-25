@@ -10,12 +10,12 @@ class PlotData:
 
 
         # Specifc types 
-        if(graph_type == "bar" or graph_type == "scatter"):
+        if(graph_type == "bar" or graph_type == "scatter" or graph_type == "pie"):
             for i in range(0, number_of_entries):
                 self.__entries.append(Entry(graph_type))
 
         if(graph_type == "pie"):
-            self.__sector_labels = []
+            self.__sector_labels = None 
         
 
     # Setters and Getters
@@ -55,7 +55,9 @@ class Entry:
         if(entry_type == "bar"):
             self.__x_coordinate = None
             self.__height = None
-            self.__width = None
+            self.__width = 0.4
+        if(entry_type == "pie"):
+            self.__value = 0
         if(entry_type == "scatter"):
             self.__faults = []
             #TODO: PALIATIVO, APAGAR DEPOIS QUE TIVER SOLUÇÃO
@@ -80,12 +82,22 @@ class Entry:
         self.__x_coordinate = x_coordinate
     def set_height(self, height):
         self.__height = height
+    def set_widht(self, width):
+        self.__width = width
 
     def get_x_coordinate(self):
         return self.__x_coordinate
     def get_height(self):
         return self.__height
+    def get_width(self):
+        return self.__width
 
+        # pie
+    def set_value(self, value):
+        self.__value = value
+    def get_value(self):
+        return self.__value
+        
         # scatter
     def append_fault(self, fault):
         self.__faults.append(fault)

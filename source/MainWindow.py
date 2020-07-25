@@ -199,7 +199,11 @@ class MainWindow(QMainWindow):
             self.game_info.plot_goals_quantity(self, "Quantidade de gols")
         
         elif(graph_type == "Proporção de gols"):
-            self.game_info.plot_goals_percentage() 
+            self.game_info.plot_goals_percentage(self, "Proporção de gols") 
+
+        elif(graph_type == "Posição dos gols"):
+            self.game_info.plot_goals_position(self, "Posição dos gols")
+
 
         return space
     
