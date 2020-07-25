@@ -22,8 +22,10 @@ from Position import Position
 STATISTICS = "EXTRACTIONS FIELDS" 
 LIST_MINIMUM_HEIGHT = 300
 LIST_MAXIMUM_HEIGHT = 600
-LIST_MINIMUM_WIDTH = 181
-LIST_MAXIMUM_WIDTH = 180
+#LIST_MINIMUM_WIDTH = 181
+#LIST_MAXIMUM_WIDTH = 180
+LIST_MINIMUM_WIDTH = 210
+LIST_MAXIMUM_WIDTH = 211
 
 class MainWindow(QMainWindow):
     def __init__(self):
@@ -60,7 +62,7 @@ class MainWindow(QMainWindow):
         self.init_List() # left side list
         self.create_view(False,"Escolha uma das opções na lista à esquerda") # right side graph area
         self.define_log()
-        self.game_info = DataCollector(self.log_path)
+        self.game_info = DataCollector()
 
         #creating central widget and putting it in the main window as a central widget
         self.main_widget = QWidget()
@@ -105,16 +107,16 @@ class MainWindow(QMainWindow):
         self.main_list.setMinimumWidth(LIST_MINIMUM_WIDTH)
         
         # creates the list items
-        self.main_list.insertItem(0,"TEST PIE")
-        self.main_list.insertItem(1,"TEST BAR")
-        self.main_list.insertItem(2,"Faltas absolutas")
-        self.main_list.insertItem(3,"Faltas relativas")
-        self.main_list.insertItem(4,"Posição das faltas")
-        self.main_list.insertItem(5,STATISTICS)
-        self.main_list.insertItem(6,STATISTICS)
-        self.main_list.insertItem(7,STATISTICS)
-        self.main_list.insertItem(8,STATISTICS)
-        self.main_list.insertItem(9,STATISTICS)
+        self.main_list.insertItem(0, "Quantidade de faltas")
+        self.main_list.insertItem(1, "Proporção de faltas")
+        self.main_list.insertItem(2, "Posição das faltas")
+        self.main_list.insertItem(3, "Quantidade de gols")
+        self.main_list.insertItem(4, "Proporção de gols")
+        self.main_list.insertItem(5,"Posição dos gols")
+        #self.main_list.insertItem(6,)
+        #self.main_list.insertItem(7,)
+        #self.main_list.insertItem(8,)
+        #self.main_list.insertItem(9,)
         
         # adds the list to the main_hbox
         self.main_hbox.addWidget(self.main_list)
@@ -185,154 +187,22 @@ class MainWindow(QMainWindow):
         space.addWidget(self.canvas) 
 
         # calls the function responsable of plotting the graph 
-        if(graph_type == "Faltas absolutas" or graph_type == "Faltas relativas" or graph_type == "Posição das faltas"):
-            # defines the data list based on the graph_type, absolute or relative(percentage)
-            if(graph_type == "Faltas absolutas"):
-                self.game_info.plot_faults_quantity()                
+        if(graph_type == "Quantidade de faltas"):
+            self.game_info.plot_faults_quantity(self,"Quantidade de faltas")                
 
-            elif(graph_type == "Faltas relativas"):
-                self.game_info.plot_faults_percentage()
+        elif(graph_type == "Proporção de faltas"):
+            self.game_info.plot_faults_percentage(self,"Proporção de faltas")
 
-            elif(graph_type == "Posição das faltas"):
-                self.game_info.plot_faults_position()
-
-        elif(graph_type == "Quantidade absoluta de gols"):
-            self.game_info.plot_goals_quantity()
+        elif(graph_type == "Posição das faltas"):
+            self.game_info.plot_faults_position(self, "Posição das faltas")
+        elif(graph_type == "Quantidade de gols"):
+            self.game_info.plot_goals_quantity(self, "Quantidade de gols")
         
-        elif(graph_type == "Quantidade relativa de gols"):
+        elif(graph_type == "Proporção de gols"):
             self.game_info.plot_goals_percentage() 
 
-            # COMENTADO A SEGUIR, TEST PIE e TEST BAR deverão ser excluídos, inclusive da lista, estão aqui apenas para servir de referência durante o desenvolvimento.
-       
-"""
-        elif(graph_type == "TEST PIE"):
-            self.plot_Pie("TEST PIE - APENAS PARA REFERÊNCIA ")
-        elif(graph_type == "TEST BAR"):
-            
-            data = PlotData() # COMENTÁRIOS (Felipe)
-                              # não está sendo inicializado, falta parâmetros
-                              # Opção: 1
-                              #     Parametrizar
-                              # Opção: 2
-                              #     Inicializar com parâmetros default na própria classe 
-            
-            data.appendBars(1,["test bar"]) # Este método não está definido no PlotData
-            
-            data.set_x_label("x label")
-            data.set_y_label("y label")
-            
-            bar = data.getBar(0) # ESta método não está definida no PlotData
-            
-            bar.set_name("Bar name")
-            bar.set_value(100) 
-            bar.set_label("Bar label")
-            
-            self.plot_Bar("TEST BAR - APENAS PARA REFERÊNCIA",data)
-        '''(...)'''
-"""
-
         return space
-
-    def plot_Bar(self, title, data):
-       
-        # setting the graph  
-            # create an axis
-        ax = self.figure.add_subplot(111) 
-            # sets axis labels
-        ax.set_x_label(data.get_x_label()) 
-        ax.set_y_label(data.get_y_label())
-            # set title
-        ax.set_title(title)
-            # plot each bar
-        for barIndex in range(0,len(data.get_entries())):
-            ax.bar(data.get_entry(barIndex).get_x_coordinate(), data.get_entry(barIndex).get_value())
-        
-
-        #TODO: is this necessary?
-        # discards the old graph
-        #ax.clear()
- 
-        #TODO: is this necessary?
-        # refresh canvas
-        #self.canvas.draw()
     
-    def plot_Pie(self, title):
-
-        data = [50,50]
-        label = ["A","B"]
-
-        # create an axis
-        ax = self.figure.add_subplot(111)
-
-        # plot data
-        ax.pie(data, labels = label)
-
-        # set title
-        ax.set_title(title)
-
-        #TODO: is this necessary?
-        # discards the old graph
-        #ax.clear()
- 
-        #TODO: is this necessary?
-        # refresh canvas
-        #self.canvas.draw()
-
-    def plot_Scatter(self, title):
-        #TODO: refatorar
-
-        #data = [team1NumberOfFouls,team2NumberOfFouls,fatalsPostitions=[[team,x,y],[team,x,y] ... ]
-        #data = [team1NumberOfFouls,team2NumberOfFouls,x1,x2,y1,y2,X1,X2,X3,Y1,Y2,Y3,]
-
-        team1NumberOfFouls = 2
-        team2NumberOfFouls = 3
-     
-        data = [team1NumberOfFouls,team2NumberOfFouls,10,15,10,15,35,40,45,35,40,45]
-        
-        #xPositionsTeam1 = [10,15]
-        #yPositionsTeam1 = [10,15]
-        #xPositionsTeam2 = [35,40,45]
-        #yPositionsTeam2 = [35,40,45]
-
-        xPositionsTeam1 = []
-        yPositionsTeam1 = []
-        xPositionsTeam2 = []
-        yPositionsTeam2 = []
-
-
-        for i in range(0, data[0]):
-            xPositionsTeam1.append(data[i+2])
-            yPositionsTeam1.append(data[i+4])
-        for i in range(6, data[1]+6):
-            xPositionsTeam2.append(data[i])
-            yPositionsTeam2.append(data[i+3])
-
-        team1 = (xPositionsTeam1,yPositionsTeam1) 
-        team2 = (xPositionsTeam2,yPositionsTeam2)
-        data = (team1,team2)
-        
-        colorTeam1 = "green"
-        colorTeam2 = "red"
-        colors = (colorTeam1,colorTeam2)
-        
-        team1Name = "team1"
-        team2Name = "team2"
-        groups = (team1Name,team2Name)
-
-        # create an axis
-        ax = self.figure.add_subplot(111)        
-        
-        
-       
-        for data, color, group in zip(data, colors, groups):
-            x, y = data
-            ax.scatter(x, y, alpha=1, c=color, edgecolors="none", s=30, label=group)
-        
-        # set title
-        ax.set_title(title) 
-
-        # set legend
-        ax.legend(loc=2)
 
     def define_log(self):
         self.log_path = './files/t1.rcg.csv'
@@ -346,11 +216,6 @@ class MainWindow(QMainWindow):
     
     def getOut(self):
         sys.exit()
-
-    ##### Computing #####
-
-
-    ##### Showing #####
 
 
 if __name__ == "__main__":
