@@ -1,5 +1,6 @@
 import pandas as pd
 import numpy as np
+import matplotlib.pyplot as plt
 
 from Team import Team
 from Event import Event
@@ -217,29 +218,34 @@ class DataCollector():
 			axes.set_title("Posição das faltas")
 			axes.set_xlabel('X')
 			axes.set_ylabel('Y')																# TODO: na solução definitiva, não fazer hardcoded assim como está aqui.
-			axes.scatter(data.get_entry(0).get_x_positions(), data.get_entry(0).get_y_positions(), color = "#7da67d", label = "RobôCin")
-			axes.scatter(data.get_entry(1).get_x_positions(), data.get_entry(1).get_y_positions(), color = "#ffa1a1", label = "Razi")
+			axes.scatter(data.get_entry(0).get_x_positions(), data.get_entry(0).get_y_positions(), color = "blue", label = self.get_team("l").get_name() )
+			axes.scatter(data.get_entry(1).get_x_positions(), data.get_entry(1).get_y_positions(), color = "#ffa1a1", label = self.get_team("r").get_name() )
 			axes.legend()
+			axes.margins(x = 1, y = 1)
+
+			# Show background image
+			img = plt.imread("files/soccerField.png")
+			axes.imshow(img, zorder = -1, extent=[-56, 56, -34, 34])
 
 
 		#TODO: TERMINAR IMPLEMENTAÇÃO QUANDO O MESMO PROBLEMA DE _plot_faults_position FOR
 		#      RESOLVIDO.
 		if (graph_type == "_scatter"):
-			# set title
-			axes.set_title('Posição das faltas')
-			# set axis labels
-			axes.set_xlabel('X')
-			axes.set_ylabel('Y')
+                    # set title
+                    axes.set_title('Posição das faltas')
+                    # set axis labels
+                    axes.set_xlabel('X')
+                    axes.set_ylabel('Y')
+                    
+                    #Xrc = [20,50,70]
+                    #Yrc = [20,50,70]
+                    #Xother = [26,58,74]
+                    #Yother = [26,58,74]
+                    #axes.scatter(Xrc, Yrc, color='r')
+                    #axes.scatter(Xother, Yother, color='b')
 
-			#Xrc = [20,50,70]
-			#Yrc = [20,50,70]
-			#Xother = [26,58,74]
-			#Yother = [26,58,74]
-			#axes.scatter(Xrc, Yrc, color='r')
-			#axes.scatter(Xother, Yother, color='b')
-
-			axes.scatter(data.get_entry(0).get_x_positions(), data.get_entry(0).get_y_positions(), color="#7da67d")
-			axes.scatter(data.get_entry(1).get_x_positions(), data.get_entry(1).get_y_positions(), color="#ffa1a1")
+                    axes.scatter(data.get_entry(0).get_x_positions(), data.get_entry(0).get_y_positions(), color="#7da67d")
+                    axes.scatter(data.get_entry(1).get_x_positions(), data.get_entry(1).get_y_positions(), color="#ffa1a1")
 
 		#TODO: is this necessary?
 		# discards the old graph
@@ -273,8 +279,7 @@ class DataCollector():
 		data_to_plot = PlotData("pie",2)
 
 		# sets labels for each sector
-			#TODO: está hardcoded, corrigir depois.
-		data_to_plot.set_sector_labels(["RobôCin","Razi"])
+		data_to_plot.set_sector_labels([self.get_team("l").get_name(), self.get_team("r").get_name()])
 
 		# aux variables for readability
 		fouls_commited_by_l = self.get_team("l").get_number_of_faults_commited()
@@ -358,7 +363,7 @@ class DataCollector():
 	def plot_goals_percentage(self, mainWindowObject, title):
 		data_to_plot = PlotData("pie",2)
 		
-		data_to_plot.set_sector_labels(["RobôCin","Razi"])
+		data_to_plot.set_sector_labels([self.get_team("l").get_name(), self.get_team("l").get_name()])
 
 		# aux variables for readability
 		goals_scored_l = self.get_team("l").get_number_of_goals_scored()
