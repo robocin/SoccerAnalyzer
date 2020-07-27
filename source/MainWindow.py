@@ -1,6 +1,6 @@
 import sys
 
-from PyQt5.QtWidgets import QApplication, QPushButton, QMainWindow, QWidget, QDialog, QGroupBox, QHBoxLayout, QVBoxLayout, QListWidget, QLabel, QMenuBar, QAction
+from PyQt5.QtWidgets import QApplication, QPushButton, QMainWindow, QMessageBox, QWidget, QDialog, QGroupBox, QHBoxLayout, QVBoxLayout, QListWidget, QLabel, QMenuBar, QAction
 from PyQt5 import QtWidgets
 from PyQt5 import QtGui, QtCore
 from PyQt5.QtCore import Qt
@@ -58,9 +58,10 @@ class MainWindow(QMainWindow):
         self.main_hbox = QHBoxLayout()
 
         #creating the elements of the window and calling some computing functions
-
-        self.mainScreen("2D")
-        self.define_log()
+            # Log selection PopUp
+        self.logType = self.selectorScreenPopUp()
+            # MainScreen
+        self.mainScreen(self.logType)
         self.game_info = DataCollector()
 
         #creating central widget and putting it in the main window as a central widget
@@ -73,8 +74,24 @@ class MainWindow(QMainWindow):
 
 
     ## Screen type functions ##
-    def selectorScreen(self):
-        pass
+    def selectorScreenPopUp(self):
+        msgBox = QMessageBox()
+        msgBox.setWindowTitle("Log type selection")
+        msgBox.setText("Select the log type") 
+        msgBox.setIcon(QMessageBox.Question)
+
+        button1 = msgBox.addButton("2D",QMessageBox.AcceptRole)
+        button2 = msgBox.addButton("VSS",QMessageBox.AcceptRole)
+        button3 = msgBox.addButton("SSL",QMessageBox.AcceptRole)
+
+        x = msgBox.exec_()
+
+        if (msgBox.clickedButton() == button1):
+            return "2D"
+        if (msgBox.clickedButton() == button2):
+            return "VSS"
+        if (msgBox.clickedButton() == button2):
+            return "SSL"
 
     def mainScreen(self, logType):
         # All log types
@@ -84,7 +101,12 @@ class MainWindow(QMainWindow):
             self.init_List("2D") # left side list
             self.create_view(False,"Escolha uma das opções na lista à esquerda") # right side graph area
         # vss
+        if(logType == "VSS"):
+            self.init_List("VSS") # left side list
+            self.create_view(False,"Escolha uma das opções na lista à esquerda") # right side graph area
         # ssl
+        if(logType == "SSl"):
+            pass
     
     ##### Definition of custom functions #####
     def init_Menu(self):
@@ -135,13 +157,15 @@ class MainWindow(QMainWindow):
             #self.main_list.insertItem(9,)
 
             # vss
-        elif(logType == "vss"):
+        elif(logType == "VSS"):
             self.main_list.insertItem(0, "Mapa de calor: posição dos jogadores")
 
             # ssl
-        elif(logType == "ssl"):
+        elif(logType == "SSL"):
             pass
         
+        self.main_list.setWordWrap(True)
+
         # adds the list to the main_hbox
         self.main_hbox.addWidget(self.main_list)
         
