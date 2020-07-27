@@ -364,8 +364,7 @@ class DataCollector():
 		goals_scored_l = self.get_team("l").get_number_of_goals_scored()
 		goals_scored_r = self.get_team("r").get_number_of_goals_scored()
 		total_number_of_goals = goals_scored_l + goals_scored_r
-		print(total_number_of_goals)
-
+		
 		# sets data for sector 1
 		sector1 = data_to_plot.get_entry(0)
 		sector1.set_value( (goals_scored_l*100)/total_number_of_goals)
