@@ -1,6 +1,6 @@
 import sys
 
-from PyQt5.QtWidgets import QApplication, QPushButton, QMainWindow, QMessageBox, QWidget, QDialog, QGroupBox, QHBoxLayout, QVBoxLayout, QListWidget, QLabel, QMenuBar, QAction
+from PyQt5.QtWidgets import QApplication, QPushButton, QMainWindow, QMessageBox, QWidget, QDialog, QGroupBox, QHBoxLayout, QVBoxLayout, QListWidget, QLabel, QMenuBar, QAction, QFileDialog
 from PyQt5 import QtWidgets
 from PyQt5 import QtGui, QtCore
 from PyQt5.QtCore import Qt
@@ -59,10 +59,12 @@ class MainWindow(QMainWindow):
 
         #creating the elements of the window and calling some computing functions
             # Log selection PopUp
-        self.logType = self.selectorScreenPopUp()
+        self.category = self.selectorScreenPopUp()
+        self.log_path = self.select_file()
+
             # MainScreen
-        self.mainScreen(self.logType)
-        self.game_info = DataCollector()
+        self.game_info = DataCollector(self.log_path)
+        self.mainScreen(self.category)
 
         #creating central widget and putting it in the main window as a central widget
         self.main_widget = QWidget()
@@ -80,32 +82,34 @@ class MainWindow(QMainWindow):
         msgBox.setText("Select the log type") 
         msgBox.setIcon(QMessageBox.Question)
 
-        button1 = msgBox.addButton("2D",QMessageBox.AcceptRole)
-        button2 = msgBox.addButton("VSS",QMessageBox.AcceptRole)
-        button3 = msgBox.addButton("SSL",QMessageBox.AcceptRole)
+        button1 = msgBox.addButton("2D",QMessageBox.ActionRole)
+        button2 = msgBox.addButton("VSS",QMessageBox.ActionRole)
+        button3 = msgBox.addButton("SSL",QMessageBox.ActionRole)
 
         x = msgBox.exec_()
 
         if (msgBox.clickedButton() == button1):
-            return "2D"
+            category = "2D"
         if (msgBox.clickedButton() == button2):
-            return "VSS"
+            category = "VSS"
         if (msgBox.clickedButton() == button2):
-            return "SSL"
+            category = "SSL"
 
-    def mainScreen(self, logType):
+        return category
+
+    def mainScreen(self, category):
         # All log types
         self.init_Menu() # main menu at the top of the screen
         # 2D
-        if(logType == "2D"):
+        if(category == "2D"):
             self.init_List("2D") # left side list
             self.create_view(False,"Escolha uma das opções na lista à esquerda") # right side graph area
         # vss
-        if(logType == "VSS"):
+        if(category == "VSS"):
             self.init_List("VSS") # left side list
             self.create_view(False,"Escolha uma das opções na lista à esquerda") # right side graph area
         # ssl
-        if(logType == "SSl"):
+        if(category == "SSl"):
             pass
     
     ##### Definition of custom functions #####
@@ -123,6 +127,11 @@ class MainWindow(QMainWindow):
         terminalMenu = self.mainMenu.addMenu("Terminal")
         helpMenu = self.mainMenu.addMenu("Help")
         
+        #Actions inside fileMenu
+        findFile = QAction("File", self)
+        fileMenu.addAction(findFile)
+        findFile.triggered.connect(self.select_file)
+
         #creates the "clear" action inside the "edit" option on the main menu 
         clearAction = QAction("Clear", self)
         editMenu.addAction(clearAction)
@@ -130,7 +139,7 @@ class MainWindow(QMainWindow):
         #connects the "clear" action to the clear_View() function 
         clearAction.triggered.connect(self.clear_View) # when calling clear_View without specifying parameters, False is given as parameter to graph_type
  
-    def init_List(self, logType):
+    def init_List(self, category):
         '''
         Creates the selection list
         '''
@@ -142,9 +151,9 @@ class MainWindow(QMainWindow):
         self.main_list.setMaximumWidth(LIST_MAXIMUM_WIDTH)
         self.main_list.setMinimumWidth(LIST_MINIMUM_WIDTH)
         
-        # Based on the logType, creates the correspondent list and list items
+        # Based on the category, creates the correspondent list and list items
             # 2D
-        if(logType == "2D"):
+        if(category == "2D"):
             self.main_list.insertItem(0, "Quantidade de faltas")
             self.main_list.insertItem(1, "Proporção de faltas")
             self.main_list.insertItem(2, "Posição das faltas")
@@ -157,11 +166,11 @@ class MainWindow(QMainWindow):
             #self.main_list.insertItem(9,)
 
             # vss
-        elif(logType == "VSS"):
+        elif(category == "VSS"):
             self.main_list.insertItem(0, "Mapa de calor: posição dos jogadores")
 
             # ssl
-        elif(logType == "SSL"):
+        elif(category == "SSL"):
             pass
         
         self.main_list.setWordWrap(True)
@@ -175,6 +184,10 @@ class MainWindow(QMainWindow):
     def itemSelected(self, item):
         stat = item.text()
         self.create_view(stat, stat)
+
+    def select_file(self): 
+        filename, _trash = QFileDialog.getOpenFileName(self, "*.")
+        return filename
 
     def create_view(self, graph_type, title):  
         '''
@@ -255,9 +268,6 @@ class MainWindow(QMainWindow):
 
         return space
     
-
-    def define_log(self):
-        self.log_path = './files/t1.rcg.csv'
 
     def get_Score(self): 
         placar = [self.log['team_score_l'].max(),self.log['team_score_r'].max()]
