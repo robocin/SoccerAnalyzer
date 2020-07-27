@@ -62,6 +62,7 @@ class MainWindow(QMainWindow):
         self.init_List() # left side list
         self.create_view(False,"Escolha uma das opções na lista à esquerda") # right side graph area
         
+        self.mainScreen("2D")
         self.log_path = self.select_file()
         self.game_info = DataCollector(self.log_path)
 
@@ -73,6 +74,21 @@ class MainWindow(QMainWindow):
         #turns main window visible
         self.show()
 
+
+    ## Screen type functions ##
+    def selectorScreen(self):
+        pass
+
+    def mainScreen(self, logType):
+        # All log types
+        self.init_Menu() # main menu at the top of the screen
+        # 2D
+        if(logType == "2D"):
+            self.init_List("2D") # left side list
+            self.create_view(False,"Escolha uma das opções na lista à esquerda") # right side graph area
+        # vss
+        # ssl
+    
     ##### Definition of custom functions #####
     def init_Menu(self):
         '''
@@ -100,7 +116,7 @@ class MainWindow(QMainWindow):
         #connects the "clear" action to the clear_View() function 
         clearAction.triggered.connect(self.clear_View) # when calling clear_View without specifying parameters, False is given as parameter to graph_type
  
-    def init_List(self):
+    def init_List(self, logType):
         '''
         Creates the selection list
         '''
@@ -112,17 +128,27 @@ class MainWindow(QMainWindow):
         self.main_list.setMaximumWidth(LIST_MAXIMUM_WIDTH)
         self.main_list.setMinimumWidth(LIST_MINIMUM_WIDTH)
         
-        # creates the list items
-        self.main_list.insertItem(0, "Quantidade de faltas")
-        self.main_list.insertItem(1, "Proporção de faltas")
-        self.main_list.insertItem(2, "Posição das faltas")
-        self.main_list.insertItem(3, "Quantidade de gols")
-        self.main_list.insertItem(4, "Proporção de gols")
-        self.main_list.insertItem(5,"Posição dos gols")
-        #self.main_list.insertItem(6,)
-        #self.main_list.insertItem(7,)
-        #self.main_list.insertItem(8,)
-        #self.main_list.insertItem(9,)
+        # Based on the logType, creates the correspondent list and list items
+            # 2D
+        if(logType == "2D"):
+            self.main_list.insertItem(0, "Quantidade de faltas")
+            self.main_list.insertItem(1, "Proporção de faltas")
+            self.main_list.insertItem(2, "Posição das faltas")
+            self.main_list.insertItem(3, "Quantidade de gols")
+            self.main_list.insertItem(4, "Proporção de gols")
+            self.main_list.insertItem(5,"Posição dos gols")
+            #self.main_list.insertItem(6,)
+            #self.main_list.insertItem(7,)
+            #self.main_list.insertItem(8,)
+            #self.main_list.insertItem(9,)
+
+            # vss
+        elif(logType == "vss"):
+            self.main_list.insertItem(0, "Mapa de calor: posição dos jogadores")
+
+            # ssl
+        elif(logType == "ssl"):
+            pass
         
         # adds the list to the main_hbox
         self.main_hbox.addWidget(self.main_list)
@@ -228,6 +254,8 @@ class MainWindow(QMainWindow):
     
     def getOut(self):
         sys.exit()
+
+
 
 
 if __name__ == "__main__":
