@@ -61,6 +61,7 @@ class DataCollector():
 		else:
 			return self.__team_r
 	
+	#TODO: funcão redundante...    get_team(side).get_name() já retorna o nome do time
 	def get_team_name(self, team_side):
 		if(team_side == "l"):
 			return self.__team_l.get_name()
@@ -91,6 +92,28 @@ class DataCollector():
 		self.__teams.append(self.__team_r)
 
 	# Definition of computing functions
+	'''
+		#Funções getMostRecent... burras paliativas TODO: otimizar funções!!
+	def getMostRecentKicker_x(self, row):
+		i = row
+		kicker_x = None
+		while(kicker_x == None):
+			for player_id in range(0,22):
+				if(self.__data_frame.iloc[i, 34+(31*player_id)] != self.__data_frame.iloc[i-1, 34+(31*player_id)]):
+					kicker_x = self.__data_frame.iloc[i, (34+(31*player_id) - 16)]
+				
+		return kicker_x
+	
+	def getMostRecentKicker_y(self, row):
+		i = row
+		kicker_y = None
+		while(kicker_y == None):
+			for player_id in range(0,22):
+				if(self.__data_frame.iloc[i, 34+(31*player_id)] != self.__data_frame.iloc[i-1, 34+(31*player_id)]):
+					kicker_y = self.__data_frame.iloc[i, (34+(31*player_id) - 15)]
+				
+		return kicker_y
+	'''
 
 	def find_unique_event_count(self, event):
 		
@@ -215,7 +238,7 @@ class DataCollector():
 
 		#TODO: SOLUÇÃO PALIATIVA
 		if (graph_type == "scatter"):
-			axes.set_title("Posição das faltas")
+			axes.set_title(title)
 			axes.set_xlabel('X')
 			axes.set_ylabel('Y')																# TODO: na solução definitiva, não fazer hardcoded assim como está aqui.
 			axes.scatter(data.get_entry(0).get_x_positions(), data.get_entry(0).get_y_positions(), color = "blue", label = self.get_team("l").get_name() )
@@ -408,3 +431,32 @@ class DataCollector():
 		teamR.set_y_positions(teamR_y_positions)
 
 		self.plot_graph(mainWindowObject, "scatter", title, data_to_plot)
+
+	'''
+	def plot_goal_kickers_position(self, mainWindowObject, title):
+
+		data_to_plot = PlotData("scatter",2)
+		
+		teamL = data_to_plot.get_entry(0)
+		teamL_x_positions = []
+		teamL_y_positions = []
+
+		teamR = data_to_plot.get_entry(1)
+		teamR_x_positions = []
+		teamR_y_positions = []
+		
+		for i in range(len(self.__data_frame)):
+			if(self.__data_frame.iloc[i,1] == "goal_l" and self.__data_frame.iloc[i-1,1] != "goal_l"):
+				teamL_x_positions.append(int(self.getMostRecentKicker_x(i)))
+				teamL_y_positions.append(int(self.getMostRecentKicker_x(i)))
+			elif(self.__data_frame.iloc[i,1] == "goal_r" and self.__data_frame.iloc[i-1,1] != "goal_r"):
+				teamR_x_positions.append(int(self.getMostRecentKicker_x(i)))
+				teamR_y_positions.append(int(self.getMostRecentKicker_x(i)))
+
+		teamL.set_x_positions(teamL_x_positions)
+		teamL.set_y_positions(teamL_y_positions)
+		teamR.set_x_positions(teamR_x_positions)
+		teamR.set_y_positions(teamR_y_positions)
+
+		self.plot_graph(mainWindowObject, "scatter", title, data_to_plot)
+		'''

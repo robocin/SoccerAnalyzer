@@ -20,8 +20,8 @@ from Player import Player
 from Position import Position
 
 STATISTICS = "EXTRACTIONS FIELDS" 
-LIST_MINIMUM_HEIGHT = 300
-LIST_MAXIMUM_HEIGHT = 600
+LIST_MINIMUM_HEIGHT = 150
+LIST_MAXIMUM_HEIGHT = 151
 #LIST_MINIMUM_WIDTH = 181
 #LIST_MAXIMUM_WIDTH = 180
 LIST_MINIMUM_WIDTH = 210
@@ -106,8 +106,9 @@ class MainWindow(QMainWindow):
             self.create_view(False,"Escolha uma das opções na lista à esquerda") # right side graph area
         # vss
         if(category == "VSS"):
-            self.init_List("VSS") # left side list
-            self.create_view(False,"Escolha uma das opções na lista à esquerda") # right side graph area
+            pass
+            #self.init_List("VSS") # left side list
+            #self.create_view(False,"Escolha uma das opções na lista à esquerda") # right side graph area
         # ssl
         if(category == "SSl"):
             pass
@@ -159,8 +160,8 @@ class MainWindow(QMainWindow):
             self.main_list.insertItem(2, "Posição das faltas")
             self.main_list.insertItem(3, "Quantidade de gols")
             self.main_list.insertItem(4, "Proporção de gols")
-            self.main_list.insertItem(5,"Posição dos gols")
-            #self.main_list.insertItem(6,)
+            self.main_list.insertItem(5, "Posição dos gols")
+            #self.main_list.insertItem(6, "Posição dos chutes de gol")
             #self.main_list.insertItem(7,)
             #self.main_list.insertItem(8,)
             #self.main_list.insertItem(9,)
@@ -264,6 +265,8 @@ class MainWindow(QMainWindow):
 
         elif(graph_type == "Posição dos gols"):
             self.game_info.plot_goals_position(self, "Posição dos gols")
+        #elif(graph_type == "Posição dos chutes de gol"):
+        #    self.game_info.plot_goal_kickers_position(self, "Posição dos chutes de gol")
 
 
         return space
