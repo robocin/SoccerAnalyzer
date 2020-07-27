@@ -17,9 +17,9 @@ NUMBER_OF_COLUMNS_BETWEEN_PLAYER_X_POS_AND_PLAYER_COUNTING_KICKS_PLUS_ONE = 16
 NUMBER_OF_COLUMNS_BETWEEN_PLAYER_Y_POS_AND_PLAYER_COUNTING_KICKS_PLUS_ONE = 15
 
 class DataCollector():
-	def __init__(self): #sem log_path
+	def __init__(self, log_path): #sem log_path
 		
-		self.__log_path = './files/t1.rcg.csv'
+		self.__log_path = log_path
 		self.__data_frame = None	
 
 		self.__team_l = None # By instanciating the team, all the computing is scored inside the __init__ of the class Team()

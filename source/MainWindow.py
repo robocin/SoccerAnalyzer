@@ -1,6 +1,6 @@
 import sys
 
-from PyQt5.QtWidgets import QApplication, QPushButton, QMainWindow, QWidget, QDialog, QGroupBox, QHBoxLayout, QVBoxLayout, QListWidget, QLabel, QMenuBar, QAction
+from PyQt5.QtWidgets import QApplication, QPushButton, QMainWindow, QWidget, QDialog, QGroupBox, QHBoxLayout, QVBoxLayout, QListWidget, QLabel, QMenuBar, QAction, QFileDialog
 from PyQt5 import QtWidgets
 from PyQt5 import QtGui, QtCore
 from PyQt5.QtCore import Qt
@@ -61,8 +61,9 @@ class MainWindow(QMainWindow):
         self.init_Menu() # main menu at the top of the screen
         self.init_List() # left side list
         self.create_view(False,"Escolha uma das opções na lista à esquerda") # right side graph area
-        self.define_log()
-        self.game_info = DataCollector()
+        
+        self.log_path = self.select_file()
+        self.game_info = DataCollector(self.log_path)
 
         #creating central widget and putting it in the main window as a central widget
         self.main_widget = QWidget()
@@ -87,6 +88,11 @@ class MainWindow(QMainWindow):
         terminalMenu = self.mainMenu.addMenu("Terminal")
         helpMenu = self.mainMenu.addMenu("Help")
         
+        #Actions inside fileMenu
+        findFile = QAction("File", self)
+        fileMenu.addAction(findFile)
+        findFile.triggered.connect(self.select_file)
+
         #creates the "clear" action inside the "edit" option on the main menu 
         clearAction = QAction("Clear", self)
         editMenu.addAction(clearAction)
@@ -127,6 +133,11 @@ class MainWindow(QMainWindow):
     def itemSelected(self, item):
         stat = item.text()
         self.create_view(stat, stat)
+
+    def select_file(self): 
+
+        filename, _trash = QFileDialog.getOpenFileName(self, "*.")
+        return filename
 
     def create_view(self, graph_type, title):  
         '''
@@ -207,9 +218,6 @@ class MainWindow(QMainWindow):
 
         return space
     
-
-    def define_log(self):
-        self.log_path = './files/t1.rcg.csv'
 
     def get_Score(self): 
         placar = [self.log['team_score_l'].max(),self.log['team_score_r'].max()]
