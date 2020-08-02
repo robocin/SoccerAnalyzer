@@ -271,7 +271,12 @@ class DataCollector():
                     axes.scatter(data.get_entry(0).get_x_positions(), data.get_entry(0).get_y_positions(), color="#7da67d")
                     axes.scatter(data.get_entry(1).get_x_positions(), data.get_entry(1).get_y_positions(), color="#ffa1a1")
 
+		#TODO: tornar a consulta ao .csv em evento único (ao abrir o programa)
 		if (graph_type == "heatmap"):
+			sb.kdeplot(self.__data_frame["ball_x"], self.__data_frame["ball_y"],ax = axes, shade = True, color = "green", n_levels = 10)
+		
+		# TODO: Heatmap discreto. Ver se vale a pena manter. (baixa prioridade)
+		if (graph_type == "_heatmap"):
 			# the csv must be in this format:
 			'''
 			X,Y,Value
@@ -287,15 +292,6 @@ class DataCollector():
 			table = df.pivot('Y', 'X', 'Value')
 			sb.heatmap(table, ax = axes) 
 			axes.invert_yaxis()
-
-
-		#TODO: is this necessary?
-		# discards the old graph
-		#axes.clear()
-
-		#TODO: is this necessary?
-		# refresh canvas
-		#self.canvas.draw()
 
 	def plot_faults_quantity(self, mainWindowObject, title):
 		data_to_plot = PlotData("bar",2)

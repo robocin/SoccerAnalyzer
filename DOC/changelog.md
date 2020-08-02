@@ -5,11 +5,30 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+
 ## [Unreleased]
-- Major Code Refactoring (added focus on Object Oriented Programing)
-- Category selector dialog
 - VSS log implementation
 - SSL log implementation
+- Events class
+
+## [0.3] - 2020-08-02
+
+## Added
+
+- Ball positions continuous heatmap
+
+## [0.3] - 2020-07-27
+
+## Added
+
+- Category selector
+- Log selector
+
+## [0.3] - 2020-07-23
+
+## Modified
+
+- Data Collector all statistics initialization
 
 ## [0.3.4] - 2020-06-21
 
