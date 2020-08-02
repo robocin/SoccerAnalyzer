@@ -246,6 +246,7 @@ class MainWindow(QMainWindow):
             self.view_title.setAlignment(Qt.AlignCenter)
             self.view_title.setFont(QtGui.QFont("Arial",25,QtGui.QFont.Bold))
             space.addWidget(self.view_title) 
+            # Note: here we add the matplotlib canvas to the qvbox
         space.addWidget(self.canvas) 
 
         # calls the function responsable of plotting the graph 
