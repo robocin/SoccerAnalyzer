@@ -1,6 +1,7 @@
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
+import seaborn as sb
 
 from Team import Team
 from Event import Event
@@ -270,6 +271,91 @@ class DataCollector():
                     axes.scatter(data.get_entry(0).get_x_positions(), data.get_entry(0).get_y_positions(), color="#7da67d")
                     axes.scatter(data.get_entry(1).get_x_positions(), data.get_entry(1).get_y_positions(), color="#ffa1a1")
 
+		if (graph_type == "heatmap"):
+			# the csv must be in this format:
+			'''
+			X,Y,Value
+			0,0,0.6
+			0,1,0.7
+			0,2,0.3
+			1,0,0.2
+			1,1,0.4
+			1,2,0.9
+			'''
+			df = pd.read_csv("files/temp_heatmap_csv.csv") # 
+
+			table = df.pivot('Y', 'X', 'Value')
+			sb.heatmap(table, ax = axes) 
+			axes.invert_yaxis()
+			print(table)
+
+		# draft from clipboard contents
+		if (graph_type == "_heatmap"):
+			df = pd.read_clipboard()
+			'''
+			clipboard contents:
+			X  Y  Value
+			0  1  .6
+			0  2  .3
+			0  3  .2
+			0  4  .7
+			0  5  .8
+			0  6  .4
+			1  1  .8
+			1  2  .4
+			1  3  .9
+			1  4  .3
+			1  5  .1
+			1  6  .7
+			2  1  .5
+			2  2  .3
+			2  3  .6
+			2  4  .5
+			2  5  .1
+			2  6  .8
+			3  1  .3
+			3  2  .5
+			3  3  .3
+			3  4  .3
+			3  5  .4
+			3  6  .8
+			4  1  .6
+			4  2  .3
+			4  3  .2
+			4  4  .7
+			4  5  .8
+			4  6  .4
+			5  1  .8
+			5  2  .4
+			5  3  .9
+			5  4  .3
+			5  5  .1
+			5  6  .9
+			6  1  .7
+			6  2  .5
+			6  3  .3
+			6  4  .6
+			6  5  .5
+			6  6  .1
+			'''
+			table = df.pivot('Y', 'X', 'Value')
+				#Note about a seaborn and matplotlib difference on plotting functions.seaborn's heatmap automatticaly creates a figure,
+				#canvas and axes in which to plot on, popping up a new window. in order for this not to happen, we must give an axes in which to plot on with the ax argument.
+			sb.heatmap(table, ax = axes) 
+			axes.invert_yaxis()
+			#print(table)
+			'''
+			print(table)'s output(if the table is not in this exat format, there's an ugly error):
+			X    0    1    2    3    4    5    6
+			Y                                   
+			1  0.6  0.8  0.5  0.3  0.6  0.8  0.7
+			2  0.3  0.4  0.3  0.5  0.3  0.4  0.5
+			3  0.2  0.9  0.6  0.3  0.2  0.9  0.3
+			4  0.7  0.3  0.5  0.3  0.7  0.3  0.6
+			5  0.8  0.1  0.1  0.4  0.8  0.1  0.5
+			6  0.4  0.7  0.8  0.8  0.4  0.9  0.1
+			'''
+
 		#TODO: is this necessary?
 		# discards the old graph
 		#axes.clear()
@@ -432,31 +518,7 @@ class DataCollector():
 
 		self.plot_graph(mainWindowObject, "scatter", title, data_to_plot)
 
-	'''
-	def plot_goal_kickers_position(self, mainWindowObject, title):
-
-		data_to_plot = PlotData("scatter",2)
+	def plot_heatmap_ball_position(self, mainWindowObject, title):
+		data_to_plot = 1
+		self.plot_graph(mainWindowObject, "heatmap", title, data_to_plot)
 		
-		teamL = data_to_plot.get_entry(0)
-		teamL_x_positions = []
-		teamL_y_positions = []
-
-		teamR = data_to_plot.get_entry(1)
-		teamR_x_positions = []
-		teamR_y_positions = []
-		
-		for i in range(len(self.__data_frame)):
-			if(self.__data_frame.iloc[i,1] == "goal_l" and self.__data_frame.iloc[i-1,1] != "goal_l"):
-				teamL_x_positions.append(int(self.getMostRecentKicker_x(i)))
-				teamL_y_positions.append(int(self.getMostRecentKicker_x(i)))
-			elif(self.__data_frame.iloc[i,1] == "goal_r" and self.__data_frame.iloc[i-1,1] != "goal_r"):
-				teamR_x_positions.append(int(self.getMostRecentKicker_x(i)))
-				teamR_y_positions.append(int(self.getMostRecentKicker_x(i)))
-
-		teamL.set_x_positions(teamL_x_positions)
-		teamL.set_y_positions(teamL_y_positions)
-		teamR.set_x_positions(teamR_x_positions)
-		teamR.set_y_positions(teamR_y_positions)
-
-		self.plot_graph(mainWindowObject, "scatter", title, data_to_plot)
-		'''

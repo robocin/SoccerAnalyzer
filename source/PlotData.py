@@ -17,6 +17,9 @@ class PlotData:
         if(graph_type == "pie"):
             self.__sector_labels = None 
         
+        if(graph_type == "heatmap"):
+            self.__heatmap_table = None
+        
 
     # Setters and Getters
         # all
@@ -24,11 +27,6 @@ class PlotData:
         self.__x_label = label
     def set_y_label(self, label):
         self.__y_label = label
-        # pie
-    def set_sector_labels(self, labels):
-        self.__sector_labels = labels
-    
-        # all
     def get_x_label(self):
         return self.__x_label
     def get_y_label(self):
@@ -37,13 +35,18 @@ class PlotData:
         return self.__entries
     def get_entry(self, entry_id):
         return self.__entries[entry_id]
+
         # pie
+    def set_sector_labels(self, labels):
+        self.__sector_labels = labels
     def get_sector_labels(self):
         return self.__sector_labels
 
-    # TODO: (discuss) Free instance
-           #Python has in-built garbage collector it will delete the object as soon as reference count to the object becomes zero. 
-
+        # heatmap
+    def set_heatmap_table(self, table):
+        self.__heatmap_table = table
+    def get_heatmap_table(self):
+        return self.__heatmap_table
 
 class Entry:
     def __init__(self, entry_type):

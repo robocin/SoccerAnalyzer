@@ -161,7 +161,7 @@ class MainWindow(QMainWindow):
             self.main_list.insertItem(3, "Quantidade de gols")
             self.main_list.insertItem(4, "Proporção de gols")
             self.main_list.insertItem(5, "Posição dos gols")
-            #self.main_list.insertItem(6, "Posição dos chutes de gol")
+            self.main_list.insertItem(6, "Heatmap: ball position")
             #self.main_list.insertItem(7,)
             #self.main_list.insertItem(8,)
             #self.main_list.insertItem(9,)
@@ -219,6 +219,7 @@ class MainWindow(QMainWindow):
         if (graph_type == False):
             self.create_view(False,"Escolha uma das opções na lista à esquerda")
    
+    
     def create_Plot(self, graph_type, title):
         '''
         Creates figure, cavas, navigationToolbar, and configures the layout.
@@ -266,9 +267,9 @@ class MainWindow(QMainWindow):
 
         elif(graph_type == "Posição dos gols"):
             self.game_info.plot_goals_position(self, "Posição dos gols")
-        #elif(graph_type == "Posição dos chutes de gol"):
-        #    self.game_info.plot_goal_kickers_position(self, "Posição dos chutes de gol")
-
+        
+        elif(graph_type == "Heatmap: ball position"):
+            self.game_info.plot_heatmap_ball_position(self, "Heatmap: ball position")
 
         return space
     
