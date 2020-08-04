@@ -11,20 +11,20 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - SSL log implementation
 - Events class
 
-## [0.3] - 2020-08-02
+## [0.3.7] - 2020-08-02
 
 ## Added
 
 - Ball positions continuous heatmap
 
-## [0.3] - 2020-07-27
+## [0.3.6] - 2020-07-27
 
 ## Added
 
 - Category selector
 - Log selector
 
-## [0.3] - 2020-07-23
+## [0.3.5] - 2020-07-23
 
 ## Modified
 
