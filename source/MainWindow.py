@@ -231,6 +231,13 @@ class MainWindow(QMainWindow):
         # creates a canvas widget, which displays the figure 
         self.canvas = FigureCanvas(self.figure)
 
+        # Creates the scoreboard widget
+        if(graph_type != False):
+            placar = self.game_info.get_team("l").get_name() + " " + str(self.game_info.get_team("l").get_number_of_goals_scored()) + " X " + str(self.game_info.get_team("r").get_number_of_goals_scored()) + " "+ self.game_info.get_team("r").get_name()
+            self.scoreboard = QLabel(placar) 
+            self.scoreboard.setFont(QtGui.QFont("Times", 20, QtGui.QFont.Bold))
+            self.scoreboard.setAlignment(QtCore.Qt.AlignCenter |QtCore.Qt.AlignVCenter)
+
         # creates the navigationToolbar widget  
         if(graph_type != False): 
             self.toolbar = NavigationToolbar(self.canvas, self)
@@ -240,6 +247,7 @@ class MainWindow(QMainWindow):
         space = QVBoxLayout()
              
         if(graph_type != False): #if graph_type is not none
+            space.addWidget(self.scoreboard)
             space.addWidget(self.toolbar)
         else:
             # creates the encouraging message at the top 
