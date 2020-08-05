@@ -206,9 +206,19 @@ class DataCollector():
 
 		return players_array
 		
-		# Functions that command the plotting of graphs
+	def copy_dataframe_subset_by_rows(self, dataframe, first_row, last_row):
+		# Returns a copy of a subset of the given dataframe, delimited by first_row and last_row
+			# Add one to each because of the first label row
+		first_row += 1
+		last_row += 1
 
-#TODO: GENERALIZAR PLOTTING FUNCTIONS 
+		subset = dataframe.head(last_row)
+		subset = subset.tail(last_row - first_row)
+
+		return subset
+
+		# Plotting of graphs:
+
 	def plot_graph(self, mainWindowObject, graph_type, title, data):
 		#Create an matplotlib.axes object
 		axes = mainWindowObject.figure.add_subplot(111)
@@ -241,19 +251,16 @@ class DataCollector():
 		if (graph_type == "scatter"):
 			axes.set_title(title)
 			axes.set_xlabel('X')
-			axes.set_ylabel('Y')																# TODO: na solução definitiva, não fazer hardcoded assim como está aqui.
+			axes.set_ylabel('Y')																
 			axes.scatter(data.get_entry(0).get_x_positions(), data.get_entry(0).get_y_positions(), color = "blue", label = self.get_team("l").get_name() )
 			axes.scatter(data.get_entry(1).get_x_positions(), data.get_entry(1).get_y_positions(), color = "#ffa1a1", label = self.get_team("r").get_name() )
 			axes.legend()
 			axes.margins(x = 1, y = 1)
 
-			# Show background image
-			img = plt.imread("files/soccerField.png")
-			axes.imshow(img, zorder = -1, extent=[-56, 56, -34, 34])
 
 
-		#TODO: TERMINAR IMPLEMENTAÇÃO QUANDO O MESMO PROBLEMA DE _plot_faults_position FOR
-		#      RESOLVIDO.
+		#TODO: TERMINAR IMPLEMENTAÇÃO QUANDO O MESMO PROBLEMA DE _plot_faults_position for
+		#      resolvido.
 		if (graph_type == "_scatter"):
                     # set title
                     axes.set_title('Posição das faltas')
@@ -292,6 +299,16 @@ class DataCollector():
 			table = df.pivot('Y', 'X', 'Value')
 			sb.heatmap(table, ax = axes) 
 			axes.invert_yaxis()
+
+		if (graph_type == "line"):
+			data.get_dataframe().plot(x="ball_x", y="ball_y", ax = axes)
+
+		# Shows background image if ther is one to be shown (set by data)
+		if(data.is_background_image_visible() == True):
+			print("asdfffffffffffffff")
+			img = data.get_background_image()
+			axes.imshow(img, zorder = -1, extent=[-56, 56, -34, 34])
+
 
 	def plot_faults_quantity(self, mainWindowObject, title):
 		data_to_plot = PlotData("bar",2)
@@ -361,6 +378,9 @@ class DataCollector():
 		teamR.set_x_positions(teamR_x_positions)
 		teamR.set_y_positions(teamR_y_positions)
 
+		data_to_plot.set_background_image(plt.imread("files/soccerField.png"))
+		data_to_plot.show_background_image()
+
 		self.plot_graph(mainWindowObject, "scatter", title, data_to_plot)
 	
 	#TODO: TERMINAR IMPLEMENTAÇÃO, DEPOIS QUE RESOLVER O PROBLEMA
@@ -376,6 +396,9 @@ class DataCollector():
 		team2 = data_to_plot.get_entry(1)
 		for fault in self.get_team("r").get_faults_commited():
 			team2.append_fault(fault)
+
+		data_to_plot.set_background_image(plt.imread("files/soccerField.png"))
+
 		self.plot_graph(mainWindowObject, "scatter", title, data_to_plot)
 
 	def plot_goals_quantity(self, mainWindowObject, title):
@@ -445,9 +468,21 @@ class DataCollector():
 		teamR.set_x_positions(teamR_x_positions)
 		teamR.set_y_positions(teamR_y_positions)
 
+		data_to_plot.set_background_image(plt.imread("files/soccerField.png"))
+		data_to_plot.show_background_image()
+
 		self.plot_graph(mainWindowObject, "scatter", title, data_to_plot)
 
 	def plot_heatmap_ball_position(self, mainWindowObject, title):
-		data_to_plot = 1
+		data_to_plot = PlotData()
 		self.plot_graph(mainWindowObject, "heatmap", title, data_to_plot)
 		
+	def plot_event_retrospective(self, mainWindowObject, title, start_time, end_time):
+		data_to_plot = PlotData("line")
+		data_to_plot.set_dataframe(self.copy_dataframe_subset_by_rows(self.__data_frame, 0, 2000))
+		print(data_to_plot.get_dataframe())
+
+		data_to_plot.set_background_image(plt.imread("files/soccerField.png"))
+		data_to_plot.show_background_image()
+
+		self.plot_graph(mainWindowObject, "line", title, data_to_plot)

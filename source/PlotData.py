@@ -1,13 +1,15 @@
 from Position import Position
 
 class PlotData:
-    def __init__(self, graph_type, number_of_entries=0):
+    def __init__(self, graph_type=None, number_of_entries=0):
         # All types
         self.__name = None
         self.__entries = []
         self.__x_label = None
         self.__y_label = None
-
+        self.__background_image = None
+        self.__show_background_image = False
+        self.__dataframe = None
 
         # Specifc types 
         if(graph_type == "bar" or graph_type == "scatter" or graph_type == "pie"):
@@ -19,6 +21,7 @@ class PlotData:
         
         if(graph_type == "heatmap"):
             self.__heatmap_table = None
+
         
 
     # Setters and Getters
@@ -27,6 +30,10 @@ class PlotData:
         self.__x_label = label
     def set_y_label(self, label):
         self.__y_label = label
+    def set_background_image(self, img):
+        self.__background_image = img
+    def set_dataframe(self, dataframe):
+        self.__dataframe = dataframe
     def get_x_label(self):
         return self.__x_label
     def get_y_label(self):
@@ -35,6 +42,17 @@ class PlotData:
         return self.__entries
     def get_entry(self, entry_id):
         return self.__entries[entry_id]
+    def get_background_image(self):
+        return self.__background_image
+    def get_dataframe(self):
+        return self.__dataframe
+
+    def show_background_image(self):
+        self.__show_background_image = True
+    def hide_background_image(self):
+        self.__show_background_image = False
+    def is_background_image_visible(self):
+        return self.__show_background_image
 
         # pie
     def set_sector_labels(self, labels):

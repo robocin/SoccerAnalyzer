@@ -162,7 +162,7 @@ class MainWindow(QMainWindow):
             self.main_list.insertItem(4, "Proporção de gols")
             self.main_list.insertItem(5, "Posição dos gols")
             self.main_list.insertItem(6, "Heatmap: ball position")
-            #self.main_list.insertItem(7,)
+            self.main_list.insertItem(7, "Event Retrospective")
             #self.main_list.insertItem(8,)
             #self.main_list.insertItem(9,)
 
@@ -278,6 +278,9 @@ class MainWindow(QMainWindow):
         
         elif(graph_type == "Heatmap: ball position"):
             self.game_info.plot_heatmap_ball_position(self, "Heatmap: ball position")
+
+        elif(graph_type == "Event Retrospective"):
+            self.game_info.plot_event_retrospective(self, "Event Retrospective", 200, 500)
 
         return space
     
