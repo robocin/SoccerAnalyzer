@@ -240,9 +240,8 @@ class DataCollector():
 	def plot_graph(self, mainWindowObject, graph_type, title, data, axes):
 		#Clear previous plots in the axes
 		axes.clear()
-		plt.clf()
 		#Create an matplotlib.axes object
-		mainWindowObject.canvas.show()
+		mainWindowObject.figure.canvas.show()
 
 		if (graph_type == "bar"):
 			# sets axis labels
@@ -272,32 +271,12 @@ class DataCollector():
 		if (graph_type == "scatter"):
 			axes.set_title(title)
 			axes.set_xlabel('X')
-			axes.set_ylabel('Y')																
-			axes.scatter(data.get_entry(0).get_x_positions(), data.get_entry(0).get_y_positions(), color = "blue", label = self.get_team("l").get_name() )
-			axes.scatter(data.get_entry(1).get_x_positions(), data.get_entry(1).get_y_positions(), color = "#ffa1a1", label = self.get_team("r").get_name() )
+			axes.set_ylabel('Y')	
+			for entry in data.get_entries():
+				axes.scatter(entry.get_x_positions(), entry.get_y_positions(),color = entry.get_color(), label = entry.get_label())									
+			
 			axes.legend()
 			axes.margins(x = 1, y = 1)
-
-
-
-		#TODO: TERMINAR IMPLEMENTAÇÃO QUANDO O MESMO PROBLEMA DE _plot_faults_position for
-		#      resolvido.
-		if (graph_type == "_scatter"):
-                    # set title
-                    axes.set_title('Posição das faltas')
-                    # set axis labels
-                    axes.set_xlabel('X')
-                    axes.set_ylabel('Y')
-                    
-                    #Xrc = [20,50,70]
-                    #Yrc = [20,50,70]
-                    #Xother = [26,58,74]
-                    #Yother = [26,58,74]
-                    #axes.scatter(Xrc, Yrc, color='r')
-                    #axes.scatter(Xother, Yother, color='b')
-
-                    axes.scatter(data.get_entry(0).get_x_positions(), data.get_entry(0).get_y_positions(), color="#7da67d")
-                    axes.scatter(data.get_entry(1).get_x_positions(), data.get_entry(1).get_y_positions(), color="#ffa1a1")
 
 		#TODO: tornar a consulta ao .csv em evento único (ao abrir o programa)
 		if (graph_type == "heatmap"):
@@ -308,24 +287,6 @@ class DataCollector():
 			axes.set_ybound(lower=33, upper=-33)
 				# sets color of the graph
 			axes.set_facecolor("#dbf9db")
-
-		# TODO: Heatmap discreto. Ver se vale a pena manter. (baixa prioridade)
-		if (graph_type == "_heatmap"):
-			# the csv must be in this format:
-			'''
-			X,Y,Value
-			0,0,0.6
-			0,1,0.7
-			0,2,0.3
-			1,0,0.2
-			1,1,0.4
-			1,2,0.9
-			'''
-			df = pd.read_csv("files/temp_heatmap_csv.csv") # 
-
-			table = df.pivot('Y', 'X', 'Value')
-			sb.heatmap(table, ax = axes) 
-			axes.invert_yaxis()
 
 		if (graph_type == "line"):
 			#TODO: generalizar isso
@@ -411,26 +372,20 @@ class DataCollector():
 		teamR.set_x_positions(teamR_x_positions)
 		teamR.set_y_positions(teamR_y_positions)
 
+		data_to_plot.get_entry(0).set_label(self.get_team_name("l"))
+		data_to_plot.get_entry(1).set_label(self.get_team_name("r"))
+
 		data_to_plot.set_background_image(plt.imread("files/soccerField.png"))
 		data_to_plot.show_background_image()
 
-		self.plot_graph(mainWindowObject, "scatter", title, data_to_plot, axes)
-	
-	#TODO: TERMINAR IMPLEMENTAÇÃO, DEPOIS QUE RESOLVER O PROBLEMA
-	#      DE DESCOBRIR QUEM FEZ A FALTA
-	def _plot_faults_position(self, mainWindowObject, title, axes):
-		data_to_plot = PlotData("scatter",2)
-		# sets data for team1
-		team1 = data_to_plot.get_entry(0)
-			# for each fault made by team "l", appends it to the data_to_plot's entry of the team it belongs to
-		for fault in self.get_team("l").get_faults_commited():
-			team1.append_fault(fault)
-		# sets data for team 2
-		team2 = data_to_plot.get_entry(1)
-		for fault in self.get_team("r").get_faults_commited():
-			team2.append_fault(fault)
+		team_l_name_to_lower = data_to_plot.get_entry(0).get_label().lower()
 
-		data_to_plot.set_background_image(plt.imread("files/soccerField.png"))
+		if(team_l_name_to_lower == "robocin"):
+			data_to_plot.get_entry(0).set_color("#7da67d")
+			data_to_plot.get_entry(1).set_color("#ffa1a1")
+		else:
+			data_to_plot.get_entry(0).set_color("#ffa1a1")
+			data_to_plot.get_entry(1).set_color("#7da67d")
 
 		self.plot_graph(mainWindowObject, "scatter", title, data_to_plot, axes)
 
@@ -461,8 +416,21 @@ class DataCollector():
 		teamR.set_x_positions(teamR_x_positions)
 		teamR.set_y_positions(teamR_y_positions)
 
+		data_to_plot.get_entry(0).set_label(self.get_team_name("l"))
+		data_to_plot.get_entry(1).set_label(self.get_team_name("r"))
+
 		data_to_plot.set_background_image(plt.imread("files/soccerField.png"))
 		data_to_plot.show_background_image()
+
+		team_l_name_to_lower = data_to_plot.get_entry(0).get_label().lower()
+		team_r_name_to_lower = data_to_plot.get_entry(1).get_label().lower()
+
+		if(team_l_name_to_lower == "robocin"):
+			data_to_plot.get_entry(0).set_color("#7da67d")
+			data_to_plot.get_entry(1).set_color("#ffa1a1")
+		else:
+			data_to_plot.get_entry(0).set_color("#ffa1a1")
+			data_to_plot.get_entry(1).set_color("#7da67d")
 
 		self.plot_graph(mainWindowObject, "scatter", title, data_to_plot, axes)
 
@@ -475,6 +443,7 @@ class DataCollector():
 		data_to_plot = PlotData("line")
 
 		data_to_plot.set_dataframe(self.copy_dataframe_subset_by_rows(self.__data_frame, start_time, end_time))
+
 
 		data_to_plot.set_background_image(plt.imread("files/soccerField.png"))
 		data_to_plot.show_background_image()
