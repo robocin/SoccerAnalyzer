@@ -107,7 +107,7 @@ class MainWindow(QMainWindow):
 
         return category
 
-    def create_comboBox_entity_drop_down_button(self, graph_type):
+    def create_comboBox_entity_drop_down_button(self, graph_type, axes):
         comboBox_entity = QComboBox()
 
         comboBox_entity.addItem("ball")
@@ -115,33 +115,32 @@ class MainWindow(QMainWindow):
         for letter in letters:
             for i in range(1,12):
                 comboBox_entity.addItem("player_" + letter + str(i))
-        comboBox_entity.currentTextChanged.connect(lambda: self.comboBox_entity_chosen(comboBox_entity.currentText(), graph_type))
+        comboBox_entity.currentTextChanged.connect(lambda: self.comboBox_entity_chosen(comboBox_entity.currentText(), graph_type, axes))
 
         return comboBox_entity        
 
-    def comboBox_entity_chosen(self, playerIndicative, graph_type):
+    def comboBox_entity_chosen(self, playerIndicative, graph_type, axes):
 
         #TODO: clear view aqui?
         if(graph_type == "Heatmap"):
             self.string_x = playerIndicative + "_x"
             self.string_y = playerIndicative + "_y"
-            self.game_info.plot_heatmap_position(self, "heatmap", self.string_x, self.string_y)
-            
+            self.game_info.plot_heatmap_position(self, "heatmap", self.string_x, self.string_y, axes)
 
-    def create_comboBox_goal_drop_down_button(self, graph_type):
+    def create_comboBox_goal_drop_down_button(self, graph_type, axes):
         comboBox_goal = QComboBox()
         comboBox_goal.addItem("Choose a goal")
         for i in range(1, 1 + self.game_info.get_team("l").get_number_of_goals_scored()+self.game_info.get_team("r").get_number_of_goals_scored()):
             comboBox_goal.addItem(str(i)) #TODO: adicionar nome do time que fez cada gol
 
-        comboBox_goal.currentTextChanged.connect(lambda: self.comboBox_goal_chosen(comboBox_goal, graph_type))
+        comboBox_goal.currentTextChanged.connect(lambda: self.comboBox_goal_chosen(comboBox_goal, graph_type, axes))
 
         return comboBox_goal
 
-    def comboBox_goal_chosen(self, comboBox, graph_type):
+    def comboBox_goal_chosen(self, comboBox, graph_type, axes):
         if(graph_type == "Event Retrospective" and comboBox.currentText()!="Choose a goal"):
             start_time, end_time = self.game_info.goal_replay(int(comboBox.currentText()), 100)      
-            self.game_info.plot_event_retrospective(self, "Event Retrospective", start_time, end_time)            
+            self.game_info.plot_event_retrospective(self, "Event Retrospective", start_time, end_time, axes)            
 
     def mainScreen(self, category):
         # All log types
@@ -207,7 +206,7 @@ class MainWindow(QMainWindow):
             self.main_list.insertItem(3, "Posição dos gols")
             self.main_list.insertItem(4, "Heatmap")
             self.main_list.insertItem(5, "Event Retrospective")
-            self.main_list.insertItem(6, "Player Retrospective")
+            self.main_list.insertItem(6, "Player Replay")
             #self.main_list.insertItem(9,)
 
             # vss
@@ -263,7 +262,6 @@ class MainWindow(QMainWindow):
         if (graph_type == False):
             self.create_view(False,"Escolha uma das opções na lista à esquerda")
    
-    
     def create_Plot(self, graph_type, title):
         '''
         Creates figure, cavas, navigationToolbar, and configures the layout.
@@ -272,8 +270,14 @@ class MainWindow(QMainWindow):
         # creates a 'figure', where to plot the graphs on 
         self.figure = Figure()
 
+        # Creates the axes
+        axes = self.figure.add_subplot(111)
+        
+        
         # creates a canvas widget, which displays the figure 
         self.canvas = FigureCanvas(self.figure)
+        self.canvas.hide()
+        
 
         # Creates the scoreboard widget
         if(graph_type != False):
@@ -296,7 +300,7 @@ class MainWindow(QMainWindow):
         if(graph_type == "Heatmap"):
             text = QLabel("Select the entity: ")
             text.setFont(QtGui.QFont("Arial",20,QtGui.QFont.Bold))
-            comboBox_entity = self.create_comboBox_entity_drop_down_button(graph_type)
+            comboBox_entity = self.create_comboBox_entity_drop_down_button(graph_type, axes)
             plot_options.addWidget(text)
             plot_options.addWidget(comboBox_entity)
 
@@ -304,9 +308,10 @@ class MainWindow(QMainWindow):
         if(graph_type == "Event Retrospective"):
             text = QLabel("Select the goal: ")
             text.setFont(QtGui.QFont("Arial",20,QtGui.QFont.Bold))
-            comboBox_goal = self.create_comboBox_goal_drop_down_button(graph_type)
+            comboBox_goal = self.create_comboBox_goal_drop_down_button(graph_type, axes)
             plot_options.addWidget(text)
             plot_options.addWidget(comboBox_goal)
+
 
         # General layout:
         if(graph_type != False): #if graph_type is not none
@@ -327,22 +332,25 @@ class MainWindow(QMainWindow):
 
         # calls the function responsable of plotting the graph 
         if(graph_type == "Quantidade de faltas"):
-            self.game_info.plot_faults_quantity(self,"Quantidade de faltas")                
+            self.game_info.plot_faults_quantity(self,"Quantidade de faltas", axes)                
 
         elif(graph_type == "Proporção de faltas"):
-            self.game_info.plot_faults_percentage(self,"Proporção de faltas")
+            self.game_info.plot_faults_percentage(self,"Proporção de faltas", axes)
 
         elif(graph_type == "Posição das faltas"):
-            self.game_info.plot_faults_position(self, "Posição das faltas")
+            self.game_info.plot_faults_position(self, "Posição das faltas", axes)
 
         elif(graph_type == "Posição dos gols"):
-            self.game_info.plot_goals_position(self, "Posição dos gols")
+            self.game_info.plot_goals_position(self, "Posição dos gols", axes)
     
         elif(graph_type == "Heatmap"):
-            self.current_plot = self.game_info.plot_heatmap_position(self, "Heatmap", self.string_x, self.string_y)
+            self.current_plot = self.game_info.plot_heatmap_position(self, "Heatmap", self.string_x, self.string_y, axes)
 
         elif(graph_type == "Event Retrospective"):
-            self.game_info.plot_event_retrospective(self, "Event Retrospective", self.start_time, self.end_time)
+            self.game_info.plot_event_retrospective(self, "Event Retrospective", self.start_time, self.end_time, axes)
+
+        elif(graph_type == "Player Replay"):
+            self.game_info.plot_player_replay(self, "Player Replay", 50, 10, axes)
 
         return vertical_space
     

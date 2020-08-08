@@ -105,6 +105,7 @@ class Entry:
             #TODO: PALIATIVO, APAGAR DEPOIS QUE TIVER SOLUÇÃO
             self.__x_positions = []
             self.__y_positions = []
+            self.__color = "blue"
 
 	# Setters and Getters (all types)
     def set_value(self, value):
@@ -133,17 +134,16 @@ class Entry:
         return self.__height
     def get_width(self):
         return self.__width
-
-        # pie
-    def set_value(self, value):
-        self.__value = value
-    def get_value(self):
-        return self.__value
         
         # scatter
     def append_fault(self, fault):
         self.__faults.append(fault)
         #TODO: PALIATIVOS, APAGAR QUANDO TIVER SOLUÇÃO
+    def set_color(self, color):
+        self.__color = color
+    
+    def get_color(self):
+        return self.__color
     
     #TODO: DEPENDE DA SOLUÇÃO DE QUEM COMETEU A FALTA
     def _get_x_positions(self):
