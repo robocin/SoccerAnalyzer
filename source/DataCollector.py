@@ -479,7 +479,7 @@ class DataCollector():
 		
 	def plot_event_retrospective(self, mainWindowObject, title, start_time, end_time):
 		data_to_plot = PlotData("line")
-		data_to_plot.set_dataframe(self.copy_dataframe_subset_by_rows(self.__data_frame, 0, 2000))
+		data_to_plot.set_dataframe(self.copy_dataframe_subset_by_rows(self.__data_frame, start_time, end_time))
 		print(data_to_plot.get_dataframe())
 
 		data_to_plot.set_background_image(plt.imread("files/soccerField.png"))

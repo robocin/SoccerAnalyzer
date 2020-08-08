@@ -1,6 +1,6 @@
 import sys
 
-from PyQt5.QtWidgets import QApplication, QPushButton, QMainWindow, QMessageBox, QWidget, QDialog, QGroupBox, QHBoxLayout, QVBoxLayout, QListWidget, QLabel, QMenuBar, QAction, QFileDialog
+from PyQt5.QtWidgets import QApplication, QPushButton, QComboBox, QMainWindow, QMessageBox, QWidget, QDialog, QGroupBox, QHBoxLayout, QVBoxLayout, QListWidget, QLabel, QMenuBar, QAction, QFileDialog
 from PyQt5 import QtWidgets
 from PyQt5 import QtGui, QtCore
 from PyQt5.QtCore import Qt
@@ -97,6 +97,25 @@ class MainWindow(QMainWindow):
 
         return category
 
+    def create_comboBox_entity_drop_down_button(self):
+        comboBox_entity = QComboBox()
+
+        comboBox_entity.addItem("Ball")
+        letters = "LR"
+        for letter in letters:
+            for i in range(1,12):
+                comboBox_entity.addItem("Player_" + letter + "_" + str(i))
+
+        return comboBox_entity        
+
+    def create_comboBox_goal_drop_down_button(self):
+        comboBox_goal = QComboBox()
+
+        for i in range(1, 1 + self.game_info.get_team("l").get_number_of_goals_scored()+self.game_info.get_team("r").get_number_of_goals_scored()):
+            comboBox_goal.addItem("Goal " + str(i)) #TODO: adicionar nome do time que fez cada gol
+
+        return comboBox_goal
+
     def mainScreen(self, category):
         # All log types
         self.init_Menu() # main menu at the top of the screen
@@ -161,7 +180,7 @@ class MainWindow(QMainWindow):
             self.main_list.insertItem(3, "Quantidade de gols")
             self.main_list.insertItem(4, "Proporção de gols")
             self.main_list.insertItem(5, "Posição dos gols")
-            self.main_list.insertItem(6, "Heatmap: ball position")
+            self.main_list.insertItem(6, "Heatmap")
             self.main_list.insertItem(7, "Event Retrospective")
             #self.main_list.insertItem(8,)
             #self.main_list.insertItem(9,)
@@ -243,20 +262,42 @@ class MainWindow(QMainWindow):
             self.toolbar = NavigationToolbar(self.canvas, self)
 
         # customizes the toolbar and canvas layout 
+        vertical_space = QVBoxLayout() # Vertical general space
+        horizontal_space = QHBoxLayout() # Horizontal space right above the graph
+        plot_options = QHBoxLayout() # Horizontal space that holds the plot options buttons (inside the horizontal space above the graph)
+
+        # plot options buttons #TODO: maybe, create a function to make this block cleaner?
+        if(graph_type == "Heatmap"):
+            text = QLabel("Select the entity: ")
+            text.setFont(QtGui.QFont("Arial",20,QtGui.QFont.Bold))
+            comboBox_entity = self.create_comboBox_entity_drop_down_button()
+            plot_options.addWidget(text)
+            plot_options.addWidget(comboBox_entity)
+
         
-        space = QVBoxLayout()
-             
+        if(graph_type == "Event Retrospective"):
+            text = QLabel("Select the entity and the goal: ")
+            text.setFont(QtGui.QFont("Arial",20,QtGui.QFont.Bold))
+            comboBox_entity = self.create_comboBox_entity_drop_down_button()
+            comboBox_goal = self.create_comboBox_goal_drop_down_button()
+            plot_options.addWidget(text)
+            plot_options.addWidget(comboBox_entity)
+            plot_options.addWidget(comboBox_goal)
+
         if(graph_type != False): #if graph_type is not none
-            space.addWidget(self.scoreboard)
-            space.addWidget(self.toolbar)
+            vertical_space.addWidget(self.scoreboard)
+            horizontal_space.addWidget(self.toolbar)
+            horizontal_space.addLayout(plot_options)
+            vertical_space.addLayout(horizontal_space)
         else:
             # creates the encouraging message at the top 
             self.view_title = QLabel(title) 
             self.view_title.setAlignment(Qt.AlignCenter)
             self.view_title.setFont(QtGui.QFont("Arial",25,QtGui.QFont.Bold))
-            space.addWidget(self.view_title) 
+            vertical_space.addWidget(self.view_title) 
             # Note: here we add the matplotlib canvas to the qvbox
-        space.addWidget(self.canvas) 
+
+        vertical_space.addWidget(self.canvas)
 
         # calls the function responsable of plotting the graph 
         if(graph_type == "Quantidade de faltas"):
@@ -276,13 +317,13 @@ class MainWindow(QMainWindow):
         elif(graph_type == "Posição dos gols"):
             self.game_info.plot_goals_position(self, "Posição dos gols")
         
-        elif(graph_type == "Heatmap: ball position"):
-            self.game_info.plot_heatmap_ball_position(self, "Heatmap: ball position")
+        elif(graph_type == "Heatmap"):
+            self.game_info.plot_heatmap_ball_position(self, "Heatmap")
 
         elif(graph_type == "Event Retrospective"):
-            self.game_info.plot_event_retrospective(self, "Event Retrospective", 200, 500)
+            self.game_info.plot_event_retrospective(self, "Event Retrospective", 0, 10000)
 
-        return space
+        return vertical_space
     
 
     def get_Score(self): 
