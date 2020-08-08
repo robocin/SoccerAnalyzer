@@ -10,6 +10,8 @@ from Position import Position
 from PlotData import PlotData
 
 #Constants
+BALL_X = 10
+BALL_Y = 11
 TOTAL_NUMBER_OF_PLAYERS = 22
 NUMBER_OF_PLAYERS_PER_TEAM = TOTAL_NUMBER_OF_PLAYERS/2
 PLAYER_L1_COUNTING_KICK_LOG_DATA_FRAME_COLUMN_POSITION = 34
@@ -115,10 +117,16 @@ class DataCollector():
 				
 		return kicker_y
 	'''
-
-	def find_unique_event_count(self, event):
+	
+	def find_unique_event_occurrences(self, event):
+  		
+		event_occurrences_index = []
+  		
+		for i in range(len(self.__data_frame)):
+			if(self.__data_frame.iloc[i,1] == event and self.__data_frame.iloc[i-1,1] != event):
+				event_occurrences_index.append(i)
 		
-		simplified_dataframe = self.data_frame[['playmode']]
+		return event_occurrences_index
 
 	def statChanged(self, logDataFrame, rowNumber, columnNumber):
 		if(logDataFrame.iloc[rowNumber, columnNumber] == logDataFrame.iloc[rowNumber-1, columnNumber]):
@@ -302,8 +310,7 @@ class DataCollector():
 
 		if (graph_type == "line"):
 			data.get_dataframe().plot(x="ball_x", y="ball_y", ax = axes)
-
-		# Shows background image if ther is one to be shown (set by data)
+			# Shows background image if ther is one to be shown (set by data)
 		if(data.is_background_image_visible() == True):
 			print("asdfffffffffffffff")
 			img = data.get_background_image()
@@ -367,11 +374,11 @@ class DataCollector():
 		
 		for i in range(len(self.__data_frame)):
 			if(self.__data_frame.iloc[i,1] == "foul_charge_l" and self.__data_frame.iloc[i-1,1] != "foul_charge_l"):
-				teamL_x_positions.append(int(self.__data_frame.iloc[i,10]))
-				teamL_y_positions.append(int(self.__data_frame.iloc[i,11]))
+				teamL_x_positions.append(int(self.__data_frame.iloc[i,BALL_X]))
+				teamL_y_positions.append(int(self.__data_frame.iloc[i,BALL_Y]))
 			elif(self.__data_frame.iloc[i,1] == "foul_charge_r" and self.__data_frame.iloc[i-1,1] != "foul_charge_r"):
-				teamR_x_positions.append(int(self.__data_frame.iloc[i,10]))
-				teamR_y_positions.append(int(self.__data_frame.iloc[i,11]))
+				teamR_x_positions.append(int(self.__data_frame.iloc[i,BALL_X]))
+				teamR_y_positions.append(int(self.__data_frame.iloc[i,BALL_Y]))
 
 		teamL.set_x_positions(teamL_x_positions)
 		teamL.set_y_positions(teamL_y_positions)
@@ -486,3 +493,5 @@ class DataCollector():
 		data_to_plot.show_background_image()
 
 		self.plot_graph(mainWindowObject, "line", title, data_to_plot)
+
+	def plot_player_retrospective(self, mainWindowObject, title, cycles):

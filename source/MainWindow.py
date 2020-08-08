@@ -163,7 +163,7 @@ class MainWindow(QMainWindow):
             self.main_list.insertItem(5, "Posição dos gols")
             self.main_list.insertItem(6, "Heatmap: ball position")
             self.main_list.insertItem(7, "Event Retrospective")
-            #self.main_list.insertItem(8,)
+            self.main_list.insertItem(8, "Player Retrospective")
             #self.main_list.insertItem(9,)
 
             # vss
@@ -285,13 +285,6 @@ class MainWindow(QMainWindow):
         return space
     
 
-    def get_Score(self): 
-        placar = [self.log['team_score_l'].max(),self.log['team_score_r'].max()]
-        team_left = self.log.iloc[0].team_name_l
-        team_right = self.log.iloc[0].team_name_r
-        equipes = [team_left,team_right]
-        eixox = np.arange(len(equipes))
-    
     def getOut(self):
         sys.exit()
 
