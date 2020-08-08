@@ -11,6 +11,7 @@ from matplotlib.backends.backend_qt4agg import NavigationToolbar2QT as Navigatio
 
 import numpy as np
 import pandas as pd
+import matplotlib.pyplot as plt
 
 from DataCollector import DataCollector 
 from PlotData import PlotData
@@ -30,6 +31,8 @@ LIST_MAXIMUM_WIDTH = 211
 class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
+
+        self.current_plot = None
 
         self.VIEW_FILLED = False
 
@@ -100,13 +103,17 @@ class MainWindow(QMainWindow):
     def create_comboBox_entity_drop_down_button(self):
         comboBox_entity = QComboBox()
 
-        comboBox_entity.addItem("Ball")
-        letters = "LR"
+        comboBox_entity.addItem("ball")
+        letters = "lr"
         for letter in letters:
             for i in range(1,12):
-                comboBox_entity.addItem("Player_" + letter + "_" + str(i))
+                comboBox_entity.addItem("player_" + letter + str(i))
+        comboBox_entity.currentTextChanged.connect(lambda: self.comboBox_entity_chosen(comboBox_entity.currentText()))
 
         return comboBox_entity        
+
+    def comboBox_entity_chosen(self, playerIndicative):
+        self.game_info.plot_heatmap_position(self, "heatmap", playerIndicative + "_x", playerIndicative + "_y")
 
     def create_comboBox_goal_drop_down_button(self):
         comboBox_goal = QComboBox()
@@ -114,7 +121,12 @@ class MainWindow(QMainWindow):
         for i in range(1, 1 + self.game_info.get_team("l").get_number_of_goals_scored()+self.game_info.get_team("r").get_number_of_goals_scored()):
             comboBox_goal.addItem("Goal " + str(i)) #TODO: adicionar nome do time que fez cada gol
 
+        comboBox_entity.currentTextChanged.connect(lambda: self.comboBox_goal_chosen(comboBox_goal))
+
         return comboBox_goal
+
+    def comboBox_goal_chosen(self, comboBox):
+        pass #do the graph change
 
     def mainScreen(self, category):
         # All log types
@@ -266,7 +278,8 @@ class MainWindow(QMainWindow):
         horizontal_space = QHBoxLayout() # Horizontal space right above the graph
         plot_options = QHBoxLayout() # Horizontal space that holds the plot options buttons (inside the horizontal space above the graph)
 
-        # plot options buttons #TODO: maybe, create a function to make this block cleaner?
+        # Custom layouts:
+            # Custom Heatmap layout
         if(graph_type == "Heatmap"):
             text = QLabel("Select the entity: ")
             text.setFont(QtGui.QFont("Arial",20,QtGui.QFont.Bold))
@@ -274,7 +287,7 @@ class MainWindow(QMainWindow):
             plot_options.addWidget(text)
             plot_options.addWidget(comboBox_entity)
 
-        
+            # Custom Event Retrospective layout
         if(graph_type == "Event Retrospective"):
             text = QLabel("Select the entity and the goal: ")
             text.setFont(QtGui.QFont("Arial",20,QtGui.QFont.Bold))
@@ -284,6 +297,7 @@ class MainWindow(QMainWindow):
             plot_options.addWidget(comboBox_entity)
             plot_options.addWidget(comboBox_goal)
 
+        # General layout:
         if(graph_type != False): #if graph_type is not none
             vertical_space.addWidget(self.scoreboard)
             horizontal_space.addWidget(self.toolbar)
@@ -298,6 +312,7 @@ class MainWindow(QMainWindow):
             # Note: here we add the matplotlib canvas to the qvbox
 
         vertical_space.addWidget(self.canvas)
+
 
         # calls the function responsable of plotting the graph 
         if(graph_type == "Quantidade de faltas"):
@@ -316,9 +331,9 @@ class MainWindow(QMainWindow):
 
         elif(graph_type == "Posição dos gols"):
             self.game_info.plot_goals_position(self, "Posição dos gols")
-        
+    
         elif(graph_type == "Heatmap"):
-            self.game_info.plot_heatmap_ball_position(self, "Heatmap")
+            self.current_plot = self.game_info.plot_heatmap_position(self, "Heatmap", "ball_x", "ball_y")
 
         elif(graph_type == "Event Retrospective"):
             self.game_info.plot_event_retrospective(self, "Event Retrospective", 0, 10000)

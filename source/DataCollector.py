@@ -9,6 +9,8 @@ from Player import Player
 from Position import Position
 from PlotData import PlotData
 
+from matplotlib.backends.backend_qt4agg import NavigationToolbar2QT as NavigationToolbar
+
 #Constants
 TOTAL_NUMBER_OF_PLAYERS = 22
 NUMBER_OF_PLAYERS_PER_TEAM = TOTAL_NUMBER_OF_PLAYERS/2
@@ -221,6 +223,8 @@ class DataCollector():
 
 	def plot_graph(self, mainWindowObject, graph_type, title, data):
 		#Create an matplotlib.axes object
+		if(mainWindowObject.current_plot != None):
+			mainWindowObject.current_plot.remove()
 		axes = mainWindowObject.figure.add_subplot(111)
 
 		if (graph_type == "bar"):
@@ -280,8 +284,9 @@ class DataCollector():
 
 		#TODO: tornar a consulta ao .csv em evento único (ao abrir o programa)
 		if (graph_type == "heatmap"):
-			sb.kdeplot(self.__data_frame["ball_x"], self.__data_frame["ball_y"],ax = axes, shade = True, color = "green", n_levels = 10)
-		
+			x_and_y_strings = data.get_heatmap_strings()
+			mainWindowObject.current_plot = sb.kdeplot(self.__data_frame[x_and_y_strings[0]], self.__data_frame[x_and_y_strings[1]],ax = axes, shade = True, color = "green", n_levels = 10)
+
 		# TODO: Heatmap discreto. Ver se vale a pena manter. (baixa prioridade)
 		if (graph_type == "_heatmap"):
 			# the csv must be in this format:
@@ -305,7 +310,6 @@ class DataCollector():
 
 		# Shows background image if ther is one to be shown (set by data)
 		if(data.is_background_image_visible() == True):
-			print("asdfffffffffffffff")
 			img = data.get_background_image()
 			axes.imshow(img, zorder = -1, extent=[-56, 56, -34, 34])
 
@@ -473,9 +477,10 @@ class DataCollector():
 
 		self.plot_graph(mainWindowObject, "scatter", title, data_to_plot)
 
-	def plot_heatmap_ball_position(self, mainWindowObject, title):
+	def plot_heatmap_position(self, mainWindowObject, title, x_string, y_string):
 		data_to_plot = PlotData()
-		self.plot_graph(mainWindowObject, "heatmap", title, data_to_plot)
+		data_to_plot.set_heatmap_strings([x_string,y_string])
+		self.plot_graph(mainWindowObject, "heatmap" , title, data_to_plot)
 		
 	def plot_event_retrospective(self, mainWindowObject, title, start_time, end_time):
 		data_to_plot = PlotData("line")
