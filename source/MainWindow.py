@@ -120,6 +120,7 @@ class MainWindow(QMainWindow):
         return comboBox_entity        
 
     def comboBox_entity_chosen(self, playerIndicative, graph_type):
+
         #TODO: clear view aqui?
         if(graph_type == "Heatmap"):
             self.string_x = playerIndicative + "_x"
@@ -129,7 +130,7 @@ class MainWindow(QMainWindow):
 
     def create_comboBox_goal_drop_down_button(self, graph_type):
         comboBox_goal = QComboBox()
-
+        comboBox_goal.addItem("Choose a goal")
         for i in range(1, 1 + self.game_info.get_team("l").get_number_of_goals_scored()+self.game_info.get_team("r").get_number_of_goals_scored()):
             comboBox_goal.addItem(str(i)) #TODO: adicionar nome do time que fez cada gol
 
@@ -138,7 +139,7 @@ class MainWindow(QMainWindow):
         return comboBox_goal
 
     def comboBox_goal_chosen(self, comboBox, graph_type):
-        if(graph_type == "Event Retrospective"):
+        if(graph_type == "Event Retrospective" and comboBox.currentText()!="Choose a goal"):
             start_time, end_time = self.game_info.goal_replay(int(comboBox.currentText()), 100)      
             self.game_info.plot_event_retrospective(self, "Event Retrospective", start_time, end_time)            
 

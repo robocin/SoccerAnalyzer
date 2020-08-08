@@ -321,8 +321,14 @@ class DataCollector():
 			axes.invert_yaxis()
 
 		if (graph_type == "line"):
+			#TODO: generalizar isso
 			mainWindowObject.current_plot = data.get_dataframe().plot(x="ball_x", y="ball_y", ax = axes)
 
+			''' TENTANDO FAZER MOSTRAR O VETOR, será realmente útil?
+			kick_vector_x = data.get_dataframe().iloc[0,11]
+			kick_vector_y = data.get_dataframe().iloc[0,12]
+			axes.annotate("", xy=(kick_vector_x, kick_vector_y), xytext=(0, 0), arrowprops=dict(arrowstyle="->"))
+			'''
 		# Shows background image if ther is one to be shown (set by data)
 		if(data.is_background_image_visible() == True):
 			img = data.get_background_image()
