@@ -301,6 +301,11 @@ class DataCollector():
 		if (graph_type == "heatmap"):
 			x_and_y_strings = data.get_heatmap_strings()
 			mainWindowObject.current_plot = sb.kdeplot(self.__data_frame[x_and_y_strings[0]], self.__data_frame[x_and_y_strings[1]],ax = axes, shade = True, color = "green", n_levels = 10)
+				# sets the size of the graph
+			axes.set_xbound(lower=-56, upper=56)
+			axes.set_ybound(lower=33, upper=-33)
+				# sets color of the graph
+			axes.set_facecolor("#dbf9db")
 
 		# TODO: Heatmap discreto. Ver se vale a pena manter. (baixa prioridade)
 		if (graph_type == "_heatmap"):
