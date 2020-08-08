@@ -126,7 +126,6 @@ class MainWindow(QMainWindow):
             self.string_x = playerIndicative + "_x"
             self.string_y = playerIndicative + "_y"
             self.game_info.plot_heatmap_position(self, "heatmap", self.string_x, self.string_y, axes)
-            
 
     def create_comboBox_goal_drop_down_button(self, graph_type, axes):
         comboBox_goal = QComboBox()

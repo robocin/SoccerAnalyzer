@@ -240,7 +240,7 @@ class DataCollector():
 	def plot_graph(self, mainWindowObject, graph_type, title, data, axes):
 		#Clear previous plots in the axes
 		axes.clear()
-		
+		plt.clf()
 		#Create an matplotlib.axes object
 		mainWindowObject.canvas.show()
 
