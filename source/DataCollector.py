@@ -1,6 +1,7 @@
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
+import matplotlib
 import seaborn as sb
 
 from Team import Team
@@ -236,11 +237,12 @@ class DataCollector():
 		start_time = row - size
 		return [start_time, end_time]
 
-	def plot_graph(self, mainWindowObject, graph_type, title, data):
+	def plot_graph(self, mainWindowObject, graph_type, title, data, axes):
+		#Clear previous plots in the axes
+		axes.clear()
+		
 		#Create an matplotlib.axes object
-		if(mainWindowObject.current_plot != None):
-			mainWindowObject.current_plot.remove()
-		axes = mainWindowObject.figure.add_subplot(111)
+		mainWindowObject.canvas.show()
 
 		if (graph_type == "bar"):
 			# sets axis labels
@@ -300,7 +302,7 @@ class DataCollector():
 		#TODO: tornar a consulta ao .csv em evento único (ao abrir o programa)
 		if (graph_type == "heatmap"):
 			x_and_y_strings = data.get_heatmap_strings()
-			mainWindowObject.current_plot = sb.kdeplot(self.__data_frame[x_and_y_strings[0]], self.__data_frame[x_and_y_strings[1]],ax = axes, shade = True, color = "green", n_levels = 10)
+			sb.kdeplot(self.__data_frame[x_and_y_strings[0]], self.__data_frame[x_and_y_strings[1]],ax = axes, shade = True, color = "green", n_levels = 10)
 				# sets the size of the graph
 			axes.set_xbound(lower=-56, upper=56)
 			axes.set_ybound(lower=33, upper=-33)
@@ -327,7 +329,7 @@ class DataCollector():
 
 		if (graph_type == "line"):
 			#TODO: generalizar isso
-			mainWindowObject.current_plot = data.get_dataframe().plot(x="ball_x", y="ball_y", ax = axes)
+			data.get_dataframe().plot(x="ball_x", y="ball_y", ax = axes)
 
 			''' TENTANDO FAZER MOSTRAR O VETOR, será realmente útil?
 			kick_vector_x = data.get_dataframe().iloc[0,11]
@@ -339,8 +341,9 @@ class DataCollector():
 			img = data.get_background_image()
 			axes.imshow(img, zorder = -1, extent=[-56, 56, -34, 34])
 
+		return axes
 
-	def plot_faults_quantity(self, mainWindowObject, title):
+	def plot_faults_quantity(self, mainWindowObject, title, axes):
 		data_to_plot = PlotData("bar",2)
 			
 			# sets data for graph
@@ -358,9 +361,9 @@ class DataCollector():
 		bar2.set_value(self.get_team("r").get_number_of_faults_commited()) 
 		
 			# calls the function to plot the graph 
-		self.plot_graph(mainWindowObject, "bar", title, data_to_plot)
+		self.plot_graph(mainWindowObject, "bar", title, data_to_plot, axes)
 
-	def plot_faults_percentage(self, mainWindowObject, title):
+	def plot_faults_percentage(self, mainWindowObject, title, axes):
 		data_to_plot = PlotData("pie",2)
 
 		# sets labels for each sector
@@ -380,11 +383,11 @@ class DataCollector():
 		sector2.set_value( (fouls_commited_by_r*100)/total_number_of_fouls)
 
 
-		self.plot_graph(mainWindowObject, "pie", title, data_to_plot)
+		self.plot_graph(mainWindowObject, "pie", title, data_to_plot, axes)
 
 	#TODO: SOLUÇÃO PALIATIVA, ELIMINAR QUANDO A DE BAIXO ESTIVER
 	#	   PRONTA. (define a posição da falta pela posição da bola no momento em que a falta ocorreu)
-	def plot_faults_position(self, mainWindowObject, title):
+	def plot_faults_position(self, mainWindowObject, title, axes):
 		data_to_plot = PlotData("scatter",2)
 		
 		teamL = data_to_plot.get_entry(0)
@@ -411,11 +414,11 @@ class DataCollector():
 		data_to_plot.set_background_image(plt.imread("files/soccerField.png"))
 		data_to_plot.show_background_image()
 
-		self.plot_graph(mainWindowObject, "scatter", title, data_to_plot)
+		self.plot_graph(mainWindowObject, "scatter", title, data_to_plot, axes)
 	
 	#TODO: TERMINAR IMPLEMENTAÇÃO, DEPOIS QUE RESOLVER O PROBLEMA
 	#      DE DESCOBRIR QUEM FEZ A FALTA
-	def _plot_faults_position(self, mainWindowObject, title):
+	def _plot_faults_position(self, mainWindowObject, title, axes):
 		data_to_plot = PlotData("scatter",2)
 		# sets data for team1
 		team1 = data_to_plot.get_entry(0)
@@ -429,51 +432,11 @@ class DataCollector():
 
 		data_to_plot.set_background_image(plt.imread("files/soccerField.png"))
 
-		self.plot_graph(mainWindowObject, "scatter", title, data_to_plot)
-
-	def plot_goals_quantity(self, mainWindowObject, title):
-		data_to_plot = PlotData("bar",2)
-
-		# sets data for graph
-		data_to_plot.set_x_label("Team name")
-		data_to_plot.set_y_label("Number of goals scored")
-			
-			# sets data for bar 1 
-		bar1 =  data_to_plot.get_entry(0)
-		bar1.set_x_coordinate(self.get_team("l").get_name())
-		bar1.set_value(self.get_team("l").get_number_of_goals_scored()) 
-			
-			# sets data for bar 2 
-		bar2 = data_to_plot.get_entry(1) 
-		bar2.set_x_coordinate(self.get_team("r").get_name())
-		bar2.set_value(self.get_team("r").get_number_of_goals_scored()) 
-		
-			# calls the function to plot the graph 
-		self.plot_graph(mainWindowObject, "bar", title, data_to_plot)
-	
-	def plot_goals_percentage(self, mainWindowObject, title):
-		data_to_plot = PlotData("pie",2)
-		
-		data_to_plot.set_sector_labels([self.get_team("l").get_name(), self.get_team("l").get_name()])
-
-		# aux variables for readability
-		goals_scored_l = self.get_team("l").get_number_of_goals_scored()
-		goals_scored_r = self.get_team("r").get_number_of_goals_scored()
-		total_number_of_goals = goals_scored_l + goals_scored_r
-		
-		# sets data for sector 1
-		sector1 = data_to_plot.get_entry(0)
-		sector1.set_value( (goals_scored_l*100)/total_number_of_goals)
-
-		# sets data for sector 2
-		sector2 = data_to_plot.get_entry(1)
-		sector2.set_value( (goals_scored_r*100)/total_number_of_goals)
-
-		self.plot_graph(mainWindowObject, "pie", title, data_to_plot)
+		self.plot_graph(mainWindowObject, "scatter", title, data_to_plot, axes)
 
 
 	#TODO: ESTE É O LOCAL, NO GOL, ONDE A BOLA ENTROU (LEMBRAR DE FAZER O GRÁFICO DA POSIÇÃO DE QUEM CHUTOU A BOLA Q RESULTOU EM GOL)
-	def plot_goals_position(self, mainWindowObject, title):
+	def plot_goals_position(self, mainWindowObject, title, axes):
 
 		data_to_plot = PlotData("scatter",2)
 		
@@ -501,14 +464,14 @@ class DataCollector():
 		data_to_plot.set_background_image(plt.imread("files/soccerField.png"))
 		data_to_plot.show_background_image()
 
-		self.plot_graph(mainWindowObject, "scatter", title, data_to_plot)
+		self.plot_graph(mainWindowObject, "scatter", title, data_to_plot, axes)
 
-	def plot_heatmap_position(self, mainWindowObject, title, x_string, y_string):
+	def plot_heatmap_position(self, mainWindowObject, title, x_string, y_string, axes):
 		data_to_plot = PlotData()
 		data_to_plot.set_heatmap_strings([x_string,y_string])
-		self.plot_graph(mainWindowObject, "heatmap" , title, data_to_plot)
+		return self.plot_graph(mainWindowObject, "heatmap" , title, data_to_plot, axes)
 		
-	def plot_event_retrospective(self, mainWindowObject, title, start_time, end_time):
+	def plot_event_retrospective(self, mainWindowObject, title, start_time, end_time, axes):
 		data_to_plot = PlotData("line")
 
 		data_to_plot.set_dataframe(self.copy_dataframe_subset_by_rows(self.__data_frame, start_time, end_time))
@@ -516,4 +479,4 @@ class DataCollector():
 		data_to_plot.set_background_image(plt.imread("files/soccerField.png"))
 		data_to_plot.show_background_image()
 
-		self.plot_graph(mainWindowObject, "line", title, data_to_plot)
+		return self.plot_graph(mainWindowObject, "line", title, data_to_plot, axes)
