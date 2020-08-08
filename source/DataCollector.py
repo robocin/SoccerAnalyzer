@@ -9,6 +9,8 @@ from Player import Player
 from Position import Position
 from PlotData import PlotData
 
+from matplotlib.backends.backend_qt4agg import NavigationToolbar2QT as NavigationToolbar
+
 #Constants
 BALL_X = 10
 BALL_Y = 11
@@ -227,8 +229,25 @@ class DataCollector():
 
 		# Plotting of graphs:
 
+	#TODO: procurar o valor por string e achar o valor showtime referente
+	def goal_replay(self, goal_number, size):
+		#Returns the start and end times of a replay of a gol
+		start_time = 0
+		end_time = 0
+		number_of_goals = 0
+		for row in self.__data_frame.index:
+			if((self.__data_frame.iloc[row,1] == "goal_l" and self.__data_frame.iloc[row-1,1] != "goal_l") or (self.__data_frame.iloc[row,1] == "goal_r" and self.__data_frame.iloc[row-1,1] != "goal_r")):
+				number_of_goals += 1
+			if(number_of_goals == goal_number):
+				break
+		end_time = row
+		start_time = row - size
+		return [start_time, end_time]
+
 	def plot_graph(self, mainWindowObject, graph_type, title, data):
 		#Create an matplotlib.axes object
+		if(mainWindowObject.current_plot != None):
+			mainWindowObject.current_plot.remove()
 		axes = mainWindowObject.figure.add_subplot(111)
 
 		if (graph_type == "bar"):
@@ -259,9 +278,10 @@ class DataCollector():
 		if (graph_type == "scatter"):
 			axes.set_title(title)
 			axes.set_xlabel('X')
-			axes.set_ylabel('Y')																
-			axes.scatter(data.get_entry(0).get_x_positions(), data.get_entry(0).get_y_positions(), color = "blue", label = self.get_team("l").get_name() )
-			axes.scatter(data.get_entry(1).get_x_positions(), data.get_entry(1).get_y_positions(), color = "#ffa1a1", label = self.get_team("r").get_name() )
+			axes.set_ylabel('Y')	
+			for(entry in data.get_entries().count()):													
+				axes.scatter(data.get_entry(0).get_x_positions(), data.get_entry(0).get_y_positions(), color = "blue", label = self.get_team("l").get_name() )
+				axes.scatter(data.get_entry(1).get_x_positions(), data.get_entry(1).get_y_positions(), color = "#ffa1a1", label = self.get_team("r").get_name() )
 			axes.legend()
 			axes.margins(x = 1, y = 1)
 
@@ -288,8 +308,14 @@ class DataCollector():
 
 		#TODO: tornar a consulta ao .csv em evento único (ao abrir o programa)
 		if (graph_type == "heatmap"):
-			sb.kdeplot(self.__data_frame["ball_x"], self.__data_frame["ball_y"],ax = axes, shade = True, color = "green", n_levels = 10)
-		
+			x_and_y_strings = data.get_heatmap_strings()
+			mainWindowObject.current_plot = sb.kdeplot(self.__data_frame[x_and_y_strings[0]], self.__data_frame[x_and_y_strings[1]],ax = axes, shade = True, color = "green", n_levels = 10)
+				# sets the size of the graph
+			axes.set_xbound(lower=-56, upper=56)
+			axes.set_ybound(lower=33, upper=-33)
+				# sets color of the graph
+			axes.set_facecolor("#dbf9db")
+
 		# TODO: Heatmap discreto. Ver se vale a pena manter. (baixa prioridade)
 		if (graph_type == "_heatmap"):
 			# the csv must be in this format:
@@ -309,10 +335,16 @@ class DataCollector():
 			axes.invert_yaxis()
 
 		if (graph_type == "line"):
-			data.get_dataframe().plot(x="ball_x", y="ball_y", ax = axes)
-			# Shows background image if ther is one to be shown (set by data)
+			#TODO: generalizar isso
+			mainWindowObject.current_plot = data.get_dataframe().plot(x="ball_x", y="ball_y", ax = axes)
+
+			''' TENTANDO FAZER MOSTRAR O VETOR, será realmente útil?
+			kick_vector_x = data.get_dataframe().iloc[0,11]
+			kick_vector_y = data.get_dataframe().iloc[0,12]
+			axes.annotate("", xy=(kick_vector_x, kick_vector_y), xytext=(0, 0), arrowprops=dict(arrowstyle="->"))
+			'''
+		# Shows background image if ther is one to be shown (set by data)
 		if(data.is_background_image_visible() == True):
-			print("asdfffffffffffffff")
 			img = data.get_background_image()
 			axes.imshow(img, zorder = -1, extent=[-56, 56, -34, 34])
 
@@ -480,18 +512,54 @@ class DataCollector():
 
 		self.plot_graph(mainWindowObject, "scatter", title, data_to_plot)
 
-	def plot_heatmap_ball_position(self, mainWindowObject, title):
+	def plot_heatmap_position(self, mainWindowObject, title, x_string, y_string):
 		data_to_plot = PlotData()
-		self.plot_graph(mainWindowObject, "heatmap", title, data_to_plot)
+		data_to_plot.set_heatmap_strings([x_string,y_string])
+		self.plot_graph(mainWindowObject, "heatmap" , title, data_to_plot)
 		
 	def plot_event_retrospective(self, mainWindowObject, title, start_time, end_time):
 		data_to_plot = PlotData("line")
-		data_to_plot.set_dataframe(self.copy_dataframe_subset_by_rows(self.__data_frame, 0, 2000))
-		print(data_to_plot.get_dataframe())
+
+		data_to_plot.set_dataframe(self.copy_dataframe_subset_by_rows(self.__data_frame, start_time, end_time))
 
 		data_to_plot.set_background_image(plt.imread("files/soccerField.png"))
 		data_to_plot.show_background_image()
 
 		self.plot_graph(mainWindowObject, "line", title, data_to_plot)
 
-	def plot_player_retrospective(self, mainWindowObject, title, cycles):
+	def plot_player_retrospective(self, mainWindowObject, title, cycles, player_n):
+  	
+		player_n = 10
+		cycles = 20
+
+		if side[0] == 'l' or side[0] == 'L':
+			side = 'l'
+		elif side[0] == 'r' or side[0] == 'R':
+			side = 'r'
+		
+		goal_occurrences_l = self.find_unique_event_occurrences("goal_l")
+		goal_occurrences_r = self.find_unique_event_occurrences("goal_r")
+		
+		end_time = goal_occurrences_l[0]
+		start_time = goal_occurrences_l[0] - cycles
+		
+		player_row_x = "player_{}{}_x".format(side,player_n)
+		player_row_y = "player_{}{}_y".format(side,player_n)
+		
+		player_replay_x = []
+		player_replay_y = []
+		
+		for i in range(0, cycles):
+			player_replay_x.append(self.__data_frame.loc[start_time + i,player_row_x])
+			player_replay_y.append(self.__data_frame.loc[start_time + i,player_row_y])
+		
+		data_to_plot = PlotData("scatter", 1)
+
+		data_to_plot.set_x_positions = player_replay_x
+		data_to_plot.set_y_positions = player_replay_y
+
+		data_to_plot.set_background_image(plt.imread("files/soccerField.png"))
+		data_to_plot.show_background_image()
+
+		self.plot_graph(mainWindowObject, "scatter", title, data_to_plot)
+    
