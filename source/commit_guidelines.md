@@ -18,6 +18,7 @@ feat: add hat wobble
 ```
 - `chore`: (changing internal logic)
 - `feat`: (new feature)
+- `deletion`: (deletion of a feature)
 - `fix`: (bug fix)
 - `docs`: (changes to the documentation)
 - `style`: (formatting, missing semi colons, etc)

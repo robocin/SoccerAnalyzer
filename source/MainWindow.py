@@ -204,11 +204,9 @@ class MainWindow(QMainWindow):
             self.main_list.insertItem(0, "Quantidade de faltas")
             self.main_list.insertItem(1, "Proporção de faltas")
             self.main_list.insertItem(2, "Posição das faltas")
-            self.main_list.insertItem(3, "Quantidade de gols")
-            self.main_list.insertItem(4, "Proporção de gols")
-            self.main_list.insertItem(5, "Posição dos gols")
-            self.main_list.insertItem(6, "Heatmap")
-            self.main_list.insertItem(7, "Event Retrospective")
+            self.main_list.insertItem(3, "Posição dos gols")
+            self.main_list.insertItem(4, "Heatmap")
+            self.main_list.insertItem(5, "Event Retrospective")
             #self.main_list.insertItem(8,)
             #self.main_list.insertItem(9,)
 
@@ -336,11 +334,6 @@ class MainWindow(QMainWindow):
 
         elif(graph_type == "Posição das faltas"):
             self.game_info.plot_faults_position(self, "Posição das faltas")
-        elif(graph_type == "Quantidade de gols"):
-            self.game_info.plot_goals_quantity(self, "Quantidade de gols")
-        
-        elif(graph_type == "Proporção de gols"):
-            self.game_info.plot_goals_percentage(self, "Proporção de gols") 
 
         elif(graph_type == "Posição dos gols"):
             self.game_info.plot_goals_position(self, "Posição dos gols")
