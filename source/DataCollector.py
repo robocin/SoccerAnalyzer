@@ -234,33 +234,6 @@ class DataCollector():
 				break
 		end_time = row
 		start_time = row - size
-		'''
-		number_of_goals = 0
-		for i in range(len(self.__data_frame)):
-			if((self.__data_frame.loc[i,1] == "goal_l" and self.__data_frame.iloc[i-1,1] != "goal_r") or (self.__data_frame.iloc[i,1] == "goal_r" and self.__data_frame.iloc[i-1,1] != "goal_r")):
-				number_of_goals += 1
-			if(number_of_goals == goal_number):
-				end_time = i
-				break
-		start_time = end_time - size
-		print(len(self.__data_frame))
-		return [start_time, end_time]
-
-		'''
-
-		'''
-		number_of_goals = 0
-		row = 0
-		while(number_of_goals != goal_number):
-			if(self.statChanged(self.__data_frame, row, 1)):
-				number_of_goals += 1
-			row += 1
-		start_time = row - 1 - size
-		start_time = start_time if start_time > 0 else 0
-		end_time = row + 100
-		'''
-		print(start_time)
-		print(end_time)
 		return [start_time, end_time]
 
 	def plot_graph(self, mainWindowObject, graph_type, title, data):
