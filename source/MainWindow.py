@@ -120,11 +120,13 @@ class MainWindow(QMainWindow):
         return comboBox_entity        
 
     def comboBox_entity_chosen(self, playerIndicative, graph_type):
+        #TODO: clear view aqui?
         if(graph_type == "Heatmap"):
             self.string_x = playerIndicative + "_x"
             self.string_y = playerIndicative + "_y"
             self.game_info.plot_heatmap_position(self, "heatmap", self.string_x, self.string_y)
-     
+            
+
     def create_comboBox_goal_drop_down_button(self, graph_type):
         comboBox_goal = QComboBox()
 
@@ -137,10 +139,8 @@ class MainWindow(QMainWindow):
 
     def comboBox_goal_chosen(self, comboBox, graph_type):
         if(graph_type == "Event Retrospective"):
-            start_time, end_time = self.game_info.goal_replay(int(comboBox.currentText()), 100)
-            print(start_time)
-            print(end_time)         
-            self.game_info.plot_event_retrospective(self, "Event Retrospective", 1850, 1950)            
+            start_time, end_time = self.game_info.goal_replay(int(comboBox.currentText()), 100)      
+            self.game_info.plot_event_retrospective(self, "Event Retrospective", start_time, end_time)            
 
     def mainScreen(self, category):
         # All log types

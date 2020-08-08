@@ -221,17 +221,32 @@ class DataCollector():
 
 		# Plotting of graphs:
 
+	#TODO: procurar o valor por string e achar o valor showtime referente
 	def goal_replay(self, goal_number, size):
 		#Returns the start and end times of a replay of a gol
+		start_time = 0
+		end_time = 0
+		number_of_goals = 0
+		for row in self.__data_frame.index:
+			if((self.__data_frame.iloc[row,1] == "goal_l" and self.__data_frame.iloc[row-1,1] != "goal_l") or (self.__data_frame.iloc[row,1] == "goal_r" and self.__data_frame.iloc[row-1,1] != "goal_r")):
+				number_of_goals += 1
+			if(number_of_goals == goal_number):
+				break
+		end_time = row
+		start_time = row - size
+		'''
 		number_of_goals = 0
 		for i in range(len(self.__data_frame)):
-			if((self.__data_frame.iloc[i,1] == "goal_l" and self.__data_frame.iloc[i-1,1] != "goal_r") or (self.__data_frame.iloc[i,1] == "goal_r" and self.__data_frame.iloc[i-1,1] != "goal_r")):
+			if((self.__data_frame.loc[i,1] == "goal_l" and self.__data_frame.iloc[i-1,1] != "goal_r") or (self.__data_frame.iloc[i,1] == "goal_r" and self.__data_frame.iloc[i-1,1] != "goal_r")):
 				number_of_goals += 1
 			if(number_of_goals == goal_number):
 				end_time = i
 				break
 		start_time = end_time - size
+		print(len(self.__data_frame))
 		return [start_time, end_time]
+
+		'''
 
 		'''
 		number_of_goals = 0
