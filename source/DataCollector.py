@@ -221,6 +221,33 @@ class DataCollector():
 
 		# Plotting of graphs:
 
+	def goal_replay(self, goal_number, size):
+		#Returns the start and end times of a replay of a gol
+		number_of_goals = 0
+		for i in range(len(self.__data_frame)):
+			if((self.__data_frame.iloc[i,1] == "goal_l" and self.__data_frame.iloc[i-1,1] != "goal_r") or (self.__data_frame.iloc[i,1] == "goal_r" and self.__data_frame.iloc[i-1,1] != "goal_r")):
+				number_of_goals += 1
+			if(number_of_goals == goal_number):
+				end_time = i
+				break
+		start_time = end_time - size
+		return [start_time, end_time]
+
+		'''
+		number_of_goals = 0
+		row = 0
+		while(number_of_goals != goal_number):
+			if(self.statChanged(self.__data_frame, row, 1)):
+				number_of_goals += 1
+			row += 1
+		start_time = row - 1 - size
+		start_time = start_time if start_time > 0 else 0
+		end_time = row + 100
+		'''
+		print(start_time)
+		print(end_time)
+		return [start_time, end_time]
+
 	def plot_graph(self, mainWindowObject, graph_type, title, data):
 		#Create an matplotlib.axes object
 		if(mainWindowObject.current_plot != None):
@@ -306,7 +333,7 @@ class DataCollector():
 			axes.invert_yaxis()
 
 		if (graph_type == "line"):
-			data.get_dataframe().plot(x="ball_x", y="ball_y", ax = axes)
+			mainWindowObject.current_plot = data.get_dataframe().plot(x="ball_x", y="ball_y", ax = axes)
 
 		# Shows background image if ther is one to be shown (set by data)
 		if(data.is_background_image_visible() == True):
@@ -484,8 +511,8 @@ class DataCollector():
 		
 	def plot_event_retrospective(self, mainWindowObject, title, start_time, end_time):
 		data_to_plot = PlotData("line")
+
 		data_to_plot.set_dataframe(self.copy_dataframe_subset_by_rows(self.__data_frame, start_time, end_time))
-		print(data_to_plot.get_dataframe())
 
 		data_to_plot.set_background_image(plt.imread("files/soccerField.png"))
 		data_to_plot.show_background_image()

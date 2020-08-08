@@ -21,6 +21,11 @@ class PlotData:
         
         if(graph_type == "heatmap"):
             self.__heatmap_strings = []
+        
+        if(graph_type == "Event Retrospective"):
+            self.__start_time = 0
+            self.__end_time = 0
+            self.__goal_number = 0
 
         
 
@@ -65,6 +70,22 @@ class PlotData:
         self.__heatmap_strings = strings_list
     def get_heatmap_strings(self):
         return self.__heatmap_strings
+
+        # Event retrospective
+    def set_start_time(self, time):
+        self.__start_time = time
+    def set_end_time(self, time):
+        self.__end_time = time
+    def set_goal_number(self, goal_number_name):
+        self.__goal_number = goal_number_name
+    
+    def get_start_time(self):
+        return self.__start_time
+    def get_end_time(self):
+        return self.__end_time
+    def get_goal_number(self):
+        return self.__goal_number
+
 
 class Entry:
     def __init__(self, entry_type):
