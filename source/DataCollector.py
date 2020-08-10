@@ -289,8 +289,8 @@ class DataCollector():
 			axes.set_facecolor("#dbf9db")
 
 		if (graph_type == "line"):
-			#TODO: generalizar isso
-			data.get_dataframe().plot(x="ball_x", y="ball_y", ax = axes)
+			#TODO: generalizar isso							  # Label está hardcoded, fazer isso direito
+			data.get_dataframe().plot(title = "Event Replay", x="ball_x", y="ball_y", label = "Trajetória da bola\n100 ciclos antes do gol 1", ax = axes,)
 
 			''' TENTANDO FAZER MOSTRAR O VETOR, será realmente útil?
 			kick_vector_x = data.get_dataframe().iloc[0,11]
