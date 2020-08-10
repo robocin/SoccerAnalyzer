@@ -206,7 +206,7 @@ class MainWindow(QMainWindow):
             self.main_list.insertItem(3, "Posição dos gols")
             self.main_list.insertItem(4, "Heatmap")
             self.main_list.insertItem(5, "Event Retrospective")
-            #self.main_list.insertItem(8,)
+            self.main_list.insertItem(6, "Player Replay")
             #self.main_list.insertItem(9,)
 
             # vss
@@ -312,6 +312,7 @@ class MainWindow(QMainWindow):
             plot_options.addWidget(text)
             plot_options.addWidget(comboBox_goal)
 
+
         # General layout:
         if(graph_type != False): #if graph_type is not none
             vertical_space.addWidget(self.scoreboard)
@@ -348,16 +349,12 @@ class MainWindow(QMainWindow):
         elif(graph_type == "Event Retrospective"):
             self.game_info.plot_event_retrospective(self, "Event Retrospective", self.start_time, self.end_time, axes)
 
+        elif(graph_type == "Player Replay"):
+            self.game_info.plot_player_replay(self, "Player Replay", 50, 10, axes)
+
         return vertical_space
     
 
-    def get_Score(self): 
-        placar = [self.log['team_score_l'].max(),self.log['team_score_r'].max()]
-        team_left = self.log.iloc[0].team_name_l
-        team_right = self.log.iloc[0].team_name_r
-        equipes = [team_left,team_right]
-        eixox = np.arange(len(equipes))
-    
     def getOut(self):
         sys.exit()
 
