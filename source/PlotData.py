@@ -1,7 +1,7 @@
 from Position import Position
 
 class PlotData:
-    def __init__(self, graph_type=None, title="ZMissing Title", number_of_entries=0):
+    def __init__(self, graph_type=None, title="Missing Title", number_of_entries=0):
         # All types
         self.__title = title
         self.__entries = []
@@ -58,6 +58,10 @@ class Entry:
         # Bar
         if (graph_type == "bar"):
             self.__width = 0.4
+        
+        # Pie
+        if(graph_type == "pie"):
+            self.__sector_labels = None 
 
 	# Setters and Getters (all types)
     def set_value(self, value):
@@ -97,6 +101,11 @@ class Entry:
     # Bar
     def set_widht(self, width):
         self.__width = width
-
     def get_width(self):
         return self.__width
+
+    # Pie
+    def set_sector_labels(self, labels):
+        self.__sector_labels = labels
+    def get_sector_labels(self):
+        return self.__sector_labels

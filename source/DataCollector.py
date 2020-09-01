@@ -262,7 +262,7 @@ class DataCollector():
 			
 			# sets data for bar 2 
 		bar2 = data_to_plot.get_entry(1) 
-		bar1.set_color("#ffa1a1")
+		bar2.set_color("#ffa1a1")
 		bar2.set_x_coordinate(self.get_team("r").get_name())
 		bar2.set_y_coordinate(self.get_team("r").get_number_of_faults_commited()) 
 		
@@ -270,10 +270,7 @@ class DataCollector():
 		self.plot_bar(mainWindowObject, feature_name, data_to_plot, axes)
 
 	def show_feature_faults_percentage(self, mainWindowObject, feature_name, axes):
-		data_to_plot = PlotData("pie",2)
-
-		# sets labels for each sector
-		data_to_plot.set_sector_labels([self.get_team("l").get_name(), self.get_team("r").get_name()])
+		data_to_plot = PlotData("pie",number_of_entries=2)
 
 		# aux variables for readability
 		fouls_commited_by_l = self.get_team("l").get_number_of_faults_commited()
@@ -282,15 +279,24 @@ class DataCollector():
 
 		# sets data for sector 1
 		sector1 = data_to_plot.get_entry(0)
+		sector1.set_color("#7da67d")
+		sector1.set_label(self.get_team("l").get_name())
+
 		sector1.set_value( (fouls_commited_by_l*100)/total_number_of_fouls)
 
 		# sets data for sector 2
 		sector2 = data_to_plot.get_entry(1)
+		sector2.set_color("#ffa1a1")
+		sector2.set_label(self.get_team("r").get_name())
 		sector2.set_value( (fouls_commited_by_r*100)/total_number_of_fouls)
 
 
-		self.plot_graph(mainWindowObject, "pie", title, data_to_plot, axes)
+		self.plot_pie(mainWindowObject, feature_name, data_to_plot, axes)
 
+	def show_feature_events_position(self, mainWindowObject, feature_name, axes):
+		pass
+
+	#merging this one onto show_feature_events_position
 	def show_feature_faults_position(self, mainWindowObject, feature_name, axes):
 		data_to_plot = PlotData("scatter",2)
 		
@@ -330,8 +336,8 @@ class DataCollector():
 			data_to_plot.get_entry(0).set_color("#ffa1a1")
 			data_to_plot.get_entry(1).set_color("#7da67d")
 
-		self.plot_graph(mainWindowObject, "scatter", title, data_to_plot, axes)
-
+		self.plot_scattter(mainWindowObject, feature_name, data_to_plot, axes)
+	#mergin this one onto show_feature_events_position
 	def show_feature_goals_position(self, mainWindowObject, feature_name, axes):
 
 		data_to_plot = PlotData("scatter",2)
@@ -378,6 +384,7 @@ class DataCollector():
 	def show_feature_heatmap_position(self, mainWindowObject, feature_name, x_string, y_string, axes):
 		pass
 		
+		# merge this with events position (maybe?)
 	def show_feature_event_retrospective(self, mainWindowObject, feature_name, start_time, end_time, object, axes):
 		pass
 
@@ -386,6 +393,7 @@ class DataCollector():
 
 	# Plotting functions
 	def plot_bar(self, mainWindowObject, title, data, axes):
+
 		# sets axis labels
 		axes.set_xlabel(data.get_x_label()) 
 		axes.set_ylabel(data.get_y_label())
@@ -401,3 +409,22 @@ class DataCollector():
 			height = entry.get_y_coordinate()
 			axes.annotate('{}'.format(height), xy=(aux, height), xytext=(0, 3), textcoords="offset points", ha='center', va='bottom')
 			aux += 1
+
+	def plot_pie(self, mainWindowObject, title, data, axes):
+
+		# set title
+		axes.set_title(title)
+
+		colors = []
+		values = []
+		labels = []
+		for entry in data.get_entries():
+			colors.append(entry.get_color())
+			values.append(entry.get_value())
+			labels.append(entry.get_label())
+
+		# plot the graph
+		axes.pie(values, explode =(0.06, 0), labels = labels, colors = colors, autopct='%1.1f%%', shadow=True, startangle=90)
+
+	def plot_scatter(self, mainWindowObject, title, data, axes):
+		pass

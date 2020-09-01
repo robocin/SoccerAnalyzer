@@ -168,12 +168,11 @@ class MainWindow(QMainWindow):
         if(category == "2D"):
             self.main_list.insertItem(0, "Fouls Quantity")
             self.main_list.insertItem(1, "Fouls Proportion")
-            self.main_list.insertItem(2, "Fouls Position")
-            self.main_list.insertItem(3, "Goals Position")
-            self.main_list.insertItem(4, "Heatmaps")
-            self.main_list.insertItem(5, "Event Retrospective")
-            self.main_list.insertItem(6, "Player Replay")
-            self.main_list.insertItem(9,"Stamina Tracker")
+            self.main_list.insertItem(2, "Events Position")
+            self.main_list.insertItem(3, "Heatmaps")
+            self.main_list.insertItem(4, "Event Retrospective")
+            self.main_list.insertItem(5, "Player Replay")
+            self.main_list.insertItem(6,"Stamina Tracker")
 
             # vss
         elif(category == "VSS"):
@@ -290,11 +289,8 @@ class MainWindow(QMainWindow):
         elif(feature_name == "Fouls Proportion"):
             self.game_info.show_feature_faults_percentage(self, feature_name, self.axes)
 
-        elif(feature_name == "Fouls Position"):
-            self.game_info.show_feature_faults_position(self, feature_name, self.axes)
-
-        elif(feature_name == "Goals Position"):
-            self.game_info.show_feature_goals_position(self, feature_name, self.axes)
+        elif(feature_name == "Events Position"):
+            self.game_info.show_feature_events_position(self, feature_name, self.axes)
             
         elif(feature_name == "Heatmaps"):
             self.current_plot = self.game_info.show_feature_heatmap_position(self, feature_name, self.axes)
