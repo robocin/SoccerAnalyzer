@@ -280,20 +280,18 @@ class DataCollector():
 			axes.set_title(title)
 			axes.set_xlabel('X')
 			axes.set_ylabel('Y')	
-
-			#todo: limpar isso aqui
 			
-			if(title == "Player Replay"):
-				for entry in data.get_entries():
-					axes.scatter(entry.get_x_positions(), entry.get_y_positions(),color = entry.get_color(), label = entry.get_label(), marker = '.', s = 25)
-			else:
-				for entry in data.get_entries():
-					axes.scatter(entry.get_x_positions(), entry.get_y_positions(),color = entry.get_color(), label = entry.get_label())									
+			plt.cla()
+			for entry in data.get_entries():
+				axes.scatter(entry.get_x_positions(), entry.get_y_positions(),color = entry.get_color(), label = entry.get_label()) #todo: adicionar argumentos 'marker' e 's' passados por dentro do plotdata
+			
 			axes.legend()
 			axes.margins(x = 1, y = 1)
 
 		#TODO: tornar a consulta ao .csv em evento único (ao abrir o programa)
 		if (graph_type == "heatmap"):
+
+		
 			x_and_y_strings = data.get_heatmap_strings()
 			sb.kdeplot(self.__data_frame[x_and_y_strings[0]], self.__data_frame[x_and_y_strings[1]],ax = axes, shade = True, color = "green", n_levels = 10)
 				# sets the size of the graph
@@ -455,7 +453,9 @@ class DataCollector():
 
 	def plot_heatmap_position(self, mainWindowObject, title, x_string, y_string, axes):
 		data_to_plot = PlotData()
+
 		data_to_plot.set_heatmap_strings([x_string,y_string])
+
 		return self.plot_graph(mainWindowObject, "heatmap" , title, data_to_plot, axes)
 		
 	def plot_event_retrospective(self, mainWindowObject, title, start_time, end_time, object, axes):
