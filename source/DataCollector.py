@@ -245,84 +245,10 @@ class DataCollector():
 		start_time = row - size
 		return [start_time, end_time]
 
-	def plot_graph(self, mainWindowObject, graph_type, title, data, axes):
-		#Clear previous plots in the axes
-		axes.clear()
-		#Create an matplotlib.axes object
-		mainWindowObject.figure.canvas.show()
+	# Show features functions
 
-		if (graph_type == "bar"):
-			# sets axis labels
-			axes.set_xlabel(data.get_x_label()) 
-			axes.set_ylabel(data.get_y_label())
-			colors = ["#7da67d","#ffa1a1"]
-			# set title
-			axes.set_title(title)
-			# plot each bar
-			for barIndex in range(0,len(data.get_entries())):
-				axes.bar(data.get_entry(barIndex).get_x_coordinate(), data.get_entry(barIndex).get_value(), width = data.get_entry(barIndex).get_width(), color = colors[barIndex])
-		
-			#Attach a text label above each bar in *rects*, displaying its height.
-			#adapted from matplotlib documentation
-			aux = 0
-			for entry in data.get_entries():
-				height = entry.get_value()
-				axes.annotate('{}'.format(height), xy=(aux, height), xytext=(0, 3), textcoords="offset points", ha='center', va='bottom')
-				aux += 1
-
-		if (graph_type == "pie"):
-			axes.set_title(title)
-			# plot the graph
-			axes.pie([data.get_entry(0).get_value(), data.get_entry(1).get_value()], explode =(0.06, 0), labels = data.get_sector_labels(), colors = ["#7da67d", "#ffa1a1"], autopct='%1.1f%%', shadow=True, startangle=90)
-
-		#TODO: SOLUÇÃO PALIATIVA
-		if (graph_type == "scatter"):
-			axes.set_title(title)
-			axes.set_xlabel('X')
-			axes.set_ylabel('Y')	
-			
-			plt.cla()
-			for entry in data.get_entries():
-				axes.scatter(entry.get_x_positions(), entry.get_y_positions(),color = entry.get_color(), label = entry.get_label()) #todo: adicionar argumentos 'marker' e 's' passados por dentro do plotdata
-			
-			axes.legend()
-			axes.margins(x = 1, y = 1)
-
-		#TODO: tornar a consulta ao .csv em evento único (ao abrir o programa)
-		if (graph_type == "heatmap"):
-
-		
-			x_and_y_strings = data.get_heatmap_strings()
-			sb.kdeplot(self.__data_frame[x_and_y_strings[0]], self.__data_frame[x_and_y_strings[1]],ax = axes, shade = True, color = "green", n_levels = 10)
-				# sets the size of the graph
-			axes.set_xbound(lower=-56, upper=56)
-			axes.set_ybound(lower=33, upper=-33)
-				# sets color of the graph
-			axes.set_facecolor("#dbf9db")
-
-		if (graph_type == "line"):
-			#sb.lineplot(title = "Event Replay", x = data.get_entry(0).get_x_positions, y = data.get_entry(0).get_x_positions, label = "Ball trajectory 100 cycles before the goal", ax = axes )
-			sb.lineplot(x = data.get_entry(0).get_x_positions(), y = data.get_entry(0).get_y_positions(), ax = axes )
-		
-			#TODO: generalizar isso							  # Label está hardcoded, fazer isso direito
-			#data.get_dataframe().plot(title = "Event Replay", x="ball_x", y="ball_y", label = "Ball trajectory 100 cycles before the goal", ax = axes)
-
-
-			''' TENTANDO FAZER MOSTRAR O VETOR, será realmente útil?
-			kick_vector_x = data.get_dataframe().iloc[0,11]
-			kick_vector_y = data.get_dataframe().iloc[0,12]
-			axes.annotate("", xy=(kick_vector_x, kick_vector_y), xytext=(0, 0), arrowprops=dict(arrowstyle="->"))
-			'''
-		# Shows background image if ther is one to be shown (set by data)
-		if(data.is_background_image_visible() == True):
-			img = data.get_background_image()
-			axes.imshow(img, zorder = -1, extent=[-56, 56, -34, 34])
-		
-
-		return axes
-
-	def plot_faults_quantity(self, mainWindowObject, title, axes):
-		data_to_plot = PlotData("bar",2)
+	def show_feature_faults_quantity(self, mainWindowObject, feature_name, axes):
+		data_to_plot = PlotData("bar", "Fouls Quantiti", 2)
 			
 			# sets data for graph
 		data_to_plot.set_x_label("Team name")
@@ -330,18 +256,20 @@ class DataCollector():
 			
 			# sets data for bar 1 
 		bar1 =  data_to_plot.get_entry(0)
+		bar1.set_color("#7da67d")
 		bar1.set_x_coordinate(self.get_team("l").get_name())
-		bar1.set_value(self.get_team("l").get_number_of_faults_commited()) 
+		bar1.set_y_coordinate(self.get_team("l").get_number_of_faults_commited()) 
 			
 			# sets data for bar 2 
 		bar2 = data_to_plot.get_entry(1) 
+		bar1.set_color("#ffa1a1")
 		bar2.set_x_coordinate(self.get_team("r").get_name())
-		bar2.set_value(self.get_team("r").get_number_of_faults_commited()) 
+		bar2.set_y_coordinate(self.get_team("r").get_number_of_faults_commited()) 
 		
 			# calls the function to plot the graph 
-		self.plot_graph(mainWindowObject, "bar", title, data_to_plot, axes)
+		self.plot_bar(mainWindowObject, feature_name, data_to_plot, axes)
 
-	def plot_faults_percentage(self, mainWindowObject, title, axes):
+	def show_feature_faults_percentage(self, mainWindowObject, feature_name, axes):
 		data_to_plot = PlotData("pie",2)
 
 		# sets labels for each sector
@@ -363,9 +291,7 @@ class DataCollector():
 
 		self.plot_graph(mainWindowObject, "pie", title, data_to_plot, axes)
 
-	#TODO: SOLUÇÃO PALIATIVA, ELIMINAR QUANDO A DE BAIXO ESTIVER
-	#	   PRONTA. (define a posição da falta pela posição da bola no momento em que a falta ocorreu)
-	def plot_faults_position(self, mainWindowObject, title, axes):
+	def show_feature_faults_position(self, mainWindowObject, feature_name, axes):
 		data_to_plot = PlotData("scatter",2)
 		
 		teamL = data_to_plot.get_entry(0)
@@ -406,9 +332,7 @@ class DataCollector():
 
 		self.plot_graph(mainWindowObject, "scatter", title, data_to_plot, axes)
 
-
-	#TODO: ESTE É O LOCAL, NO GOL, ONDE A BOLA ENTROU (LEMBRAR DE FAZER O GRÁFICO DA POSIÇÃO DE QUEM CHUTOU A BOLA Q RESULTOU EM GOL)
-	def plot_goals_position(self, mainWindowObject, title, axes):
+	def show_feature_goals_position(self, mainWindowObject, feature_name, axes):
 
 		data_to_plot = PlotData("scatter",2)
 		
@@ -451,11 +375,29 @@ class DataCollector():
 
 		self.plot_graph(mainWindowObject, "scatter", title, data_to_plot, axes)
 
-	def plot_heatmap_position(self, mainWindowObject, title, x_string, y_string, axes):
+	def show_feature_heatmap_position(self, mainWindowObject, feature_name, x_string, y_string, axes):
 		pass
 		
-	def plot_event_retrospective(self, mainWindowObject, title, start_time, end_time, object, axes):
+	def show_feature_event_retrospective(self, mainWindowObject, feature_name, start_time, end_time, object, axes):
 		pass
 
-	def plot_stamina_tracker(self, mainWindowObject, title, axes):
+	def show_feature_stamina_tracker(self, mainWindowObject, feature_name, axes):
 		pass
+
+	# Plotting functions
+	def plot_bar(self, mainWindowObject, title, data, axes):
+		# sets axis labels
+		axes.set_xlabel(data.get_x_label()) 
+		axes.set_ylabel(data.get_y_label())
+		# set title
+		axes.set_title(title)
+		# plot each bar
+		for barIndex in range(0,len(data.get_entries())):
+			axes.bar(data.get_entry(barIndex).get_x_coordinate(), data.get_entry(barIndex).get_y_coordinate(), width = data.get_entry(barIndex).get_width(), color = data.get_entry(barIndex).get_color())
+		# Attach a text label above each bar in *rects*, displaying its height.
+		#I don't understand this. It was adapted from matplotlib documentation.
+		aux = 0
+		for entry in data.get_entries():
+			height = entry.get_y_coordinate()
+			axes.annotate('{}'.format(height), xy=(aux, height), xytext=(0, 3), textcoords="offset points", ha='center', va='bottom')
+			aux += 1

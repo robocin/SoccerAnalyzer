@@ -166,11 +166,11 @@ class MainWindow(QMainWindow):
         # Based on the category, creates the correspondent list and list items
             # 2D
         if(category == "2D"):
-            self.main_list.insertItem(0, "Quantidade de faltas")
-            self.main_list.insertItem(1, "Proporção de faltas")
-            self.main_list.insertItem(2, "Posição das faltas")
-            self.main_list.insertItem(3, "Posição dos gols")
-            self.main_list.insertItem(4, "Heatmap")
+            self.main_list.insertItem(0, "Fouls Quantity")
+            self.main_list.insertItem(1, "Fouls Proportion")
+            self.main_list.insertItem(2, "Fouls Position")
+            self.main_list.insertItem(3, "Goals Position")
+            self.main_list.insertItem(4, "Heatmaps")
             self.main_list.insertItem(5, "Event Retrospective")
             self.main_list.insertItem(6, "Player Replay")
             self.main_list.insertItem(9,"Stamina Tracker")
@@ -189,6 +189,7 @@ class MainWindow(QMainWindow):
         self.main_hbox.addWidget(self.main_list)
         
         # when an item is clicked on (or pressed ENTER on), sends a signal to the itemSelected() function 
+        self.main_list.itemClicked.connect(self.itemSelected)
         self.main_list.itemActivated.connect(self.itemSelected)
     
     def itemSelected(self, item):
@@ -199,7 +200,7 @@ class MainWindow(QMainWindow):
         filename, _trash = QFileDialog.getOpenFileName(self, "*.")
         return filename
 
-    def create_view(self, graph_type, title):  
+    def create_view(self, feature_name, title):  
         '''
         Creates the area, on the right side of the screen, where the plot the graphs on.
         '''
@@ -211,24 +212,26 @@ class MainWindow(QMainWindow):
         if self.VIEW_FILLED == True:
             self.clear_View(title)
         # creates the area where to plot the graphs
-        self.plot_Area = self.create_Plot(graph_type, title)
+        self.plot_Area = self.create_feature_area(feature_name, title)
+        # calls the feature to be shown
+        self.call_feature_function(feature_name, title)
         # defines the layout of view_groupBox
         self.view_groupBox.setLayout(self.plot_Area)
         # adds the view_groupBox to the main_hbox 
         self.main_hbox.addWidget(self.view_groupBox) 
         self.VIEW_FILLED = True
 
-    def clear_View(self, graph_type):
+    def clear_View(self, feature_name):
         #for widget in main_hbox,
         for i in reversed(range(self.main_hbox.count())): 
             if i > 0:
                 self.main_hbox.itemAt(i).widget().setParent(None)  
         self.VIEW_FILLED = False
         # if the clear_View function was called by a signal from: MainMenu -> edit -> clear, 
-        if (graph_type == False):
+        if (feature_name == False):
             self.create_view(False,"Escolha uma das opções na lista à esquerda")
    
-    def create_Plot(self, graph_type, title):
+    def create_feature_area(self, feature_name, title):
         '''
         Creates figure, cavas, navigationToolbar, and configures the layout.
         Calls the function to plot the graph.
@@ -243,14 +246,14 @@ class MainWindow(QMainWindow):
         self.canvas.hide()
 
         # Creates the scoreboard widget
-        if(graph_type != False):
+        if(feature_name != False):
             placar = self.game_info.get_team("l").get_name() + " " + str(self.game_info.get_team("l").get_number_of_goals_scored()) + " X " + str(self.game_info.get_team("r").get_number_of_goals_scored()) + " "+ self.game_info.get_team("r").get_name()
             self.scoreboard = QLabel(placar) 
             self.scoreboard.setFont(QtGui.QFont("Times", 20, QtGui.QFont.Bold))
             self.scoreboard.setAlignment(QtCore.Qt.AlignCenter |QtCore.Qt.AlignVCenter)
 
         # creates the navigationToolbar widget  
-        if(graph_type != False): 
+        if(feature_name != False): 
             self.toolbar = NavigationToolbar(self.canvas, self)
         
         # customizes the toolbar and canvas layout 
@@ -259,7 +262,7 @@ class MainWindow(QMainWindow):
         plot_options = QHBoxLayout() # Horizontal space that holds the plot options buttons (inside the horizontal space above the graph)
 
         # General layout:
-        if(graph_type != False): #if graph_type is not none
+        if(feature_name != False): #if graph_type is not none
             vertical_space.addWidget(self.scoreboard)
             horizontal_space.addWidget(self.toolbar)
             horizontal_space.addLayout(plot_options)
@@ -274,31 +277,33 @@ class MainWindow(QMainWindow):
 
         vertical_space.addWidget(self.canvas)
 
-
-        # calls the function responsable of plotting the graph 
-        if(graph_type == "Quantidade de faltas"):
-            self.game_info.plot_faults_quantity(self,"Quantidade de faltas", self.axes)                
-
-        elif(graph_type == "Proporção de faltas"):
-            self.game_info.plot_faults_percentage(self,"Proporção de faltas", self.axes)
-
-        elif(graph_type == "Posição das faltas"):
-            self.game_info.plot_faults_position(self, "Posição das faltas", self.axes)
-
-        elif(graph_type == "Posição dos gols"):
-            self.game_info.plot_goals_position(self, "Posição dos gols", self.axes)
-            
-        elif(graph_type == "Heatmap"):
-            self.current_plot = self.game_info.plot_heatmap_position(self, "Heatmap", self.string_x, self.string_y, self.axes)
-        
-        elif(graph_type == "Event Retrospective"):
-            self.game_info.plot_event_retrospective(self, "Event Retrospective", self.start_time, self.end_time, "ball", self.axes)
-
-        elif(graph_type == "Stamina Tracker"):
-            self.game_info.plot_stamina_tracker(self, "Stamina Tracker", self.axes)
+        if (feature_name != False):
+            self.figure.canvas.show()
 
         return vertical_space
-    
+
+    def call_feature_function(self, feature_name, title):
+        # calls the function responsable of plotting the graph 
+        if(feature_name == "Fouls Quantity"):
+            self.game_info.show_feature_faults_quantity(self, feature_name, self.axes)                
+
+        elif(feature_name == "Fouls Proportion"):
+            self.game_info.show_feature_faults_percentage(self, feature_name, self.axes)
+
+        elif(feature_name == "Fouls Position"):
+            self.game_info.show_feature_faults_position(self, feature_name, self.axes)
+
+        elif(feature_name == "Goals Position"):
+            self.game_info.show_feature_goals_position(self, feature_name, self.axes)
+            
+        elif(feature_name == "Heatmaps"):
+            self.current_plot = self.game_info.show_feature_heatmap_position(self, feature_name, self.axes)
+        
+        elif(feature_name == "Event Retrospective"):
+            self.game_info.show_feature_event_retrospective(self, feature_name, self.axes)
+
+        elif(feature_name == "Stamina Tracker"):
+            self.game_info.show_feature_stamina_tracker(self, feature_name, self.axes)
 
     def getOut(self):
         sys.exit()
