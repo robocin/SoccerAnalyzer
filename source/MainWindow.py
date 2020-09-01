@@ -188,8 +188,8 @@ class MainWindow(QMainWindow):
         # adds the list to the main_hbox
         self.main_hbox.addWidget(self.main_list)
         
-        # when an item is clicked on, sends a signal to the itemSelected() function 
-        self.main_list.itemClicked.connect(self.itemSelected)
+        # when an item is clicked on (or pressed ENTER on), sends a signal to the itemSelected() function 
+        self.main_list.itemActivated.connect(self.itemSelected)
     
     def itemSelected(self, item):
         stat = item.text()
