@@ -9,11 +9,17 @@ class PlotData:
         self.__y_label = None
         self.__background_image = None
         self.__show_background_image = False
+        #apagar essa variável dataframe depois que refatorar o todo la no datacollecor
         self.__dataframe = None
 
         # Specifc types 
+        '''
         if(graph_type == "bar" or graph_type == "scatter" or graph_type == "pie"):
             for i in range(0, number_of_entries):
+                self.__entries.append(Entry(graph_type))
+        '''
+        # Instance the entries
+        for i in range(0, number_of_entries):
                 self.__entries.append(Entry(graph_type))
 
         if(graph_type == "pie"):
@@ -91,6 +97,7 @@ class Entry:
     def __init__(self, entry_type):
         # All types
         self.__value = None
+        self.__values = []
         self.__label = None
 
         # Specifc types
@@ -110,10 +117,14 @@ class Entry:
 	# Setters and Getters (all types)
     def set_value(self, value):
         self.__value = value
+    def set_values(self, value):
+        self.__value = value
     def set_label(self, label):
         self.__label = label
 	
     def get_value(self):
+        return self.__value
+    def get_values(self):
         return self.__value
     def get_label(self):
         return self.__label

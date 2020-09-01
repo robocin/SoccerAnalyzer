@@ -17,7 +17,7 @@ from DataCollector import DataCollector
 from PlotData import PlotData
 from Team import Team 
 from Event import Event
-from Player import Player
+from Player import Player   
 from Position import Position
 
 STATISTICS = "EXTRACTIONS FIELDS" 
@@ -34,7 +34,7 @@ class MainWindow(QMainWindow):
 
         #Global variables
         self.start_time = 0
-        self.end_time = 10000
+        self.end_time = 200
         self.entity = "ball"
         self.string_x = "ball_x"
         self.string_y = "ball_y"
@@ -207,7 +207,7 @@ class MainWindow(QMainWindow):
             self.main_list.insertItem(4, "Heatmap")
             self.main_list.insertItem(5, "Event Retrospective")
             self.main_list.insertItem(6, "Player Replay")
-            #self.main_list.insertItem(9,)
+            self.main_list.insertItem(9,"Stamina Tracker")
 
             # vss
         elif(category == "VSS"):
@@ -267,17 +267,21 @@ class MainWindow(QMainWindow):
         Creates figure, cavas, navigationToolbar, and configures the layout.
         Calls the function to plot the graph.
         '''
+        #plt.style.use('fivethirtyeight') #this sets the visual style for the plots
+        self.figure, self.axes = plt.subplots()
+        
+        '''
         # creates a 'figure', where to plot the graphs on 
         self.figure = Figure()
 
         # Creates the axes
         axes = self.figure.add_subplot(111)
+        '''
         
         
         # creates a canvas widget, which displays the figure 
         self.canvas = FigureCanvas(self.figure)
         self.canvas.hide()
-        
 
         # Creates the scoreboard widget
         if(graph_type != False):
@@ -286,9 +290,11 @@ class MainWindow(QMainWindow):
             self.scoreboard.setFont(QtGui.QFont("Times", 20, QtGui.QFont.Bold))
             self.scoreboard.setAlignment(QtCore.Qt.AlignCenter |QtCore.Qt.AlignVCenter)
 
+        
         # creates the navigationToolbar widget  
         if(graph_type != False): 
             self.toolbar = NavigationToolbar(self.canvas, self)
+        
 
         # customizes the toolbar and canvas layout 
         vertical_space = QVBoxLayout() # Vertical general space
@@ -300,7 +306,7 @@ class MainWindow(QMainWindow):
         if(graph_type == "Heatmap"):
             text = QLabel("Select the entity: ")
             text.setFont(QtGui.QFont("Arial",20,QtGui.QFont.Bold))
-            comboBox_entity = self.create_comboBox_entity_drop_down_button(graph_type, axes)
+            comboBox_entity = self.create_comboBox_entity_drop_down_button(graph_type, self.axes)
             plot_options.addWidget(text)
             plot_options.addWidget(comboBox_entity)
 
@@ -308,7 +314,7 @@ class MainWindow(QMainWindow):
         if(graph_type == "Event Retrospective"):
             text = QLabel("Select the goal: ")
             text.setFont(QtGui.QFont("Arial",20,QtGui.QFont.Bold))
-            comboBox_goal = self.create_comboBox_goal_drop_down_button(graph_type, axes)
+            comboBox_goal = self.create_comboBox_goal_drop_down_button(graph_type, self.axes)
             plot_options.addWidget(text)
             plot_options.addWidget(comboBox_goal)
 
@@ -332,25 +338,29 @@ class MainWindow(QMainWindow):
 
         # calls the function responsable of plotting the graph 
         if(graph_type == "Quantidade de faltas"):
-            self.game_info.plot_faults_quantity(self,"Quantidade de faltas", axes)                
+            self.game_info.plot_faults_quantity(self,"Quantidade de faltas", self.axes)                
 
         elif(graph_type == "Proporção de faltas"):
-            self.game_info.plot_faults_percentage(self,"Proporção de faltas", axes)
+            self.game_info.plot_faults_percentage(self,"Proporção de faltas", self.axes)
 
         elif(graph_type == "Posição das faltas"):
-            self.game_info.plot_faults_position(self, "Posição das faltas", axes)
+            self.game_info.plot_faults_position(self, "Posição das faltas", self.axes)
 
         elif(graph_type == "Posição dos gols"):
-            self.game_info.plot_goals_position(self, "Posição dos gols", axes)
-    
+            self.game_info.plot_goals_position(self, "Posição dos gols", self.axes)
+            
         elif(graph_type == "Heatmap"):
-            self.current_plot = self.game_info.plot_heatmap_position(self, "Heatmap", self.string_x, self.string_y, axes)
+            self.current_plot = self.game_info.plot_heatmap_position(self, "Heatmap", self.string_x, self.string_y, self.axes)
 
+        
         elif(graph_type == "Event Retrospective"):
-            self.game_info.plot_event_retrospective(self, "Event Retrospective", self.start_time, self.end_time, axes)
+            self.game_info.plot_event_retrospective(self, "Event Retrospective", self.start_time, self.end_time, "ball", self.axes)
 
         elif(graph_type == "Player Replay"):
-            self.game_info.plot_player_replay(self, "Player Replay", 50, 10, axes)
+            self.game_info.plot_player_replay(self, "Player Replay", 50, 10, self.axes)
+
+        elif(graph_type == "Stamina Tracker"):
+            self.game_info.plot_stamina_tracker(self, "Stamina Tracker", self.axes)
 
         return vertical_space
     

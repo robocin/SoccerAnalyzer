@@ -280,6 +280,8 @@ class DataCollector():
 			axes.set_title(title)
 			axes.set_xlabel('X')
 			axes.set_ylabel('Y')	
+
+			#todo: limpar isso aqui
 			
 			if(title == "Player Replay"):
 				for entry in data.get_entries():
@@ -301,8 +303,12 @@ class DataCollector():
 			axes.set_facecolor("#dbf9db")
 
 		if (graph_type == "line"):
+			#sb.lineplot(title = "Event Replay", x = data.get_entry(0).get_x_positions, y = data.get_entry(0).get_x_positions, label = "Ball trajectory 100 cycles before the goal", ax = axes )
+			sb.lineplot(x = data.get_entry(0).get_x_positions(), y = data.get_entry(0).get_y_positions(), ax = axes )
+		
 			#TODO: generalizar isso							  # Label está hardcoded, fazer isso direito
-			data.get_dataframe().plot(title = "Event Replay", x="ball_x", y="ball_y", label = "Trajetória da bola\n100 ciclos antes do gol 1", ax = axes,)
+			#data.get_dataframe().plot(title = "Event Replay", x="ball_x", y="ball_y", label = "Ball trajectory 100 cycles before the goal", ax = axes)
+
 
 			''' TENTANDO FAZER MOSTRAR O VETOR, será realmente útil?
 			kick_vector_x = data.get_dataframe().iloc[0,11]
@@ -313,6 +319,7 @@ class DataCollector():
 		if(data.is_background_image_visible() == True):
 			img = data.get_background_image()
 			axes.imshow(img, zorder = -1, extent=[-56, 56, -34, 34])
+		
 
 		return axes
 
@@ -451,11 +458,40 @@ class DataCollector():
 		data_to_plot.set_heatmap_strings([x_string,y_string])
 		return self.plot_graph(mainWindowObject, "heatmap" , title, data_to_plot, axes)
 		
-	def plot_event_retrospective(self, mainWindowObject, title, start_time, end_time, axes):
+	def plot_event_retrospective(self, mainWindowObject, title, start_time, end_time, object, axes):
+		#TODO: MERGE THIS FUCTION WITH plot_player_replay (são basicamente a mesma coisa para diferentes objetos)
+		data_to_plot = PlotData("line",1)
+
+		#passar x e y dentro de star e end time
+		cycles = end_time - start_time
+
+		object_row_x = "{}_x".format(object)
+		object_row_y = "{}_y".format(object)
+
+		object_replay_x = []
+		object_replay_y = []
+
+
+		for i in range(0, cycles):
+			object_replay_x.append(self.__data_frame.loc[start_time + i,object_row_x])
+			object_replay_y.append(self.__data_frame.loc[start_time + i,object_row_y])
+
+		data_to_plot.set_background_image(plt.imread("files/soccerField.png"))
+		data_to_plot.show_background_image()
+
+		data_to_plot.get_entry(0).set_x_positions(object_replay_x)
+		data_to_plot.get_entry(0).set_y_positions(object_replay_y)
+
+
+		self.plot_graph(mainWindowObject, "line", title, data_to_plot, axes)
+
+
+	def _plot_event_retrospective(self, mainWindowObject, title, start_time, end_time, axes):
 		data_to_plot = PlotData("line")
 
+		#TODO: substituir essa implementação que usa uma criação de subset de dataframe, por algo similar ao plot_player_replay (abaixo), que utiliza variáveis que já foram criadas para esse propósito lá no PlotData
 		data_to_plot.set_dataframe(self.copy_dataframe_subset_by_rows(self.__data_frame, start_time, end_time))
-
+	
 
 		data_to_plot.set_background_image(plt.imread("files/soccerField.png"))
 		data_to_plot.show_background_image()
@@ -504,4 +540,24 @@ class DataCollector():
 		
 
 		self.plot_graph(mainWindowObject, "scatter", title, data_to_plot, axes)
-    
+
+	def plot_stamina_tracker(self, mainWindowObject, title, axes):
+		#todo: fazer
+		#todo: fazer essa feature mostrar stamina x tempo para os times também
+
+		data_to_plot = PlotData("line",1)
+
+		cycles = end_time - start_time
+
+		player_row_stamina = "player_{}{}_attribute_stamina".format(side,player_n)
+
+
+		player_stamina = []
+
+
+		for i in range(0, cycles):
+			player_stamina.append(self.__data_frame.loc[start_time + i, player_row_stamina])
+
+		data_to_plot.get_entry(0).set_values(player_stamina)
+
+		self.plot_graph(mainWindowObject, "line", title, data_to_plot, axes)
