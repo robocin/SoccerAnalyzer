@@ -85,7 +85,8 @@ class MainWindow(QMainWindow):
         self.show()
 
 
-    ## Screen type functions ##
+    ## Screen type functions ##   
+
     def selectorScreenPopUp(self):
         msgBox = QMessageBox()
         msgBox.setWindowTitle("Log type selection")
@@ -105,42 +106,7 @@ class MainWindow(QMainWindow):
         if (msgBox.clickedButton() == button2):
             category = "SSL"
 
-        return category
-
-    def create_comboBox_entity_drop_down_button(self, graph_type, axes):
-        comboBox_entity = QComboBox()
-
-        comboBox_entity.addItem("ball")
-        letters = "lr"
-        for letter in letters:
-            for i in range(1,12):
-                comboBox_entity.addItem("player_" + letter + str(i))
-        comboBox_entity.currentTextChanged.connect(lambda: self.comboBox_entity_chosen(comboBox_entity.currentText(), graph_type, axes))
-
-        return comboBox_entity        
-
-    def comboBox_entity_chosen(self, playerIndicative, graph_type, axes):
-
-        #TODO: clear view aqui?
-        if(graph_type == "Heatmap"):
-            self.string_x = playerIndicative + "_x"
-            self.string_y = playerIndicative + "_y"
-            self.game_info.plot_heatmap_position(self, "heatmap", self.string_x, self.string_y, axes)
-
-    def create_comboBox_goal_drop_down_button(self, graph_type, axes):
-        comboBox_goal = QComboBox()
-        comboBox_goal.addItem("Choose a goal")
-        for i in range(1, 1 + self.game_info.get_team("l").get_number_of_goals_scored()+self.game_info.get_team("r").get_number_of_goals_scored()):
-            comboBox_goal.addItem(str(i)) #TODO: adicionar nome do time que fez cada gol
-
-        comboBox_goal.currentTextChanged.connect(lambda: self.comboBox_goal_chosen(comboBox_goal, graph_type, axes))
-
-        return comboBox_goal
-
-    def comboBox_goal_chosen(self, comboBox, graph_type, axes):
-        if(graph_type == "Event Retrospective" and comboBox.currentText()!="Choose a goal"):
-            start_time, end_time = self.game_info.goal_replay(int(comboBox.currentText()), 100)      
-            self.game_info.plot_event_retrospective(self, "Event Retrospective", start_time, end_time, axes)            
+        return category       
 
     def mainScreen(self, category):
         # All log types
@@ -267,17 +233,10 @@ class MainWindow(QMainWindow):
         Creates figure, cavas, navigationToolbar, and configures the layout.
         Calls the function to plot the graph.
         '''
-        #plt.style.use('fivethirtyeight') #this sets the visual style for the plots
-        self.figure, self.axes = plt.subplots()
-        
-        '''
-        # creates a 'figure', where to plot the graphs on 
-        self.figure = Figure()
 
-        # Creates the axes
-        axes = self.figure.add_subplot(111)
-        '''
+        #plt.style.use('fivethirtyeight') #this sets the visual style for the plots
         
+        self.figure, self.axes = plt.subplots()
         
         # creates a canvas widget, which displays the figure 
         self.canvas = FigureCanvas(self.figure)
@@ -290,34 +249,14 @@ class MainWindow(QMainWindow):
             self.scoreboard.setFont(QtGui.QFont("Times", 20, QtGui.QFont.Bold))
             self.scoreboard.setAlignment(QtCore.Qt.AlignCenter |QtCore.Qt.AlignVCenter)
 
-        
         # creates the navigationToolbar widget  
         if(graph_type != False): 
             self.toolbar = NavigationToolbar(self.canvas, self)
         
-
         # customizes the toolbar and canvas layout 
         vertical_space = QVBoxLayout() # Vertical general space
         horizontal_space = QHBoxLayout() # Horizontal space right above the graph
         plot_options = QHBoxLayout() # Horizontal space that holds the plot options buttons (inside the horizontal space above the graph)
-
-        # Custom layouts:
-            # Custom Heatmap layout
-        if(graph_type == "Heatmap"):
-            text = QLabel("Select the entity: ")
-            text.setFont(QtGui.QFont("Arial",20,QtGui.QFont.Bold))
-            comboBox_entity = self.create_comboBox_entity_drop_down_button(graph_type, self.axes)
-            plot_options.addWidget(text)
-            plot_options.addWidget(comboBox_entity)
-
-            # Custom Event Retrospective layout
-        if(graph_type == "Event Retrospective"):
-            text = QLabel("Select the goal: ")
-            text.setFont(QtGui.QFont("Arial",20,QtGui.QFont.Bold))
-            comboBox_goal = self.create_comboBox_goal_drop_down_button(graph_type, self.axes)
-            plot_options.addWidget(text)
-            plot_options.addWidget(comboBox_goal)
-
 
         # General layout:
         if(graph_type != False): #if graph_type is not none
@@ -351,13 +290,9 @@ class MainWindow(QMainWindow):
             
         elif(graph_type == "Heatmap"):
             self.current_plot = self.game_info.plot_heatmap_position(self, "Heatmap", self.string_x, self.string_y, self.axes)
-
         
         elif(graph_type == "Event Retrospective"):
             self.game_info.plot_event_retrospective(self, "Event Retrospective", self.start_time, self.end_time, "ball", self.axes)
-
-        elif(graph_type == "Player Replay"):
-            self.game_info.plot_player_replay(self, "Player Replay", 50, 10, self.axes)
 
         elif(graph_type == "Stamina Tracker"):
             self.game_info.plot_stamina_tracker(self, "Stamina Tracker", self.axes)
