@@ -1,3 +1,5 @@
+from matplotlib.backends.backend_qt4agg import NavigationToolbar2QT as NavigationToolbar
+
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
@@ -10,7 +12,10 @@ from Player import Player
 from Position import Position
 from PlotData import PlotData
 
-from matplotlib.backends.backend_qt4agg import NavigationToolbar2QT as NavigationToolbar
+import CustomGraphicObjects
+
+from Events import Events
+
 
 #Constants
 BALL_X = 10
@@ -32,34 +37,22 @@ class DataCollector():
 		self.__team_l = None # By instanciating the team, all the computing is scored inside the __init__ of the class Team()
 		self.__team_r = None
 		self.__teams = []
-		self.__all_events = []
-		self.__all_faults = []
-		self.__all_goals = []
-		self.__all_penalties = []
+		self.__all_events = Events()
 
 		# calls for data computing
 		self.initialize()
 
 	
 	# Creates the Setters and Getters methods   
-
-	def set_team_l(self, team):
-		self.__team_l = team
 	
 	def set_log_path(self,log_path):
 		self.__log_path = log_path 		
 
-	def set_all_goals(self, all_goals):
-		self.__all_goals = all_goals
-
-	def set_all_faults(self, all_faults):
-		self.__all_faults =	all_faults
-
-	def set_all_penalties(self, all_penalties):
-		self.__all_penalties = all_penalties
-	
-	# Getters
-	
+	def set_all_events_array(self, all_events_array):
+		self.__all_events.set_all_goals(all_events_array[0])
+		self.__all_events.set_all_fouls(all_events_array[1])
+		self.__all_events.set_all_penalties(all_events_array[2])
+		
 	def get_team(self, team_side):
 		
 		if(team_side == "l"):
@@ -67,16 +60,13 @@ class DataCollector():
 		else:
 			return self.__team_r
 	
-	#TODO: funcão redundante...    get_team(side).get_name() já retorna o nome do time
-	def get_team_name(self, team_side):
-		if(team_side == "l"):
-			return self.__team_l.get_name()
-		else:
-			return self.__team_r.get_name()
-		
-	
+	def get_all_events_object(self):
+		all_events_array = [self.__all_events.get_all_goals, self.__all_events.get_all_fouls, self.__all_events.get_all_penalties]
+		return all_events_array
+
 	# Does the general initialization
 	def initialize(self):
+		#TODO:GAMBIARRA(ABC) for some reasom, self.get_team("l").get_players está retornando [[]] ao invés de [], fiz uma gambiarra dentro da função get_players dentro da classe team para resolver isso temporariamente.
 		
 		# The data will be collected from this dataframe
 		self.__data_frame = pd.read_csv(self.__log_path)
@@ -97,29 +87,52 @@ class DataCollector():
 		self.__teams.append(self.__team_l)
 		self.__teams.append(self.__team_r)
 
-	# Definition of computing functions
-	'''
-		#Funções getMostRecent... burras paliativas TODO: otimizar funções!!
-	def getMostRecentKicker_x(self, row):
-		i = row
-		kicker_x = None
-		while(kicker_x == None):
-			for player_id in range(0,22):
-				if(self.__data_frame.iloc[i, 34+(31*player_id)] != self.__data_frame.iloc[i-1, 34+(31*player_id)]):
-					kicker_x = self.__data_frame.iloc[i, (34+(31*player_id) - 16)]
+		# Events
+		''' Populates the self.__all_events with all the events found in the log file'''
+			# goals
+		all_goals = []
+
+		#parse each line if goal, append, a event (goal) object to goals (TODO: REFACTOR THIS INTO A MORE EFFICIENT WAY OF DOING IT)
+		chronological_id_counter = 0
+		for row in self.__data_frame.index:
+			if((self.__data_frame.iloc[row,1] == "goal_l" and self.__data_frame.iloc[row-1,1] != "goal_l") or (self.__data_frame.iloc[row,1] == "goal_r" and self.__data_frame.iloc[row-1,1] != "goal_r")):
+				chronological_id_counter += 1
+
+				# finds who made the goal and breakdown it's information in player_team and player_number
+				player_string = self.who_scored_this_gol(self.__data_frame, row)
+				player_team = player_string[7]
+				player_number = int( player_string[8] if len(player_string)==23 else player_string[8:9] )
+
+				# finds the position (time included) the goal was scored
+				x_position = self.__data_frame.iloc[row,10]
+				y_position = self.__data_frame.iloc[row,11]
+				timestamp = self.__data_frame.iloc[row,0]
+
+
+				# creates event object and append the event to the outer goals array
+				goal = Event("goal")
+
+				goal.set_chronological_id = chronological_id_counter
+				position = Position(x_position,y_position,timestamp)
 				
-		return kicker_x
-	
-	def getMostRecentKicker_y(self, row):
-		i = row
-		kicker_y = None
-		while(kicker_y == None):
-			for player_id in range(0,22):
-				if(self.__data_frame.iloc[i, 34+(31*player_id)] != self.__data_frame.iloc[i-1, 34+(31*player_id)]):
-					kicker_y = self.__data_frame.iloc[i, (34+(31*player_id) - 15)]
-				
-		return kicker_y
-	'''
+				goal.set_who_scored(self.get_team(player_team).get_player(player_number))
+				goal.set_position(position)
+
+				all_goals.append(goal)
+		
+			# fouls
+		all_fouls = []
+
+		#parse each line if fouls, append, a event (foul) object to goals
+
+		#self.get_all_events().set_fouls(all_fouls)
+			
+			# penalties
+				# fazer mesma coisa que goals e foals
+		all_penalties = []
+		
+		# set all events
+		self.set_all_events_array([all_goals, all_fouls, all_penalties])
 	
 	def find_unique_event_occurrences(self, event):
   		
@@ -130,6 +143,23 @@ class DataCollector():
 				event_occurrences_index.append(i)
 		
 		return event_occurrences_index
+
+	def who_scored_this_gol(self, logDataFrame, row):
+		''' returns the player who score the goal relative to the row given (you pass the first row of the goal event)'''
+		current_row = row # current row being parsed
+		player_string = None
+		row_index = 0 # modifies current_row like this: current row being parsed = row-row_index
+		while(player_string == None): # for each row, starting on row to row-1, row-2, etc
+			current_row -= row_index 
+			for i in range(0, 21): # for each player column (counting kick)
+				# if this player made a kick,
+				if(self.statChanged(logDataFrame, current_row, FIRST_COUNTING_KICK_COLUMN_L if i==0 else FIRST_COUNTING_KICK_COLUMN_L + i*NUMBER_OF_COLUMNS_BETWEEN_COUNTING_KICKS_PLUS_ONE)):
+					# makes player_string hold the related string
+					player_string = logDataFrame.columns[FIRST_COUNTING_KICK_COLUMN_L if i==0 else FIRST_COUNTING_KICK_COLUMN_L + i*NUMBER_OF_COLUMNS_BETWEEN_COUNTING_KICKS_PLUS_ONE]
+					break
+			row_index += 1
+
+		return player_string
 
 	def statChanged(self, logDataFrame, rowNumber, columnNumber):
 		if(logDataFrame.iloc[rowNumber, columnNumber] == logDataFrame.iloc[rowNumber-1, columnNumber]):
@@ -294,97 +324,14 @@ class DataCollector():
 		self.plot_pie(mainWindowObject, feature_name, data_to_plot, axes)
 
 	def show_feature_events_position(self, mainWindowObject, feature_name, axes):
-		pass
-
-	#merging this one onto show_feature_events_position
-	def show_feature_faults_position(self, mainWindowObject, feature_name, axes):
-		data_to_plot = PlotData("scatter",2)
+		# call to render this feature custom layout
+		CustomGraphicObjects.events_position_custom_layout(self, mainWindowObject) 
 		
-		teamL = data_to_plot.get_entry(0)
-		teamL_x_positions = []
-		teamL_y_positions = []
-
-		teamR = data_to_plot.get_entry(1)
-		teamR_x_positions = []
-		teamR_y_positions = []
-		
-		for i in range(len(self.__data_frame)):
-			if(self.__data_frame.iloc[i,1] == "foul_charge_l" and self.__data_frame.iloc[i-1,1] != "foul_charge_l"):
-				teamL_x_positions.append(int(self.__data_frame.iloc[i,BALL_X]))
-				teamL_y_positions.append(int(self.__data_frame.iloc[i,BALL_Y]))
-			elif(self.__data_frame.iloc[i,1] == "foul_charge_r" and self.__data_frame.iloc[i-1,1] != "foul_charge_r"):
-				teamR_x_positions.append(int(self.__data_frame.iloc[i,BALL_X]))
-				teamR_y_positions.append(int(self.__data_frame.iloc[i,BALL_Y]))
-
-		teamL.set_x_positions(teamL_x_positions)
-		teamL.set_y_positions(teamL_y_positions)
-		teamR.set_x_positions(teamR_x_positions)
-		teamR.set_y_positions(teamR_y_positions)
-
-		data_to_plot.get_entry(0).set_label(self.get_team_name("l"))
-		data_to_plot.get_entry(1).set_label(self.get_team_name("r"))
-
-		data_to_plot.set_background_image(plt.imread("files/soccerField.png"))
-		data_to_plot.show_background_image()
-
-		team_l_name_to_lower = data_to_plot.get_entry(0).get_label().lower()
-
-		if(team_l_name_to_lower == "robocin"):
-			data_to_plot.get_entry(0).set_color("#7da67d")
-			data_to_plot.get_entry(1).set_color("#ffa1a1")
-		else:
-			data_to_plot.get_entry(0).set_color("#ffa1a1")
-			data_to_plot.get_entry(1).set_color("#7da67d")
-
-		self.plot_scattter(mainWindowObject, feature_name, data_to_plot, axes)
-	#mergin this one onto show_feature_events_position
-	def show_feature_goals_position(self, mainWindowObject, feature_name, axes):
-
-		data_to_plot = PlotData("scatter",2)
-		
-		teamL = data_to_plot.get_entry(0)
-		teamL_x_positions = []
-		teamL_y_positions = []
-
-		teamR = data_to_plot.get_entry(1)
-		teamR_x_positions = []
-		teamR_y_positions = []
-		
-		for i in range(len(self.__data_frame)):
-			if(self.__data_frame.iloc[i,1] == "goal_l" and self.__data_frame.iloc[i-1,1] != "goal_l"):
-				teamL_x_positions.append(int(self.__data_frame.iloc[i,10]))
-				teamL_y_positions.append(int(self.__data_frame.iloc[i,11]))
-			elif(self.__data_frame.iloc[i,1] == "goal_r" and self.__data_frame.iloc[i-1,1] != "goal_r"):
-				teamR_x_positions.append(int(self.__data_frame.iloc[i,10]))
-				teamR_y_positions.append(int(self.__data_frame.iloc[i,11]))
-
-		teamL.set_x_positions(teamL_x_positions)
-		teamL.set_y_positions(teamL_y_positions)
-		teamR.set_x_positions(teamR_x_positions)
-		teamR.set_y_positions(teamR_y_positions)
-
-		data_to_plot.get_entry(0).set_label(self.get_team_name("l"))
-		data_to_plot.get_entry(1).set_label(self.get_team_name("r"))
-
-		data_to_plot.set_background_image(plt.imread("files/soccerField.png"))
-		data_to_plot.show_background_image()
-
-		team_l_name_to_lower = data_to_plot.get_entry(0).get_label().lower()
-		team_r_name_to_lower = data_to_plot.get_entry(1).get_label().lower()
-
-		if(team_l_name_to_lower == "robocin"):
-			data_to_plot.get_entry(0).set_color("#7da67d")
-			data_to_plot.get_entry(1).set_color("#ffa1a1")
-		else:
-			data_to_plot.get_entry(0).set_color("#ffa1a1")
-			data_to_plot.get_entry(1).set_color("#7da67d")
-
-		self.plot_graph(mainWindowObject, "scatter", title, data_to_plot, axes)
 
 	def show_feature_heatmap_position(self, mainWindowObject, feature_name, x_string, y_string, axes):
 		pass
-		
-		# merge this with events position (maybe?)
+	
+	# merge this with events position (maybe?)
 	def show_feature_event_retrospective(self, mainWindowObject, feature_name, start_time, end_time, object, axes):
 		pass
 

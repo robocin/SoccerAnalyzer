@@ -120,10 +120,10 @@ class Team:
         return self.__penaltis_commited
     
     def get_players(self):
-        return self.__players
+        return self.__players[0] #TODO: GAMBIARRA(ABC) EXPLICADA EM DATACOLLECTOR, DENTRO DE UM TODO EM INITIALIZE DEFINITION
 
     def get_substitutions(self):
         return self.__substitutions
 
     def get_player(self, playerId):
-        return self.__players[playerId-1] 
+        return self.__players[0][playerId-1] #TODO: GAMBIARRA(ABC) EXPLICADA EM DATACOLLECTOR, DENTRO DE UM TODO EM INITIALIZE DEFINITION

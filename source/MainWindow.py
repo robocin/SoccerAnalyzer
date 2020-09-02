@@ -33,13 +33,8 @@ class MainWindow(QMainWindow):
         super().__init__()
 
         #Global variables
-        self.start_time = 0
-        self.end_time = 200
-        self.entity = "ball"
-        self.string_x = "ball_x"
-        self.string_y = "ball_y"
 
-        self.current_plot = None
+        self.current_feature = None
 
         self.VIEW_FILLED = False
 
@@ -203,19 +198,17 @@ class MainWindow(QMainWindow):
         '''
         Creates the area, on the right side of the screen, where the plot the graphs on.
         '''
-        # creates the view_groupBox (area where to plot the graphs on)
+        # creates the view_groupBox (area where the feature will be shown)
         self.view_groupBox = QGroupBox()
-        # creates the layout of view_groupBox 
-        self.layout = QVBoxLayout()
-        # cleans the graph area, if there's already a graph being displayed  
+        # cleans the feature area, if there's already a feature being displayed  
         if self.VIEW_FILLED == True:
             self.clear_View(title)
-        # creates the area where to plot the graphs
-        self.plot_Area = self.create_feature_area(feature_name, title)
+        # creates the layout of the feature
+        self.feature_area = self.create_feature_area(feature_name, title)
+        # defines the layout of view_groupBox
+        self.view_groupBox.setLayout(self.feature_area)
         # calls the feature to be shown
         self.call_feature_function(feature_name, title)
-        # defines the layout of view_groupBox
-        self.view_groupBox.setLayout(self.plot_Area)
         # adds the view_groupBox to the main_hbox 
         self.main_hbox.addWidget(self.view_groupBox) 
         self.VIEW_FILLED = True
@@ -258,13 +251,13 @@ class MainWindow(QMainWindow):
         # customizes the toolbar and canvas layout 
         vertical_space = QVBoxLayout() # Vertical general space
         horizontal_space = QHBoxLayout() # Horizontal space right above the graph
-        plot_options = QHBoxLayout() # Horizontal space that holds the plot options buttons (inside the horizontal space above the graph)
+        self.plot_options = QHBoxLayout() # Horizontal space that holds the plot options buttons (inside the horizontal space above the graph)
 
         # General layout:
         if(feature_name != False): #if graph_type is not none
-            vertical_space.addWidget(self.scoreboard)
             horizontal_space.addWidget(self.toolbar)
-            horizontal_space.addLayout(plot_options)
+            vertical_space.addWidget(self.scoreboard)
+            horizontal_space.addLayout(self.plot_options)
             vertical_space.addLayout(horizontal_space)
         else:
             # creates the encouraging message at the top 
