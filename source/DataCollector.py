@@ -61,8 +61,7 @@ class DataCollector():
 			return self.__team_r
 	
 	def get_all_events_object(self):
-		all_events_array = [self.__all_events.get_all_goals, self.__all_events.get_all_fouls, self.__all_events.get_all_penalties]
-		return all_events_array
+		return self.__all_events
 
 	# Does the general initialization
 	def initialize(self):
@@ -112,7 +111,7 @@ class DataCollector():
 				# creates event object and append the event to the outer goals array
 				goal = Event("goal")
 
-				goal.set_chronological_id = chronological_id_counter
+				goal.set_chronological_id(chronological_id_counter)
 				position = Position(x_position,y_position,timestamp)
 				
 				goal.set_who_scored(self.get_team(player_team).get_player(player_number))
@@ -144,6 +143,7 @@ class DataCollector():
 		
 		return event_occurrences_index
 
+	# TODO: i think this fuction is faulty.
 	def who_scored_this_gol(self, logDataFrame, row):
 		''' returns the player who score the goal relative to the row given (you pass the first row of the goal event)'''
 		current_row = row # current row being parsed
