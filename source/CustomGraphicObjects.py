@@ -1,7 +1,7 @@
 import matplotlib.pyplot as plt
 from PyQt5.QtWidgets import QComboBox
 
-def events_position_custom_layout(data_collector, data, mainWindowObject, update_function, compute_and_set_x_and_y_positions):
+def events_position_custom_layout(data_collector, data, mainWindowObject, update_function, compute_and_set_positions):
 
     #### Definition of Functions ####
  
@@ -27,13 +27,13 @@ def events_position_custom_layout(data_collector, data, mainWindowObject, update
         if(currentText == "Goal"):
             plt.ion()
             add_to_layout(button_which_goal)
-            compute_and_set_x_and_y_positions("goal", data)
+            compute_and_set_positions("goal", data)
             update_function(mainWindowObject.axes)
             plt.ioff()
         if(currentText == "Foul"):
             plt.ion() # TODO: (recorrente) precisa disso para atualizar o plot automaticamente, mas se clicar em outra feature e volta para a mesma, para de funcionar.... econtrar solução.
             add_to_layout(button_select_which_foul)
-            compute_and_set_x_and_y_positions("foul_charge", data)
+            compute_and_set_positions("foul_charge", data)
             update_function(mainWindowObject.axes)
             plt.ioff() # TODO: (recorrente) precisa disso para não bugar loucamente
 

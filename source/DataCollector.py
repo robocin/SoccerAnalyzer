@@ -90,7 +90,7 @@ class DataCollector():
 		self.__teams.append(self.__team_l)
 		self.__teams.append(self.__team_r)
 
-		# Events
+		# Events computing ---
 		''' Populates the self.__all_events with all the events found in the log file'''
 			# goals
 		all_goals = []
@@ -102,7 +102,7 @@ class DataCollector():
 				chronological_id_counter += 1
 
 				# finds who made the goal and breakdown it's information in player_team and player_number
-				player_string = self.who_scored_this_gol(self.__data_frame, row)
+				player_string = self.who_did_this(self.__data_frame, row, "goal")
 				player_team = player_string[7]
 				player_number = int( player_string[8] if len(player_string)==23 else player_string[8:9] )
 
@@ -115,22 +115,44 @@ class DataCollector():
 				# creates event object and append the event to the outer goals array
 				goal = Event("goal")
 
-				goal.set_chronological_id(chronological_id_counter)
 				position = Position(x_position,y_position,timestamp)
 				
+				goal.set_chronological_id(chronological_id_counter)
 				goal.set_who_scored(self.get_team(player_team).get_player(player_number))
 				goal.set_position(position)
 
 				all_goals.append(goal)
+
 		
 			# fouls
 		all_fouls = []
+		chronological_id_counter = 0
+		for row in self.__data_frame.index:
+			if((self.__data_frame.iloc[row,1] == "foul_charge_l" and self.__data_frame.iloc[row-1,1] != "foul_charge_l") or (self.__data_frame.iloc[row,1] == "foul_charge_r" and self.__data_frame.iloc[row-1,1] != "foul_charge_r")):
+				chronological_id_counter += 1
 
-		#parse each line if fouls, append, a event (foul) object to goals
+				# finds who made the goal and breakdown it's information in player_team and player_number
+				player_string = self.who_did_this(self.__data_frame, row, "foul_charge")
+				player_team = player_string[7]
+				player_number = int( player_string[8] if len(player_string)==23 else player_string[8:9] )
 
-		#self.get_all_events().set_fouls(all_fouls)
-			
-			# penalties
+				# finds the position (time included) the goal was scored
+				x_position = self.__data_frame.iloc[row,10]
+				y_position = self.__data_frame.iloc[row,11]
+				timestamp = self.__data_frame.iloc[row,0]
+
+				# creates event object and append the event to the outer goals array
+				foul = Event("foul")
+
+				position = Position(x_position,y_position,timestamp)
+				
+				foul.set_chronological_id(chronological_id_counter)
+				foul.set_who_scored(self.get_team(player_team).get_player(player_number))
+				foul.set_position(position)
+
+				all_fouls.append(foul)
+
+			# TODO: penalties
 				# fazer mesma coisa que goals e foals
 		all_penalties = []
 		
@@ -148,8 +170,14 @@ class DataCollector():
 		return event_occurrences_index
 
 	# TODO: i think this fuction is faulty.
-	def who_scored_this_gol(self, logDataFrame, row):
-		''' returns the player who score the goal relative to the row given (you pass the first row of the goal event)'''
+	def who_did_this(self, logDataFrame, row, event_name):
+		if(event_name == "goal"):
+			FIRST_COLUMN = FIRST_COUNTING_KICK_COLUMN_L
+			BETWEEN_COLUMNS = NUMBER_OF_COLUMNS_BETWEEN_COUNTING_KICKS_PLUS_ONE
+		elif(event_name == "foul_charge"):
+			FIRST_COLUMN = 35 #first counting dash column
+			BETWEEN_COLUMNS = 31 #number of columns until the next counting dash
+
 		current_row = row # current row being parsed
 		player_string = None
 		row_index = 0 # modifies current_row like this: current row being parsed = row-row_index
@@ -157,9 +185,9 @@ class DataCollector():
 			current_row -= row_index 
 			for i in range(0, 21): # for each player column (counting kick)
 				# if this player made a kick,
-				if(self.statChanged(logDataFrame, current_row, FIRST_COUNTING_KICK_COLUMN_L if i==0 else FIRST_COUNTING_KICK_COLUMN_L + i*NUMBER_OF_COLUMNS_BETWEEN_COUNTING_KICKS_PLUS_ONE)):
+				if(self.statChanged(logDataFrame, current_row, FIRST_COLUMN if i==0 else FIRST_COLUMN + i*BETWEEN_COLUMNS)):
 					# makes player_string hold the related string
-					player_string = logDataFrame.columns[FIRST_COUNTING_KICK_COLUMN_L if i==0 else FIRST_COUNTING_KICK_COLUMN_L + i*NUMBER_OF_COLUMNS_BETWEEN_COUNTING_KICKS_PLUS_ONE]
+					player_string = logDataFrame.columns[FIRST_COLUMN if i==0 else FIRST_COLUMN + i*BETWEEN_COLUMNS]
 					break
 			row_index += 1
 
@@ -329,44 +357,43 @@ class DataCollector():
 		self.plot_pie(mainWindowObject, feature_name, data_to_plot, axes)
 
 	def show_feature_events_position(self, mainWindowObject, feature_name, axes):
-		# plotting
+		###### Scatter Plotting #####
 		data_to_plot = PlotData("scatter", feature_name,2)
-	
-		def compute_and_set_x_and_y_positions(event_name,data_to_plot):
-				# getting the entries
-			teamL = data_to_plot.get_entry(0)
-			teamL_x_positions = []
-			teamL_y_positions = []
-
-			teamR = data_to_plot.get_entry(1)
-			teamR_x_positions = []
-			teamR_y_positions = []
-			
-				# getting the goals positions
-			for i in range(len(self.__data_frame)):
-				if(self.__data_frame.iloc[i,1] == "{}_l".format(event_name) and self.__data_frame.iloc[i-1,1] != "{}_l".format(event_name)):
-					teamL_x_positions.append(int(self.__data_frame.iloc[i,10]))
-					teamL_y_positions.append(int(self.__data_frame.iloc[i,11]))
-				elif(self.__data_frame.iloc[i,1] == "{}_r".format(event_name) and self.__data_frame.iloc[i-1,1] != "{}_r".format(event_name)):
-					teamR_x_positions.append(int(self.__data_frame.iloc[i,10]))
-					teamR_y_positions.append(int(self.__data_frame.iloc[i,11]))
-
-				# setting the positions inside the data_to_plot entries
-			teamL.set_x_positions(teamL_x_positions)
-			teamL.set_y_positions(teamL_y_positions)
-			teamR.set_x_positions(teamR_x_positions)
-			teamR.set_y_positions(teamR_y_positions)
-
-		compute_and_set_x_and_y_positions("goal", data_to_plot)
-
+		# sets the x and y positions of the events
+		team_l_x_positions = []
+		team_l_y_positions = []
+		team_r_x_positions = []
+		team_r_y_positions = []
+			# computes the positions
+		def compute_and_set_positions(event_name, data_to_plot, specific_instance=None):
+			if(event_name=="goal"):
+				for goal in self.get_all_events_object().get_all_goals():
+					if(specific_instance==None or goal.get_chronological_id==specific_instance):
+						if(goal.get_who_scored().get_team_side() == "l"):
+							team_l_x_positions.append(goal.get_position().get_x())
+							team_l_y_positions.append(goal.get_position().get_y())
+						elif(goal.get_who_scored().get_team_side() == "r"):
+							team_r_x_positions.append(goal.get_position().get_x())
+							team_r_y_positions.append(goal.get_position().get_y())
+			elif(event_name=="foul_charge"):
+				for foul in self.get_all_events_object().get_all_fouls():
+					if(specific_instance==None or foul.get_chronological_id==specific_instance):
+						if(foul.get_who_scored().get_team_side() == "l"):
+							team_l_x_positions.append(foul.get_position().get_x())
+							team_l_y_positions.append(foul.get_position().get_y())
+						elif(foul.get_who_scored().get_team_side() == "r"):
+							team_r_x_positions.append(foul.get_position().get_x())
+							team_r_y_positions.append(foul.get_position().get_y())
+			# store the positions inside data_to_plot
+			data_to_plot.get_entry(0).set_x_positions(team_l_x_positions)
+			data_to_plot.get_entry(0).set_y_positions(team_l_y_positions)
+			data_to_plot.get_entry(1).set_x_positions(team_r_x_positions)
+			data_to_plot.get_entry(1).set_y_positions(team_r_y_positions)
+				# calls the function whe just defined, asking to plot the goals positions.
+		compute_and_set_positions("goal", data_to_plot)
 			# setting the labels (name of the teams)
 		data_to_plot.get_entry(0).set_label(self.get_team("l").get_name())
 		data_to_plot.get_entry(1).set_label(self.get_team("r").get_name())
-
-			# setting background image
-		data_to_plot.set_background_image(plt.imread("files/soccerField.png"))
-		data_to_plot.show_background_image()
-
 			# setting the colors
 		team_l_name_to_lower = data_to_plot.get_entry(0).get_label().lower()
 		team_r_name_to_lower = data_to_plot.get_entry(1).get_label().lower()
@@ -376,13 +403,16 @@ class DataCollector():
 		else:
 			data_to_plot.get_entry(0).set_color("#ffa1a1")
 			data_to_plot.get_entry(1).set_color("#7da67d")
-
+			# setting background image
+		data_to_plot.set_background_image(plt.imread("files/soccerField.png"))
+		data_to_plot.show_background_image()
 		# calling functions to plot the graph
 		self.prepare_plot_space(mainWindowObject, feature_name, data_to_plot, axes)
 		update_function = self.plot_scatter(mainWindowObject, feature_name, data_to_plot, axes)
 
+
 		# call to render this feature custom layout
-		CustomGraphicObjects.events_position_custom_layout(self, data_to_plot, mainWindowObject, update_function, compute_and_set_x_and_y_positions)
+		CustomGraphicObjects.events_position_custom_layout(self, data_to_plot, mainWindowObject, update_function, compute_and_set_positions)
 		
 	def show_feature_heatmap_position(self, mainWindowObject, feature_name, x_string, y_string, axes):
 		pass
