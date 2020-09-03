@@ -1,5 +1,9 @@
 from matplotlib.backends.backend_qt4agg import NavigationToolbar2QT as NavigationToolbar
 
+from PyQt5.QtWidgets import QPushButton
+
+from matplotlib.animation import FuncAnimation
+
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
@@ -296,11 +300,12 @@ class DataCollector():
 		bar2.set_x_coordinate(self.get_team("r").get_name())
 		bar2.set_y_coordinate(self.get_team("r").get_number_of_faults_commited()) 
 		
-			# calls the function to plot the graph 
+			# calls the functions to plot the graph 
+		self.prepare_plot_space(mainWindowObject, feature_name, data_to_plot, axes)
 		self.plot_bar(mainWindowObject, feature_name, data_to_plot, axes)
 
 	def show_feature_faults_percentage(self, mainWindowObject, feature_name, axes):
-		data_to_plot = PlotData("pie",number_of_entries=2)
+		data_to_plot = PlotData("pie",feature_name, number_of_entries=2)
 
 		# aux variables for readability
 		fouls_commited_by_l = self.get_team("l").get_number_of_faults_commited()
@@ -320,14 +325,65 @@ class DataCollector():
 		sector2.set_label(self.get_team("r").get_name())
 		sector2.set_value( (fouls_commited_by_r*100)/total_number_of_fouls)
 
-
+		#this feature does not need to call prepare_plot_space
 		self.plot_pie(mainWindowObject, feature_name, data_to_plot, axes)
 
 	def show_feature_events_position(self, mainWindowObject, feature_name, axes):
-		# call to render this feature custom layout
-		CustomGraphicObjects.events_position_custom_layout(self, mainWindowObject) 
-		
+		# plotting
+		data_to_plot = PlotData("scatter", feature_name,2)
+	
+		def compute_and_set_x_and_y_positions(event_name,data_to_plot):
+				# getting the entries
+			teamL = data_to_plot.get_entry(0)
+			teamL_x_positions = []
+			teamL_y_positions = []
 
+			teamR = data_to_plot.get_entry(1)
+			teamR_x_positions = []
+			teamR_y_positions = []
+			
+				# getting the goals positions
+			for i in range(len(self.__data_frame)):
+				if(self.__data_frame.iloc[i,1] == "{}_l".format(event_name) and self.__data_frame.iloc[i-1,1] != "{}_l".format(event_name)):
+					teamL_x_positions.append(int(self.__data_frame.iloc[i,10]))
+					teamL_y_positions.append(int(self.__data_frame.iloc[i,11]))
+				elif(self.__data_frame.iloc[i,1] == "{}_r".format(event_name) and self.__data_frame.iloc[i-1,1] != "{}_r".format(event_name)):
+					teamR_x_positions.append(int(self.__data_frame.iloc[i,10]))
+					teamR_y_positions.append(int(self.__data_frame.iloc[i,11]))
+
+				# setting the positions inside the data_to_plot entries
+			teamL.set_x_positions(teamL_x_positions)
+			teamL.set_y_positions(teamL_y_positions)
+			teamR.set_x_positions(teamR_x_positions)
+			teamR.set_y_positions(teamR_y_positions)
+
+		compute_and_set_x_and_y_positions("goal", data_to_plot)
+
+			# setting the labels (name of the teams)
+		data_to_plot.get_entry(0).set_label(self.get_team("l").get_name())
+		data_to_plot.get_entry(1).set_label(self.get_team("r").get_name())
+
+			# setting background image
+		data_to_plot.set_background_image(plt.imread("files/soccerField.png"))
+		data_to_plot.show_background_image()
+
+			# setting the colors
+		team_l_name_to_lower = data_to_plot.get_entry(0).get_label().lower()
+		team_r_name_to_lower = data_to_plot.get_entry(1).get_label().lower()
+		if(team_l_name_to_lower == "robocin"):
+			data_to_plot.get_entry(0).set_color("#7da67d")
+			data_to_plot.get_entry(1).set_color("#ffa1a1")
+		else:
+			data_to_plot.get_entry(0).set_color("#ffa1a1")
+			data_to_plot.get_entry(1).set_color("#7da67d")
+
+		# calling functions to plot the graph
+		self.prepare_plot_space(mainWindowObject, feature_name, data_to_plot, axes)
+		update_function = self.plot_scatter(mainWindowObject, feature_name, data_to_plot, axes)
+
+		# call to render this feature custom layout
+		CustomGraphicObjects.events_position_custom_layout(self, data_to_plot, mainWindowObject, update_function, compute_and_set_x_and_y_positions)
+		
 	def show_feature_heatmap_position(self, mainWindowObject, feature_name, x_string, y_string, axes):
 		pass
 	
@@ -339,13 +395,18 @@ class DataCollector():
 		pass
 
 	# Plotting functions
-	def plot_bar(self, mainWindowObject, title, data, axes):
-
-		# sets axis labels
+	def prepare_plot_space(self, mainWindowObject, title, data, axes):
+		# set axis labels
 		axes.set_xlabel(data.get_x_label()) 
 		axes.set_ylabel(data.get_y_label())
 		# set title
 		axes.set_title(title)
+		# set background image
+		if(data.is_background_image_visible() == True):
+			img = data.get_background_image()
+			axes.imshow(img, zorder = -1, extent=[-56, 56, -34, 34])
+
+	def plot_bar(self, mainWindowObject, title, data, axes):
 		# plot each bar
 		for barIndex in range(0,len(data.get_entries())):
 			axes.bar(data.get_entry(barIndex).get_x_coordinate(), data.get_entry(barIndex).get_y_coordinate(), width = data.get_entry(barIndex).get_width(), color = data.get_entry(barIndex).get_color())
@@ -374,4 +435,25 @@ class DataCollector():
 		axes.pie(values, explode =(0.06, 0), labels = labels, colors = colors, autopct='%1.1f%%', shadow=True, startangle=90)
 
 	def plot_scatter(self, mainWindowObject, title, data, axes):
-		pass
+		
+		def update(axes):
+			axes.clear()
+			plt.cla()
+			self.prepare_plot_space(mainWindowObject, title, data, axes)
+			for entry in data.get_entries():
+				axes.scatter(entry.get_x_positions(), entry.get_y_positions(),color = entry.get_color(), label = entry.get_label()) #todo: adicionar argumentos 'marker' e 's' passados por dentro do plotdata
+
+		update(axes)
+
+		return update		
+
+
+		#for entry in data.get_entries():
+		#		axes.scatter(entry.get_x_positions(), entry.get_y_positions(),color = entry.get_color(), label = entry.get_label()) #todo: adicionar argumentos 'marker' e 's' passados por dentro do plotdata
+	
+		#plt.show()
+
+
+
+# apgar isso depois
+# axes.plot([1,2,3], [1,2,3])

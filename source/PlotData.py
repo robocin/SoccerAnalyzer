@@ -53,6 +53,8 @@ class Entry:
         self.__y_label = "Y"
         self.__x_coordinate = None
         self.__y_coordinate = None
+        self.__x_positions = []
+        self.__y_positions = []
         self.__color = "grey"
 
         # Bar
@@ -80,6 +82,10 @@ class Entry:
         self.__y_coordinate = value
     def set_color(self, color):
         self.__color = color
+    def set_x_positions(self, positions):
+        self.__x_positions = positions
+    def set_y_positions(self, positions):
+        self.__y_positions = positions
 	
     def get_value(self):
         return self.__value
@@ -97,6 +103,10 @@ class Entry:
         return self.__y_coordinate
     def get_color(self):
         return self.__color
+    def get_x_positions(self):
+        return self.__x_positions
+    def get_y_positions(self):
+        return self.__y_positions
     
     # Bar
     def set_widht(self, width):

@@ -32,10 +32,10 @@ class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
 
+        #Global functions
+
         #Global variables
-
         self.current_feature = None
-
         self.VIEW_FILLED = False
 
         ##### SCREEN INILIALIZATION #####
@@ -231,7 +231,8 @@ class MainWindow(QMainWindow):
 
         #plt.style.use('fivethirtyeight') #this sets the visual style for the plots
         
-        self.figure, self.axes = plt.subplots()
+        self.figure = plt.figure()
+        self.axes = self.figure.add_subplot(111)
         
         # creates a canvas widget, which displays the figure 
         self.canvas = FigureCanvas(self.figure)
@@ -271,7 +272,7 @@ class MainWindow(QMainWindow):
 
         if (feature_name != False):
             self.figure.canvas.show()
-
+        
         return vertical_space
 
     def call_feature_function(self, feature_name, title):
