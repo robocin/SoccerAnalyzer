@@ -1,31 +1,10 @@
-"""
-EM MainWIndow.py:
-
-class MainWindow(QMainWindow):     
-    def __init__(self, name):
-            #screen initialization
-        (...)
-            #other initializations
-        (...)
-            # call define_log() and instaciates a DataCollector() 
-        (...)
-            #definition of custom functions
-        (...)
-            #showing
-        robocin_number_of_goals = data.get_Team("l").get_NumberOfGoals()
-        robocin_player1_number_of_goals = data.get_Team(robocin).get_Player(1).get_NumberOfGoals()
-
-
-"""
-
-#################################################################################################################################################
-
 from Player import Player
 from Position import Position
 from Event import Event
 
 NUMBER_OF_PLAYERS_PER_TEAM = 11 
 
+#TODO: remove unused variables and methods.
 class Team:
     def __init__(self):
         

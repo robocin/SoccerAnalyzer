@@ -1,9 +1,3 @@
-import numpy as np
-import pandas as pd
-
-import Player
-import Position
-
 # This class is a generalization of any kind game related event like: goals, faults
 #
 # A fault and a penalty would have (V0.3):
@@ -34,47 +28,18 @@ import Position
 # ----------------------------------------------------------------------------------------------
 
 class Event:
-    def __init__(self, etype = None):
-
-        # all types
-        self.__etype = etype #type is a reserved word
-        self.__position = None
-        self.__chronological_id = None
-
-        # foul
-        if(self.__etype == "foul"):
-            self.__offender = None
-            self.__defender = None
-        
-        # goal
-        if(self.__etype == "goal"):
-            self.__who_scored = None
+    def __init__(self, position=None, owner=None):
+        self.__position = position
+        self.__owner = owner
 
 
     # set and get methods
 
-        # all types
-    def set_position(self, position):
-        self.__position = position
-    def set_chronological_id(self, id):
-        self.__chronological_id = id
+    def set_position(self, x):
+        self.__position = x 
+    def set_owner(self, x):
+        self.__owner = x
     def get_position(self):
         return self.__position
-    def get_chronological_id(self):
-        return self.__chronological_id
-
-        # foul
-    def set_offender(self, offender):
-        self.__offender = offender
-    def set_defender(self, defender):
-        self.__defender = defender
-    def get_offender(self):
-        return self.__offender
-    def get_defender(self):
-        return self.__defender
-
-        # goal
-    def set_who_scored(self, player):
-        self.__who_scored = player
-    def get_who_scored(self):
-        return self.__who_scored
+    def get_owner(self):
+        return self.__owner
