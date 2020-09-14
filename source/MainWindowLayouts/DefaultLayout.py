@@ -2,9 +2,10 @@ from PyQt5 import QtWidgets
 from PyQt5 import QtCore
 from MainWindowLayouts import ClearLayout
 from PyQt5 import QtGui
+from utility_functions import show_feature
+from functools import partial
 
-
-def set_default_layout(MainWindow):
+def set_default_layout(MainWindow, game_data):
     # sets clean layout #
     ClearLayout.set_clear_layout(MainWindow)
     
@@ -13,7 +14,7 @@ def set_default_layout(MainWindow):
     MainWindow.setCentralWidget(MainWindow.mdiArea)
 
     # creates and customizes the QListWidget #
-    create_features_list(MainWindow)
+    create_features_list(MainWindow, game_data)
 
     # creates the dock widget and customizes it
     create_features_list_docker(MainWindow)
@@ -24,7 +25,7 @@ def set_default_layout(MainWindow):
     # creates the big message (subWindow of the mdiArea)#
     create_big_message(MainWindow)
 
-def create_features_list(MainWindow):
+def create_features_list(MainWindow, game_data):
     #TODO: make the width of the QListWidget be minimum
     # creates and customizes the QListWidget #
     MainWindow.features_list = QtWidgets.QListWidget()
@@ -63,9 +64,14 @@ def create_features_list(MainWindow):
     list_items.append(MainWindow.features_list_item_6) 
     MainWindow.features_list.addItem(MainWindow.features_list_item_6)
 
+    MainWindow.features_list.itemClicked.connect(lambda item: itemSelected(item, MainWindow, game_data))
+
     for item in list_items:
         item.setFont(font)
         item.setTextAlignment(QtCore.Qt.AlignHCenter)
+
+def itemSelected(item, MainWindow, game_data):
+    show_feature.show_feature(item.text(), MainWindow, game_data)
 
 def create_features_list_docker(MainWindow):
     # creates the dock widget and customizes it
@@ -81,7 +87,7 @@ def create_features_list_docker(MainWindow):
 
 def create_big_message(MainWindow):
     # creates the big message (subWindow of the mdiArea)#
-    MainWindow.message_qlabel = QtWidgets.QLabel("Selecione uma das opções na lista à esquerda")
+    MainWindow.message_qlabel = QtWidgets.QLabel("Choose one of the features of the list")
     MainWindow.message_qlabel.setStyleSheet(" font-size: 40px; qproperty-alignment: AlignCenter; font-family: Arial;")
     MainWindow.message_sub_window = MainWindow.mdiArea.addSubWindow(MainWindow.message_qlabel)
     MainWindow.mdiArea_sub_windows_list.append(MainWindow.message_sub_window)

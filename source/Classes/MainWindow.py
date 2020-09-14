@@ -5,11 +5,8 @@ from PyQt5.QtCore import Qt
 from MainWindowLayouts import DefaultLayout
 from PopUpWindows import fileSelector 
 
-
-#MainWindow = QtWidgets.QMainWindow 
-
 class MainWindow(QtWidgets.QMainWindow):
-    def __init__(self, application):
+    def __init__(self, application, game_data):#, game_statistics):
         super().__init__()
 
         # gets the QApplication object passed as a parameter for this QMainWIndow  
@@ -17,10 +14,10 @@ class MainWindow(QtWidgets.QMainWindow):
 
         # Main Window initializations 
         self.initialize_main_window("RobôCIn statistics extractor", '../files/images/robocin-03-small.png')
-        self.initialize_menu_bar()
+        self.initialize_menu_bar(game_data)
 
         # initialize the default layout()
-        DefaultLayout.set_default_layout(self)
+        DefaultLayout.set_default_layout(self, game_data)
 
     def initialize_main_window(self, window_title, icon_path):
         # creates the array that will hold all the current mainWIndow dockers 
@@ -45,7 +42,7 @@ class MainWindow(QtWidgets.QMainWindow):
         # turns the main window visible
         self.show()
 
-    def initialize_menu_bar(self):
+    def initialize_menu_bar(self, game_data):
          # adds the main window menuBar
         self.menu_bar = self.menuBar()
             # 'File' menu
@@ -57,7 +54,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.menu_bar_edit_menu = self.menu_bar.addMenu("Edit") 
         self.menu_bar_edit_menu_layout_menu =  self.menu_bar_edit_menu.addMenu("Layout")
         self.menu_bar_edit_menu_layout_menu_default_action = self.menu_bar_edit_menu_layout_menu.addAction("Default") 
-        self.menu_bar_edit_menu_layout_menu_default_action.triggered.connect(lambda: DefaultLayout.set_default_layout(self))
+        self.menu_bar_edit_menu_layout_menu_default_action.triggered.connect(lambda: DefaultLayout.set_default_layout(self, game_data))
             # 'About' menu 
         self.menu_bar_about_menu = self.menu_bar.addMenu("About") 
                 # 'About Qt' Action

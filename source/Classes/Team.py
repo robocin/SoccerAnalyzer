@@ -1,23 +1,23 @@
-from Player import Player
-from Position import Position
-from Event import Event
+from Classes import Player
+from Classes import Position
+from Classes import Event
 
 NUMBER_OF_PLAYERS_PER_TEAM = 11 
 
 #TODO: remove unused variables and methods.
 class Team:
-    def __init__(self):
+    def __init__(self, side=None):
         
         # initializes variables that will hold the values taken from de log (.csv file)
         self.__name = ""
-        self.__side = None
+        self.__side = side
         self.__players = [] 
         self.__goals_scored = []
         self.__number_of_goals_scored = 0
         self.__free_kicks = []
         self.__number_of_free_kicks = 0
-        self.__faults_commited = []
-        self.__number_of_faults_commited = 0
+        self.__fouls_commited = []
+        self.__number_of_fouls_commited = 0
         self.__penaltis_commited = []
         self.__penaltis_scored = 0
         self.__seen_on = []
@@ -44,11 +44,11 @@ class Team:
     def set_number_of_free_kicks(self, number_of_free_kicks):
         self.__number_of_free_kicks = number_of_free_kicks
 
-    def set_faults_commited(self, faults_commited):
+    def set_fouls_commited(self, faults_commited):
         self.__faults_commited = faults_commited
     
-    def set_number_of_faults_commited(self, number_of_faults_commited):
-        self.__number_of_faults_commited = number_of_faults_commited
+    def set_number_of_fouls_commited(self, number_of_fouls_commited):
+        self.__number_of_fouls_commited = number_of_fouls_commited
     
     def set_penaltis_commited(self, penaltis_commited):
         self.__penaltis_commited = penaltis_commited
@@ -89,11 +89,11 @@ class Team:
     def get_number_of_free_kicks(self):
         return self.__number_of_free_kicks
     
-    def get_faults_commited(self):
-        return self.__faults_commited
+    def get_fouls_commited(self):
+        return self.__fouls_commited
 
-    def get_number_of_faults_commited(self):
-        return self.__number_of_faults_commited
+    def get_number_of_fouls_commited(self):
+        return self.__number_of_fouls_commited
 
     def get_penaltis_commited(self):
         return self.__penaltis_commited

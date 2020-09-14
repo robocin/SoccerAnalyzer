@@ -1,10 +1,10 @@
-from Position import Position
-from Event import Event
+from Classes import Position
+from Classes import Event
 
 #TODO: remove unused variables and methods.
 class Player:
-    def __init__(self, team_name, team_side, player_id): 
-        self.__team_name = team_name #name of the team this player belongs to
+    def __init__(self, team_side=None, player_id=None): 
+        self.__team_name = None #name of the team this player belongs to
         self.__team_side = team_side 
         self.__player_id = player_id #id of this player (internal to the team)
 
