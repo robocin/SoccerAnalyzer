@@ -3,7 +3,7 @@ from PyQt5 import QtWidgets
 from PyQt5 import QtGui
 from PyQt5.QtCore import Qt
 from MainWindowLayouts import DefaultLayout
-from PopUpWindows import fileSelector 
+from utility_functions import open_file_while_running, clear_main_mdi_area
 
 class MainWindow(QtWidgets.QMainWindow):
     def __init__(self, application, game_data):#, game_statistics):
@@ -13,7 +13,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.application = application
 
         # Main Window initializations 
-        self.initialize_main_window("RobôCIn statistics extractor", '../files/images/robocin-03-small.png')
+        self.initialize_main_window("RobôCIn statistics extractor - {} {} X {} {}".format(game_data.get_team(0).get_name(),game_data.get_team(0).get_number_of_goals_scored(), game_data.get_team(1).get_number_of_goals_scored(), game_data.get_team(1).get_name()), '../files/images/robocin-03-small.png')
         self.initialize_menu_bar(game_data)
 
         # initialize the default layout()
@@ -49,7 +49,8 @@ class MainWindow(QtWidgets.QMainWindow):
         self.menu_bar_file_menu = self.menu_bar.addMenu("File") 
         self.menu_bar_file_menu_open_action = QtWidgets.QAction("Open")
         self.menu_bar_file_menu.addAction(self.menu_bar_file_menu_open_action)
-        self.menu_bar_file_menu.triggered.connect(fileSelector.fileSelectorPopUp)
+        self.menu_bar_file_menu.triggered.connect(lambda: open_file_while_running.open_file_while_running(self, game_data))
+
             # 'Edit' menu 
         self.menu_bar_edit_menu = self.menu_bar.addMenu("Edit") 
         self.menu_bar_edit_menu_layout_menu =  self.menu_bar_edit_menu.addMenu("Layout")

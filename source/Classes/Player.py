@@ -7,7 +7,7 @@ class Player:
         self.__team_name = None #name of the team this player belongs to
         self.__team_side = team_side 
         self.__player_id = player_id #id of this player (internal to the team)
-
+        self.__stamina_log = []
         self.__pos = None
         self.__f_pro = []
         self.__faults_commited = []
@@ -38,6 +38,8 @@ class Player:
         self.__good_try = good_try
     def set_tackles(self, tackles):
         self.__tackles
+    def set_stamina_log(self, log):
+        self.__stamina_log = log
 
     #get methods
     def get_team_name(self):
@@ -65,3 +67,5 @@ class Player:
         return self.__good_try
     def get_tackles(self):
         return self.__tackles
+    def get_stamina_log(self):
+        return self.__stamina_log

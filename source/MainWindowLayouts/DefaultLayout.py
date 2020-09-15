@@ -39,30 +39,40 @@ def create_features_list(MainWindow, game_data):
     list_items.append(MainWindow.features_list_item_1) 
     MainWindow.features_list.addItem(MainWindow.features_list_item_1)
 
-        # creates the fouls quantity QListWidgetItem
+        # creates the fouls proportion QListWidgetItem
     MainWindow.features_list_item_2 = QtWidgets.QListWidgetItem("Fouls Proportion")
     list_items.append(MainWindow.features_list_item_2) 
     MainWindow.features_list.addItem(MainWindow.features_list_item_2)
 
-        # creates the fouls quantity QListWidgetItem
-    MainWindow.features_list_item_3 = QtWidgets.QListWidgetItem("Heatmaps")
+        # creates the fouls positino QListWidgetItem
+    MainWindow.features_list_item_3 = QtWidgets.QListWidgetItem("Fouls Position")
     list_items.append(MainWindow.features_list_item_3) 
     MainWindow.features_list.addItem(MainWindow.features_list_item_3)
 
-        # creates the fouls quantity QListWidgetItem
-    MainWindow.features_list_item_4 = QtWidgets.QListWidgetItem("Goal Replay")
+        # creates the goals position  QListWidgetItem
+    MainWindow.features_list_item_4 = QtWidgets.QListWidgetItem("Goals Position")
     list_items.append(MainWindow.features_list_item_4) 
     MainWindow.features_list.addItem(MainWindow.features_list_item_4)
 
-        # creates the fouls quantity QListWidgetItem
-    MainWindow.features_list_item_5 = QtWidgets.QListWidgetItem("Player Replay")
+        # creates the goal replay  QListWidgetItem
+    MainWindow.features_list_item_5 = QtWidgets.QListWidgetItem("Goal Replay")
     list_items.append(MainWindow.features_list_item_5) 
     MainWindow.features_list.addItem(MainWindow.features_list_item_5)
 
-        # creates the fouls quantity QListWidgetItem
-    MainWindow.features_list_item_6 = QtWidgets.QListWidgetItem("Stamina Tracker")
+        # creates the player replay  QListWidgetItem
+    MainWindow.features_list_item_6 = QtWidgets.QListWidgetItem("Player Replay")
     list_items.append(MainWindow.features_list_item_6) 
     MainWindow.features_list.addItem(MainWindow.features_list_item_6)
+
+        # creates the heatmaps  QListWidgetItem
+    MainWindow.features_list_item_7 = QtWidgets.QListWidgetItem("Heatmaps")
+    list_items.append(MainWindow.features_list_item_7) 
+    MainWindow.features_list.addItem(MainWindow.features_list_item_7)
+
+        # creates the stamina tracker  QListWidgetItem
+    MainWindow.features_list_item_8 = QtWidgets.QListWidgetItem("Stamina Tracker")
+    list_items.append(MainWindow.features_list_item_8) 
+    MainWindow.features_list.addItem(MainWindow.features_list_item_8)
 
     MainWindow.features_list.itemClicked.connect(lambda item: itemSelected(item, MainWindow, game_data))
 

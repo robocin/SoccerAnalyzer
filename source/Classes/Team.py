@@ -10,6 +10,7 @@ class Team:
         
         # initializes variables that will hold the values taken from de log (.csv file)
         self.__name = ""
+        self.__color = None
         self.__side = side
         self.__players = [] 
         self.__goals_scored = []
@@ -25,6 +26,9 @@ class Team:
     # set methods
     def set_name(self, name):
         self.__name = name
+
+    def set_color(self, color):
+        self.__color = color
 
     def set_side(self, side):
         self.__side = side
@@ -71,11 +75,14 @@ class Team:
     def get_name(self):
         return self.__name
 
+    def get_color(self):
+        return self.__color
+
     def get_side(self):
         return self.__side
 
     def get_goals_scored(self):
-        return self.__goalsscored
+        return self.__goals_scored
 
     def get_penaltis_scored(self):
         return self.__penaltis_scored

@@ -1,9 +1,13 @@
 from Classes import GameData, Team, Player
 import pandas as pd
+from utility_functions import is_robocin 
 
-def data_extractor(file_path):
-    # initializes the game_data class
-    game_data = GameData.GameData()
+def data_extractor(file_path, game_data_arg=None, game_statistics_arg=None):
+    if(game_data_arg==None):
+        # initializes the game_data class
+        game_data = GameData.GameData()
+    else:
+        game_data = game_data_arg
     # saves the pandas.dataFrame object in it
     game_data.set_dataframe(read_file(file_path))
 
@@ -15,15 +19,18 @@ def data_extractor(file_path):
     # extract teams data
     extract_teams(game_data, dataframe)
 
-
-
     return game_data
 
 def extract_players(game_data, dataframe):
     # instaciates all players 
     all_players = []
+    row = 1
+    stamina = []
+    # for each player,
     for i in range(0,22):
+        # instanciates the player
         all_players.append(Player.Player("l" if i<11 else "r",i if i<11 else i-11))
+
     
     game_data.set_players(all_players)
 
@@ -36,6 +43,15 @@ def extract_teams(game_data, dataframe): #TODO: split this into shorter, more sp
     team_right_name =dataframe.iloc[0].team_name_r
     game_data.get_team(0).set_name(team_left_name)
     game_data.get_team(1).set_name(team_right_name)
+
+    # set teams colors
+    if(is_robocin.is_robocin(game_data.get_team(0))):
+        game_data.get_team(0).set_color("#7da67d")
+        game_data.get_team(1).set_color("#ffa1a1")
+    else:
+        game_data.get_team(0).set_color("#ffa1a1")
+        game_data.get_team(1).set_color("#7da67d")
+
 
     # get the teams sides
     team_left_side = "l"
@@ -69,8 +85,11 @@ def extract_teams(game_data, dataframe): #TODO: split this into shorter, more sp
 
     # TODO: get the faults commited by the players for each team
 
+# def extract_events()
+
 
 
 def read_file(file_path):
     dataframe = pd.read_csv(file_path)
     return dataframe
+

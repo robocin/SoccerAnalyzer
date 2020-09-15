@@ -2,6 +2,7 @@ from PyQt5 import QtWidgets
 from utility_functions import clear_main_mdi_area
 import matplotlib.pyplot as plt
 from matplotlib.backends.backend_qt4agg import FigureCanvasQTAgg as FigureCanvas 
+from PyQt5.QtCore import Qt
 
 def fouls_proportion(MainWindow, game_data):
     # configure the plot
@@ -9,7 +10,9 @@ def fouls_proportion(MainWindow, game_data):
     axes = figure.add_subplot(111)
     canvas = FigureCanvas(figure)
 
-    # add the mdiSubwindow with the plot as its inner widget
+    #TODO: for all features, add the score at the top
+
+    # add the mdiSubwindow with the vbox as its inner widget
     sub_window = MainWindow.mdiArea.addSubWindow(canvas)
     MainWindow.mdiArea_sub_windows_list.append(sub_window)
     sub_window.showMaximized() 
