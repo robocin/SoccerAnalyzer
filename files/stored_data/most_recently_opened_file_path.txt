@@ -1,0 +1,1 @@
+/home/mateus/pastas/git/log-analyzer/files/logs/t1.rcg.csv

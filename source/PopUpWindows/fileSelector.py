@@ -54,7 +54,7 @@ def ask_tipe_of_file():
         return category
 
 def is_the_most_recently_opened_file_txt_file_empty():
-    txt_file = open("/home/mateus/pastas/git/log-analyzer/files/stored_data/most_recently_opened_file_path.txt", "r")
+    txt_file = open("../files/stored_data/most_recently_opened_file_path.txt", "r")
     line = txt_file.readline()
     txt_file.close()
     if(line == ''):
@@ -63,13 +63,13 @@ def is_the_most_recently_opened_file_txt_file_empty():
         return False
 
 def get_most_recently_opened_file():
-    txt_file = open("/home/mateus/pastas/git/log-analyzer/files/stored_data/most_recently_opened_file_path.txt", "r")
+    txt_file = open("../files/stored_data/most_recently_opened_file_path.txt", "r")
     line = txt_file.readline()
     txt_file.close()
     return line
 
 def set_most_recently_opened_file(file_path):
-    txt_file = open("/home/mateus/pastas/git/log-analyzer/files/stored_data/most_recently_opened_file_path.txt", "r+")
+    txt_file = open("../files/stored_data/most_recently_opened_file_path.txt", "r+")
     txt_file.truncate(0) # clears the .txt
     txt_file.write(file_path)
     txt_file.close()
