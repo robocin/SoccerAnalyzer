@@ -64,4 +64,4 @@ def item_changed(index, game_data, axes, figure):
     if(index<11):
         plot_stamina(game_data, "l", index)
     else:
-        plot_stamina(game_data, "r", index-11)
+        plot_stamina(game_data, "r", index-10)
