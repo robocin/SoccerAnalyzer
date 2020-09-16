@@ -54,15 +54,15 @@ def create_features_list(MainWindow, game_data):
     list_items.append(MainWindow.features_list_item_4) 
     MainWindow.features_list.addItem(MainWindow.features_list_item_4)
 
-        # creates the goal replay  QListWidgetItem
-    MainWindow.features_list_item_5 = QtWidgets.QListWidgetItem("Goal Replay")
-    list_items.append(MainWindow.features_list_item_5) 
-    MainWindow.features_list.addItem(MainWindow.features_list_item_5)
+    #     # creates the goal replay  QListWidgetItem
+    # MainWindow.features_list_item_5 = QtWidgets.QListWidgetItem("Goal Replay")
+    # list_items.append(MainWindow.features_list_item_5) 
+    # MainWindow.features_list.addItem(MainWindow.features_list_item_5)
 
-        # creates the player replay  QListWidgetItem
-    MainWindow.features_list_item_6 = QtWidgets.QListWidgetItem("Player Replay")
-    list_items.append(MainWindow.features_list_item_6) 
-    MainWindow.features_list.addItem(MainWindow.features_list_item_6)
+    #     # creates the player replay  QListWidgetItem
+    # MainWindow.features_list_item_6 = QtWidgets.QListWidgetItem("Player Replay")
+    # list_items.append(MainWindow.features_list_item_6) 
+    # MainWindow.features_list.addItem(MainWindow.features_list_item_6)
 
         # creates the heatmaps  QListWidgetItem
     MainWindow.features_list_item_7 = QtWidgets.QListWidgetItem("Heatmaps")
