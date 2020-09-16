@@ -5,10 +5,11 @@ from PyQt5 import QtGui
 
 
 def open_most_recent_file_or_ask_if_there_is_none():
-    if(is_the_most_recently_opened_file_txt_file_empty() == False):
-        return get_most_recently_opened_file()
-    else:
-        return file_selector()
+    return file_selector()
+    # if(is_the_most_recently_opened_file_txt_file_empty() == False):
+    #     return get_most_recently_opened_file()
+    # else:
+    #     return file_selector()
 
 def file_selector(): # returns the file_path
         txt_file = ask_for_file_and_save_it()
