@@ -11,6 +11,39 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - SSL log implementation
 - Events class
 
+## [0.3.8] - 2020-09-19
+
+## Added
+- Open most recent file at launch
+
+- Utility functions
+
+- Stamina tracker
+
+- mdiArea as the main widget
+
+- DataExtractor class
+
+## Modified
+
+- Internal structure and code flow
+
+- Main window layout
+
+- Feature layouts
+
+- Popup file selector layout
+
+
+## Deprecated
+
+- Data collector class
+
+- Player and ball replay features
+
+- Plot data class
+
+
 ## [0.3.7] - 2020-08-02
 
 ## Added
