@@ -1,5 +1,45 @@
 ## RoboCIn - 2D Log Analyzer
+### Install
+You must have at least Python 3.x to run the analyzer and it's modules, if you don't have it, install it in your OS. More information here: https://www.python.org/downloads/
 
+> The following modules are required:
+>  - [PyQT5](#pyqt5)
+>  - [Matplotlib](#matplotlib)
+>  - [Pandas](#pandas)
+>  - [Seaborn](#seaborn)
+
+We are using pip3 to install these components, to check if you have it run:
+```
+pip3 -v 
+```
+If you don't have it run: 
+```
+sudo apt-get -y install python3-pip
+```
+If you are having problems with your pip3 setuptools, try:
+```
+pip3 install --upgrade pip3 setuptools
+```
+### PyQT5
+PyQt5 the framework used to create our Graphical User interface(GUI). Our analyzer uses the Python version to create windows, pop ups, widgets and show all computed information on the screen. You should install it using:
+```
+pip3 install PyQt5
+```
+### Matplotlib
+It's used to plot all information gathered from our DataFrames inside our main window. You should install it using:
+```
+pip3 install matplotlib
+```
+### Pandas
+Is the main library to manipulate and explore our data. We use it to read the inputs as .csv files and then store information in our internal components described at (). You should install it using:
+```
+pip3 install pandas
+```
+### Seaborn
+It's used to create plots that aren't possible only with matplotlib. Install it using:
+```
+pip3 install seaborn
+```
 - Arquitetura (V1)
 
 ![Screenshot](./DOC/la.jpg)
