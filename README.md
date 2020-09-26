@@ -44,9 +44,9 @@ pip3 install seaborn
 
 ![Screenshot](./DOC/la.jpg)
 
-- Diagrama de classes (V1.1)
+- Diagrama de flow do código (V1)
 
-![Screenshot](./DOC/classes_v1_1.png)
+![Screenshot](./DOC/Code_Flow(V1.0).jpeg)
 
 - Generalização de campos/atributos
 
