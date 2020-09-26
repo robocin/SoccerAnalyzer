@@ -1,4 +1,4 @@
-/source/__pycache__
-/testing/__pycache__
-*.txt
+!**/__pycache__/
+
+/utility_functions/__pycache__
 *.swp
