@@ -1,1 +1,1 @@
-/home/mateus/pastas/git/log-analyzer/files/logs/t1.rcg.csv
+/hdd/pastas/git/log-analyzer/files/logs/20190705100545-RoboCIn_1-vs-HillStone_0.rcg.csv
