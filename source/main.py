@@ -3,6 +3,7 @@ from PyQt5 import QtWidgets
 from Classes import MainWindow
 from PopUpWindows import fileSelector
 from utility_functions import organize_data
+import subprocess
 
 
 if __name__ == "__main__":
@@ -20,6 +21,9 @@ if __name__ == "__main__":
 
    # Call the main window
    MainWindow = MainWindow.MainWindow(Application, game_data)#, game_statistics) 
+
+   # Clean pycache files and folders
+   subprocess.call(['sh', './clean_pycache.sh'])
    
    # Exit if system asks for it
    sys.exit(Application.exec())
