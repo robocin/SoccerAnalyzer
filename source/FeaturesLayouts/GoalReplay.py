@@ -66,10 +66,11 @@ def draw_background_image(file_path, axes):
 
 def plot_ball_replay(dataframe, initial_row, final_row, ax_value):
     cut_dataframe = copy_dataframe_subset_by_rows.copy_dataframe_subset_by_rows(dataframe, initial_row, final_row)
+    print(cut_dataframe)
     cut_dataframe.plot(title = "Goal Replay", x="ball_x", y="ball_y", label="Ball trajectory 100 cycles before the goal", ax = ax_value)
 
 def item_changed(index, game_data, axes, figure):
     plt.cla()
     draw_background_image("../files/images/soccerField.png", axes)
     all_goals_rows = find_unique_event_ocurrences.find_unique_event_ocurrences(game_data.get_dataframe(), "goal")
-    plot_ball_replay(game_data.get_dataframe(), all_goals_rows[index-1], all_goals_rows[index-1]+100, axes) 
+    plot_ball_replay(game_data.get_dataframe(), all_goals_rows[index-1]-100, all_goals_rows[index-1], axes) 

@@ -1,1 +1,1 @@
-/hdd/pastas/git/log-analyzer/files/logs/ironcup/RoboCin won/20200229162107-ThunderLeague_1-vs-RoboCIn_2.rcg.csv
+/hdd/pastas/git/log-analyzer/files/logs/20190707103113-Titas2019_1-vs-RoboCIn_0.rcg.csv
