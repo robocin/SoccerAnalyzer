@@ -60,7 +60,7 @@ def create_features_list(MainWindow, game_data):
     MainWindow.features_list.addItem(MainWindow.features_list_item_5)
 
         # creates the player replay  QListWidgetItem
-    MainWindow.features_list_item_6 = QtWidgets.QListWidgetItem("Player Replay")
+    MainWindow.features_list_item_6 = QtWidgets.QListWidgetItem("[BROKEN] Player Replay")
     list_items.append(MainWindow.features_list_item_6) 
     MainWindow.features_list.addItem(MainWindow.features_list_item_6)
 
@@ -73,6 +73,16 @@ def create_features_list(MainWindow, game_data):
     MainWindow.features_list_item_8 = QtWidgets.QListWidgetItem("Stamina Tracker")
     list_items.append(MainWindow.features_list_item_8) 
     MainWindow.features_list.addItem(MainWindow.features_list_item_8)
+
+        # creates the "print all goals" feature
+    MainWindow.features_list_item_9 = QtWidgets.QListWidgetItem("Print all goals")
+    list_items.append(MainWindow.features_list_item_9) 
+    MainWindow.features_list.addItem(MainWindow.features_list_item_9)
+
+        # creates the "print all fouls" feature
+    MainWindow.features_list_item_10 = QtWidgets.QListWidgetItem("Print all fouls")
+    list_items.append(MainWindow.features_list_item_10) 
+    MainWindow.features_list.addItem(MainWindow.features_list_item_10)
 
     MainWindow.features_list.itemClicked.connect(lambda item: itemSelected(item, MainWindow, game_data))
 

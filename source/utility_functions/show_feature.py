@@ -1,4 +1,4 @@
-from FeaturesLayouts import FoulsQuantity, FoulsProportion, FoulsPosition, GoalsPosition, Heatmaps, GoalReplay, PlayerReplay, StaminaTracker
+from FeaturesLayouts import FoulsQuantity, FoulsProportion, FoulsPosition, GoalsPosition, Heatmaps, GoalReplay, PlayerReplay, StaminaTracker, print_all_goals, print_all_fouls
 
 # TODO: dentro de cada uma das funções chamadas abaixo, chamar clear_main_mdi_area.py para limpar todas as subWindows abertas no main mdiArea
 #       (atualmente n estou fazendo isso pq está com um bug se ativar)
@@ -29,5 +29,8 @@ def show_feature(item_text, MainWindow, game_data):
     elif(item_text == "Stamina Tracker"):
         StaminaTracker.stamina_tracker(MainWindow, game_data)
 
+    elif(item_text == "Print all goals"):
+        print_all_goals.print_all_goals(MainWindow, game_data)
 
-
+    elif(item_text == "Print all fouls"):
+        print_all_fouls.print_all_fouls(MainWindow, game_data)

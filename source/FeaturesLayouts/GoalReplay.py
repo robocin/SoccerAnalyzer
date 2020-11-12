@@ -66,7 +66,6 @@ def draw_background_image(file_path, axes):
 
 def plot_ball_replay(dataframe, initial_row, final_row, ax_value):
     cut_dataframe = copy_dataframe_subset_by_rows.copy_dataframe_subset_by_rows(dataframe, initial_row, final_row)
-    print(cut_dataframe)
     cut_dataframe.plot(title = "Goal Replay", x="ball_x", y="ball_y", label="Ball trajectory 100 cycles before the goal", ax = ax_value)
 
 def item_changed(index, game_data, axes, figure):
