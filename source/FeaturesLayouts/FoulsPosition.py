@@ -51,6 +51,7 @@ def fouls_position(MainWindow, game_data):
         # plots the team l fouls
     for i in range(0, team_r_number_of_fouls):
         scatter_1 = axes.scatter(team_l_x_positions, team_l_y_positions, color = team_l_color, marker = 'o', s = 25)
+    scatter_1 = axes.scatter(team_l_x_positions, team_l_y_positions, color = "#7da67d", marker = 'o', s = 25)
         # plots the team r fouls
     for i in range(0, team_l_number_of_fouls):
         scatter_2 = axes.scatter(team_r_x_positions, team_r_y_positions, color = team_r_color, marker = 'o', s = 25)

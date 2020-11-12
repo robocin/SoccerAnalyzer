@@ -74,7 +74,7 @@ def goals_position(MainWindow, game_data):
     axes.set_title("Fouls Position")
     axes.set_xlabel('X')
     axes.set_ylabel('Y')	
-    axes.legend((scatter_1, scatter_2),(team_l_label, team_r_label),scatterpoints=1)
+    # axes.legend((scatter_1, scatter_2),(team_l_label, team_r_label),scatterpoints=1)
     axes.margins(x = 1, y = 1)
 
         # background image
