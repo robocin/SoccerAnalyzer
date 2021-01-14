@@ -1,5 +1,7 @@
-from .basic import Point
-from .measures import distance
+## Colocando o point aqui só pra fazer funcionar
+from common.basic.coordinates import Point
+
+PI_VALUE = 3.1415
 
 class Block:
     def __init__(self, width=0, height=0, center_x=0, center_y=0):
@@ -17,9 +19,9 @@ class Block:
 
 class Radial:
     def __init__(self, ray, center):
-        self.ray = ray
-        self.area = 3.14 * self.ray * self.ray
-        self.center = center
+        self.__ray = ray
+        self.__area = PI_VALUE * self.__ray * self.__ray
+        self.__center = center
 
     def describe(self):
         print('Ray: {}\nArea: {}'.format(self.ray,self.area))
