@@ -1,6 +1,6 @@
-from common.basic import Point, Field
+from common.basic import Field
 from common.entity import Agent, Ball, Robot
-from common.geometry import Block, Radial
+from common.geometry import Rectangle, Circle, Point
 from common.operations import distance
 
 
@@ -9,5 +9,5 @@ print(Field())
 print(Agent())
 print(Ball())
 print(Robot())
-print(Block())
-print(Radial(0,None))
+print(Rectangle())
+print(Circle(0,None))

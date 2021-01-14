@@ -1,2 +1,1 @@
-from common.basic.coordinates import Point # isso precisa?
-from common.geometry.areas import Block, Radial
+from common.geometry.geometry import Rectangle, Circle, Point

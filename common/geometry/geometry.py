@@ -1,9 +1,11 @@
-## Colocando o point aqui só pra fazer funcionar
-from common.basic.coordinates import Point
-
 PI_VALUE = 3.1415
 
-class Block:
+class Point:
+    def __init__(self, x, y):
+        self.x = x
+        self.y = y
+
+class Rectangle:
     def __init__(self, width=0, height=0, center_x=0, center_y=0):
         self.width = width
         self.height = height
@@ -17,7 +19,7 @@ class Block:
     def is_inside(self, position):
         pass
 
-class Radial:
+class Circle:
     def __init__(self, ray, center):
         self.__ray = ray
         self.__area = PI_VALUE * self.__ray * self.__ray
@@ -35,3 +37,6 @@ class Radial:
         else:
             return True
 
+class Line:
+    def __init__(self):
+        raise NotImplementedError

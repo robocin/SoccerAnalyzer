@@ -14,4 +14,4 @@ class Field:
         self.min_y = -34
 
     def describe(self):
-        pass
+        raise NotImplementedError
