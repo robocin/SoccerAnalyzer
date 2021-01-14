@@ -38,5 +38,6 @@ class Circle:
             return True
 
 class Line:
-    def __init__(self):
-        raise NotImplementedError
+    def __init__(self, initial_point=None, final_point=None) :
+        self.__initial_point = initial_point
+        self.__final_point = final_point

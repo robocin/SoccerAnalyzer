@@ -1,1 +1,0 @@
-from common.geometry.geometry import Rectangle, Circle, Point
