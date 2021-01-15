@@ -6,7 +6,7 @@ class Point:
         self.y = y
 
 class Rectangle:
-    def __init__(self, width=0, height=0, center_x=0, center_y=0):
+    def __init__(self, width, height, center_x, center_y):
         self.width = width
         self.height = height
         self.center = [center_x, center_y]

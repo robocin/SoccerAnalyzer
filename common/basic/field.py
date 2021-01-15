@@ -1,3 +1,5 @@
+from common.geometry.elements import Point
+
 class Field:
     def __init__(self):
         self.width = 105
