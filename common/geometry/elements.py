@@ -1,3 +1,5 @@
+from common.operations.measures import distance
+
 PI_VALUE = 3.1415
 
 class Point:
@@ -5,19 +7,18 @@ class Point:
         self.x = x
         self.y = y
 
+class Center(Point):
+    def __init__(self, point):
+        Point.__init__(self, point.x, point.y)
+
 class Rectangle:
-    def __init__(self, width, height, center_x, center_y):
-        self.width = width
-        self.height = height
-        self.center = [center_x, center_y]
-
-    def center(self):
-        center = [self.width/2, self.height/2]
-
-        return center
+    def __init__(self, width, height, center):
+        self.__width = width
+        self.__height = height
+        self.__center = center
 
     def is_inside(self, position):
-        pass
+        raise NotImplementedError
 
 class Circle:
     def __init__(self, ray, center):
@@ -28,16 +29,16 @@ class Circle:
     def describe(self):
         print('Ray: {}\nArea: {}'.format(self.ray,self.area))
 
+    
     def is_inside(self, point):
-        position = Point(self.center[0], self.center[1])
-        dist = distance(point, position)
+        dist = distance(point, self.__center)
 
-        if dist > self.ray:
+        if dist > self.__ray:
             return False
         else:
             return True
 
 class Line:
-    def __init__(self, initial_point=None, final_point=None) :
+    def __init__(self, initial_point, final_point) :
         self.__initial_point = initial_point
         self.__final_point = final_point
