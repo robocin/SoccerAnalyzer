@@ -1,1 +1,1 @@
-from common.geometry.elements import Point, Rectangle
+from common.entity.ball import Ball
