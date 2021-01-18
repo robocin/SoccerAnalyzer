@@ -7,12 +7,11 @@ class Point:
         self.x = x
         self.y = y
 
-class Center(Point):
-    def __init__(self, point):
-        Point.__init__(self, point.x, point.y)
-
 class Rectangle:
     def __init__(self, width, height, center):
+        
+        assert isinstance(center, Point) == True, "Center must be a point" 
+
         self.__width = width
         self.__height = height
         self.__center = center
@@ -22,13 +21,12 @@ class Rectangle:
 
 class Circle:
     def __init__(self, ray, center):
+
+        assert isinstance(center, Point) == True, "Center must be a point" 
+        
         self.__ray = ray
         self.__area = PI_VALUE * self.__ray * self.__ray
         self.__center = center
-
-    def describe(self):
-        print('Ray: {}\nArea: {}'.format(self.ray,self.area))
-
     
     def is_inside(self, point):
         dist = distance(point, self.__center)
