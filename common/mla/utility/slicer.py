@@ -1,6 +1,6 @@
 import pandas as pd
 
-def find_unique_event_ocurrences(dataframe, event):
+def find_unique_event_ocurrences(dataframe, event): # probably inefficient ? O(n)
     event_ocurrences_index = []
     for i in range(len(dataframe)):
         if(event in dataframe.iloc[i,1] and event not in dataframe.iloc[i-1,1] ):
