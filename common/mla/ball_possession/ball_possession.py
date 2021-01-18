@@ -1,3 +1,6 @@
+import pandas as pd
+from common.operations.measures import distance
+
 def closest_player_side(t0,df):  # inefficient 
         
         i = t0
@@ -26,8 +29,8 @@ def closest_player_side(t0,df):  # inefficient
             pl_x = df.iloc[i][pl_x_row]
             pl_y = df.iloc[i][pl_y_row]
 
-            l_di = distance(ball_x,ball_y,pr_x,pr_y)
-            r_di = distance(ball_x,ball_y,pl_x,pl_y)
+            l_di = distance(Point(ball_x,ball_y),Point(pr_x,pr_y))
+            r_di = distance(Point(ball_x,ball_y),Point(pl_x,pl_y))
             
             if l_di < r_di:
                 return 'l'
