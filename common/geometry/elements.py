@@ -32,8 +32,36 @@ class Point:
         self.y = y
 
 class Rectangle:
+    ''' 
+    A class to create a rectangle somewhere in the field.
+
+    ...
+
+    Attributes
+    ----------
+    width: float
+        width of the rectangle
+    height: float
+        height of the rectangle
+    center: Point object
+        center of the rectangle
+
+    '''
     def __init__(self, width, height, center):
-        
+        '''
+        Constructs all the necessary attributes for the rectangle object.
+
+        Parameters
+        ----------
+        width: float
+            width of the rectangle
+        height: float
+            height of the rectangle
+        center: Point object
+            center of the rectangle
+            
+        '''
+
         assert isinstance(center, Point) == True, "Center must be a point" 
 
         self.__width = width
@@ -44,7 +72,39 @@ class Rectangle:
         raise NotImplementedError
 
 class Circle:
+    ''' 
+    A class to create a circle somewhere in the field.
+
+    ...
+
+    Attributes
+    ----------
+    ray: float
+        ray of the circle
+    center: Point object
+        center of the circle
+    area: float
+        area of the circle
+
+    Methods
+    -------
+    is_inside(point): bool
+        returns True if the point is inside the circle or False if it is not inside the circle
+            
+
+    '''
     def __init__(self, ray, center):
+        '''
+        Constructs all the necessary attributes for the circle object.
+
+        Parameters
+        ----------
+        ray: float
+            ray of the circle
+        center: Point object
+            center of the circle
+
+        '''
 
         assert isinstance(center, Point) == True, "Center must be a point" 
         
@@ -53,6 +113,9 @@ class Circle:
         self.__center = center
     
     def is_inside(self, point):
+        '''
+        Returns True if the point is inside the circle or False if it is not inside the circle. 
+        '''
         dist = distance(point, self.__center)
 
         if dist > self.__ray:
@@ -61,6 +124,30 @@ class Circle:
             return True
 
 class Line:
+    ''' 
+    A class to create a line somewhere in the field.
+
+    ...
+
+    Attributes
+    ----------
+    intial_point: Point object
+        initial point of the line
+    final_point: Point object
+        final point of the line
+    
+    '''
     def __init__(self, initial_point, final_point) :
+        '''
+        Constructs all the necessary attributes for the line object.
+
+        Parameters
+        ----------
+        intial_point: Point object
+            initial point of the line
+        final_point: Point object
+            final point of the line
+
+        '''
         self.__initial_point = initial_point
         self.__final_point = final_point

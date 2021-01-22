@@ -13,6 +13,13 @@ class Ball:
     y: float
         y coordinates of the ball in the field
 
+    Methods
+    -------
+    x:
+        Returns the attribute x.
+    y: 
+        Returns the attribute y.
+            
     '''
     def __init__(self,x,y):
         '''
@@ -25,13 +32,6 @@ class Ball:
         y: float
             y coordinates of the ball in the field
 
-        Methods
-        -------
-        x:
-            Returns the attribute x.
-        y: 
-            Returns the attribute y.
-            
         '''
         self.__x = x
         self.__y = y
