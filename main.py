@@ -1,1 +1,1 @@
-raise NotImplementedError
+from common.entity.ball import Ball

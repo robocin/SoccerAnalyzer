@@ -1,34 +1,16 @@
+from common.geometry.elements import Point
+
 class Field:
-    ''' 
-    A class to create the field.
+    def __init__(self, width, length, center, small_penalty_area, penalty_area):
+        self.__width = width
+        self.__length = length
+        self.__center = center
+        self.__small_penalty_area = small_penalty_area
+        self.__penalty_area = penalty_area
 
-    '''
-    def __init__(self):
-        '''
-        Constructs all the necessary attributes for the point object.
-
-        Parameters
-        ----------
-        width: int
-            width of the field
-        height: int
-            height of the field
-        pa_front: int
-        pa_upper: int
-        pa_lower: int
-        spa_front: int
-        spa_upper: int
-        spa_lower: int
-        max_x: float
-            maximum x coordinate of the field
-        min_x: float
-            minimum x coordinate of the field
-        max_y: int
-            maximum y coordinate of the field
-        min_y: int
-            minimum y coordinate of the field
-
-        '''
+class Field2D(Field):
+    raise NotImplementedError
+    """
         self.width = 105
         self.height = 68
         self.pa_front = 36
@@ -42,5 +24,4 @@ class Field:
         self.max_y =  34
         self.min_y = -34
 
-    def describe(self):
-        raise NotImplementedError
+    """
