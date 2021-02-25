@@ -1,2 +1,14 @@
-# analyzer-common
-This repository contain the common structure and tools required to develop statistical analysis related to VSS, SSL and 2D Simulation. 
+# Features as scripts
+
+This branch has some 2D soccer log.csv features as individual python scripts
+
+## List of scripts
+
+### mean_stamina.py
+
+#### Usage
+
+teste
+
+- abc1
+- asldfkj
