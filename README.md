@@ -1,11 +1,16 @@
 # Features as scripts
 
-This branch has some 2D soccer log.csv features as individual python scripts
+Essa branch possui algumas features que podem ser utilizadas como scripts individuais, para logs de 2D
 
-## List of scripts
+## List of scripts:
 
-### mean_stamina.py
+### mean_stamina.py (multiple logs)
 
-- Given a path to a directory containing one or mutiple .csv files, plot a line graph of the mean stamina of each team.
-  - Interactive: Click on the lines in the legend to toggle its visibility
-- Usage: python3 mean_stamina.py <ABSOLUTE_PATH_TO_YOUR_DIRECTORY_HERE>
+- Dado o caminho absoluto para diretório com um ou mútiplos arquivos de log, plota um gráfico de linha com a stamina média de cada time
+  - Clique nas linhas dentro da caixa da legenda para esconder/mostrar cada uma das linhas correspondentes no gráfico.
+- Uso: python3 mean_stamina.py <ABSOLUTE_PATH_TO_YOUR_DIRECTORY_HERE>
+
+### fouls_positoin (single log)
+
+- Dado o caminho absoluto para um arquivo .csv, plota o campo com as posições em que as faltas ocorreram.
+- Uso: python3 fouls_position.py <ABSOLUTE_PATH_TO_YOUR_CSV_FILE_HERE>
