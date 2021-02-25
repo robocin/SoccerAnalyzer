@@ -4,7 +4,7 @@ Essa branch possui algumas features que podem ser utilizadas como scripts indivi
 
 ## List of scripts:
 
-### mean_stamina.py (multiple logs)
+### mean_stamina (multiple logs)
 
 - Dado o caminho absoluto para diretório com um ou mútiplos arquivos de log, plota um gráfico de linha com a stamina média de cada time
   - Clique nas linhas dentro da caixa da legenda para esconder/mostrar cada uma das linhas correspondentes no gráfico.
