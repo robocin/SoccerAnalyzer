@@ -10,7 +10,7 @@ Essa branch possui algumas features que podem ser utilizadas como scripts indivi
   - Clique nas linhas dentro da caixa da legenda para esconder/mostrar cada uma das linhas correspondentes no gráfico.
 - Uso: python3 mean_stamina.py <ABSOLUTE_PATH_TO_YOUR_DIRECTORY_HERE>
 
-### fouls_positoin (single log)
+### fouls_position (single log)
 
 - Dado o caminho absoluto para um arquivo .csv, plota o campo com as posições em que as faltas ocorreram.
 - Uso: python3 fouls_position.py <ABSOLUTE_PATH_TO_YOUR_CSV_FILE_HERE>
