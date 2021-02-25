@@ -7,4 +7,5 @@ This branch has some 2D soccer log.csv features as individual python scripts
 ### mean_stamina.py
 
 - Given a path to a directory containing one or mutiple .csv files, plot a line graph of the mean stamina of each team.
+  - Interactive: Click on the lines in the legend to toggle its visibility
 - Usage: python3 mean_stamina.py <ABSOLUTE_PATH_TO_YOUR_DIRECTORY_HERE>
