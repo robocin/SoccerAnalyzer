@@ -1,11 +1,12 @@
 import sys
+import os
 import pandas as pd
 import math
 """
     Pandas is needed to run this script.
     py retreat.py "location_to_log"
 """
-FILE = sys.argv[1]
+FOLDER = sys.argv[1]
 
 def distance(px, py, bx, by):
 
@@ -70,11 +71,15 @@ class Goalkeeper:
 
 def main():
 
-    log = pd.read_csv(FILE)
+    for _, _, files in os.walk(FOLDER):
+        for file in files:
+            if(".csv" in file):
+                log = pd.read_csv("./{}/{}".format(FOLDER, file))
 
-    gk = Goalkeeper(log)
-    gk.getFaultRetreat()
+                gk = Goalkeeper(log)
+                gk.getFaultRetreat()
 
 
 if __name__ == "__main__":
     main()
+
