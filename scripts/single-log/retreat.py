@@ -7,6 +7,7 @@ import math
     py retreat.py "location_to_log"
 """
 FOLDER = sys.argv[1]
+total = 0
 
 def distance(px, py, bx, by):
 
@@ -63,6 +64,7 @@ class Goalkeeper:
             # Verifica a distância do goleiro para a bola um ciclo antes da falta ser cometida.
 
             if distance(gk_x, gk_y, ball_x, ball_y) < 5:  # <- distancia do goleiro para bola
+                total = total + 1
                 self.__wRetreat = self.__wRetreat + 1
                 self.__wRetreatAt.append(cycle - 1)
             
@@ -78,7 +80,7 @@ def main():
 
                 gk = Goalkeeper(log)
                 gk.getFaultRetreat()
-
+    print("Total wrong retreats {}".format(total))
 
 if __name__ == "__main__":
     main()
