@@ -6,8 +6,7 @@ import math
     Pandas is needed to run this script.
     py retreat.py "location_to_log"
 """
-FOLDER = sys.argv[1]
-total = 0
+PATH = sys.argv[1]
 
 def distance(px, py, bx, by):
 
@@ -24,7 +23,7 @@ class Goalkeeper:
         self.__df = dataframe
         self.__ocurrencesIndexes = None
         self.__setSide()
-        self.__findUniqueEventOcurrences('foul_charge_' + self.__side)
+        self.__findUniqueEventOcurrences('back_pass_' + self.__side)
         
         
     def __setSide(self):
@@ -50,37 +49,57 @@ class Goalkeeper:
                     
         self.__ocurrencesIndexes = event_ocurrences_index
 
+
+    def getwRetreat(self):
+        return self.__wRetreat
+
     def getFaultRetreat(self):
+        
+        second_playmode = 'indirect_free_kick_' + self.__opSide
         
         for cycle in self.__ocurrencesIndexes:
             
-            ball_x = self.__df.loc[cycle - 1]["ball_x"]
-            ball_y = self.__df.loc[cycle - 1]["ball_y"]
-            
-            gk_x = self.__df.loc[cycle - 1]["player_{}1_x".format(self.__side)]
-            gk_y = self.__df.loc[cycle - 1]["player_{}1_y".format(self.__side)]
-            
-            # Parte importante do código
-            # Verifica a distância do goleiro para a bola um ciclo antes da falta ser cometida.
+            mode =  self.__df.loc[cycle]['playmode']
+            nextMode = mode
+            fCycle = cycle
 
-            if distance(gk_x, gk_y, ball_x, ball_y) < 5:  # <- distancia do goleiro para bola
-                total = total + 1
+            ''' 
+                depois de pegar as ocorrencias de um back_pass_ 
+                verifica se a flag de sequencia é um indirect_free_kick
+                e se for está sabemos que foi falta por recuo aliado.
+            '''
+            while(mode == nextMode):
+                fCycle = fCycle + 1
+                nextMode = self.__df.loc[fCycle]['playmode']
+                
+            if nextMode == 'indirect_free_kick_' + self.__opSide:
                 self.__wRetreat = self.__wRetreat + 1
-                self.__wRetreatAt.append(cycle - 1)
+                self.__wRetreatAt.append(cycle)
             
-        print("{} wrong retreats\nAt cycles: {}".format(self.__wRetreat, self.__wRetreatAt))
+        #print("{} wrong retreats\nAt cycles: {}".format(self.__wRetreat, self.__wRetreatAt))
         
 
 def main():
-
-    for _, _, files in os.walk(FOLDER):
+    totwRetreats = 0
+    totFiles = 0
+    bad_files = []
+    for _, _, files in os.walk(PATH):
         for file in files:
             if(".csv" in file):
-                log = pd.read_csv("./{}/{}".format(FOLDER, file))
-
+                #print("Looking in file {}".format(file))
+                
+                totFiles = totFiles + 1
+                log = pd.read_csv(os.path.join(PATH, file))
+                
                 gk = Goalkeeper(log)
                 gk.getFaultRetreat()
-    print("Total wrong retreats {}".format(total))
+
+                if gk.getwRetreat() > 0:
+                    bad_files.append(file)
+                    totwRetreats = totwRetreats + gk.getwRetreat()
+
+    print("Total files:", totFiles)
+    print("Total wrong retreats {}".format(totwRetreats))
 
 if __name__ == "__main__":
     main()
