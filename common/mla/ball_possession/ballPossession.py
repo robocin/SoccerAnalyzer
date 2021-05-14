@@ -76,23 +76,31 @@ class BallPossession:
         ballPositionThisCycle.x = ball_x
         ballPositionThisCycle.y = ball_y
 
+        closestRight = 1000
+        closestLeft = 1000
+
         for i in range(1, 11):
             playerLeftPosition.x = self.__currentGame.loc[currentCycle, "player_l{}_x".format(i)]
             playerLeftPosition.y = self.__currentGame.loc[currentCycle, "player_l{}_y".format(i)]
 
             playerLeftDistance = distance(playerLeftPosition, ballPositionThisCycle)
 
+            if playerLeftDistance <= closestLeft:
+                closestLeft = playerLeftDistance
+
             playerRightPosition.x = self.__currentGame.loc[currentCycle, "player_r{}_x".format(i)]
             playerRightPosition.y = self.__currentGame.loc[currentCycle, "player_r{}_y".format(i)]
 
             playerRightDistance = distance(playerRightPosition, ballPositionThisCycle)
 
-            if playerLeftDistance < playerRightDistance:
-                return "left"
-            else:
-                return "right"
+            if playerRightDistance <= closestRight:
+                closestRight = playerRightDistance
 
-            
+        if closestLeft < closestRight:
+            return "left"
+        else:
+            return "right"
+
     def __calculate(self):
         
         filteredGame = self.__filterPlaymode('play_on')
