@@ -1,2 +1,2 @@
-from field import Field
-from field import Field2D
+from .field import Field
+from .field import Field2D

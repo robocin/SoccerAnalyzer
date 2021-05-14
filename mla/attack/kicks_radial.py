@@ -1,5 +1,5 @@
 import pandas as pd
-from common.mla.io.reader import Reader
+from analyzer_common.mla.io.reader import Reader
 
 def kicks_radial(): # inefficient
     positions = []

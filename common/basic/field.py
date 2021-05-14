@@ -1,6 +1,4 @@
-from common.geometry.elements import Point
-from common.geometry.elements import Rectangle
-
+from ..basic.point import Point
 class Field:
     ''' 
     A class to create a point somewhere in the field.
@@ -46,7 +44,7 @@ class Field:
         self.__penalty_area = penalty_area
 
 class Field2D(Field):
-    raise NotImplementedError
+    # raise NotImplementedError
     """
         self.width = 105
         self.height = 68

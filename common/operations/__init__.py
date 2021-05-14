@@ -1,1 +1,1 @@
-from measures import distance
+from .measures import distance
