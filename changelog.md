@@ -7,10 +7,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [1.0.0] - 2021-05-14
 ## Fixed
-- Common modules can be fully fully used
+- Common modules can be fully used
+- MLA modules can be fully used 
 
 ## Refactored
 - Multi Log Analysis is now a independent module (mla)
+- PMSlicer renamed to PlaymodeSlicer
 
 ## [0.1.1] - 2021-05-14
 ## Added
