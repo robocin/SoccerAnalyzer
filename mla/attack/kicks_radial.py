@@ -1,8 +1,8 @@
 import pandas as pd
-from analyzer_common.mla.io.reader import Reader
 
 def kicks_radial(): # inefficient
-    positions = []
+    print('hi')
+"""    positions = []
     attempts = [0,0,0]
     for i in range(1, Reader.how_many()): # games
         for j in range(len(games[i])): # cycle
@@ -17,4 +17,4 @@ def kicks_radial(): # inefficient
                     elif area_3.is_inside(spot):
                         attempts[2] += 1
     
-    return attempts
+    return attempts"""

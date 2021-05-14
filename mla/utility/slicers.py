@@ -1,6 +1,6 @@
-class PMSlicer:
+class PlaymodeSlicer:
     """
-        Ball possession slicer
+        Playmode slicer
     """ 
     @staticmethod
     def slice(dataframe, playmode):
