@@ -7,6 +7,8 @@ class BallPossession:
     """
         Used to calculate the simple ball possession of the game.
 
+        BallPossession(dataFrame)
+
         Attributes
         ----------
             private:
@@ -47,6 +49,9 @@ class BallPossession:
                 get() -> [a,b]
                     returns the leftSideTeamPossession(a) and rightSideTeamPossession(b) in percentual
 
+                newGame(game : DataFrame)
+                    updates the object with new game and calculates the new ball possession
+
     """
     def __init__(self, dataFrame : Game):
         self.__leftSideTeamPossession = 0
@@ -54,6 +59,10 @@ class BallPossession:
         self.__currentGame = dataFrame
         self.__BALL_X_COLUMN = 10
         self.__BALL_Y_COLUMN = 11
+        self.__calculate()
+
+    def newGame(self, dataFrame : Game):
+        self.__currentGame = dataFrame
         self.__calculate()
 
     def getCurrentGame(self):
