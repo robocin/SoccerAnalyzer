@@ -1,53 +1,74 @@
 import pandas as pd
+from common.basic.point import Point
+from common.basic.game import Game
 from common.operations.measures import distance
 
-def closest_player_side(t0,df):  # inefficient 
+class BallPossession:
+    def __init__(self, dataFrame : Game):
+        self.__leftSideTeamPossession = 0
+        self.__rightSideTeamPossession = 0
+        self.__currentGame = dataFrame
+        self.__BALL_X_COLUMN = 10
+        self.__BALL_Y_COLUMN = 11
+        self.__calculate()
+
+    def getCurrentGame(self):
+        return self.__currentGame
+
+    def __filterPlaymode(self, playmode : str):
+        return self.__currentGame[self.__currentGame['playmode'] == playmode]
+
+    def __closestPlayerSide(self,
+                            cycle : int,
+                            playerLeftPosition : Point,
+                            playerRightPosition : Point,
+                            ballPositionThisCycle : Point):
         
-        i = t0
+        currentCycle = cycle
         
-        BALL_X_COL = 10
-        BALL_Y_COL = 11
+        ball_x = self.__currentGame.iloc[currentCycle, self.__BALL_X_COLUMN]
+        ball_y = self.__currentGame.iloc[currentCycle, self.__BALL_Y_COLUMN]
         
-        ball_x = df.iloc[i][BALL_X_COL]
-        ball_y = df.iloc[i][BALL_Y_COL]
+        ballPositionThisCycle.x = ball_x
+        ballPositionThisCycle.y = ball_y
 
-        l_di = 1000
-        r_di = 1000
-        prev_ldi = l_di + 1
-        prev_rdi = r_di + 1
+        for i in range(1,11):
+            playerLeftPosition.x = self.__currentGame.loc[currentCycle, "player_l{}_x".format(i)]
+            playerLeftPosition.y = self.__currentGame.loc[currentCycle, "player_l{}_y".format(i)]
 
-        for j in range(1,11):
-            pl_x_row = "player_l{}_x".format(j)
-            pl_y_row = "player_l{}_y".format(j)
+            playerLeftDistance = distance(playerLeftPosition, ballPositionThisCycle)
 
-            pr_x_row = "player_r{}_x".format(j)
-            pr_y_row = "player_r{}_y".format(j)
+            playerRightPosition.x = self.__currentGame.loc[currentCycle, "player_r{}_x".format(i)]
+            playerRightPosition.y = self.__currentGame.loc[currentCycle, "player_r{}_y".format(i)]
 
-            pr_x = df.iloc[i][pr_x_row]
-            pr_y = df.iloc[i][pr_y_row]
+            playerRightDistance = distance(playerRightPosition, ballPositionThisCycle)
 
-            pl_x = df.iloc[i][pl_x_row]
-            pl_y = df.iloc[i][pl_y_row]
-
-            l_di = distance(Point(ball_x,ball_y),Point(pr_x,pr_y))
-            r_di = distance(Point(ball_x,ball_y),Point(pl_x,pl_y))
-            
-            if l_di < r_di:
-                return 'l'
+            if playerLeftDistance < playerRightDistance:
+                return "left"
             else:
-                return 'r'
+                return "right"
 
-
-def game_ball_possession(t0,df): # inefficient
-    start = t0
-    cycles = 0
-    closest = closest_player_side(t0,df)
-    
-    while(closest == 'l'):
+            
+    def __calculate(self):
         
-        cycles += 1
-        t0 += 1
-        closest = closest_player_side(t0,df)
-    
-    print("from {} counted {} cycles\n".format(start,cycles))
-    return cycles
+        filteredGame = self.__filterPlaymode('play_on')
+
+        playerLeftPosition = Point()
+        playerRightPosition = Point()
+        ballPositionThisCycle = Point()
+
+        for currentCycle, row in filteredGame.iterrows():
+
+            closestSide = self.__closestPlayerSide(currentCycle,
+                                                   playerLeftPosition,
+                                                   playerRightPosition,
+                                                   ballPositionThisCycle)
+            
+            if closestSide == 'left':
+                self.__leftSideTeamPossession += 1
+            else:
+                self.__rightSideTeamPossession += 1
+
+    def get(self):
+        total = self.__leftSideTeamPossession + self.__rightSideTeamPossession
+        return [self.__leftSideTeamPossession/total, self.__rightSideTeamPossession/total]
