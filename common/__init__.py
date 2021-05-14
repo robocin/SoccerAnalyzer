@@ -3,7 +3,7 @@ from common.entity.ball import Ball
 from common.entity.robot import Robot
 from common.entity.agent import Agent
 from common.mla.attack.kicks_radial import kicks_radial
-from common.mla.ball_possession.ball_possession import game_ball_possession
+from common.mla.ball_possession.ballPossession import BallPossession
 from common.mla.io.reader import Reader
 from common.mla.utility.finders import find_unique_event_ocurrences
 from common.mla.utility.finders import find_unique_event_count
