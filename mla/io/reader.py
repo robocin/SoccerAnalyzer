@@ -1,5 +1,3 @@
-import pandas as pd
-
 class Reader:
     def __init__(self, games=None, games_count=0):
         self._games = games
