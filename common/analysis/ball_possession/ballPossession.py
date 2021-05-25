@@ -1,7 +1,7 @@
 import pandas as pd
-from analyzer_common.common.basic.point import Point
-from analyzer_common.common.basic.game import Game
-from analyzer_common.common.operations.measures import distance
+from AnalyzerCommon.common.basic.point import Point
+from AnalyzerCommon.common.basic.game import Game
+from AnalyzerCommon.common.operations.measures import distance
 
 class BallPossession:
     """
