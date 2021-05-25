@@ -5,5 +5,6 @@ from analyzer_common.common.basic.point import Point
 from analyzer_common.common.entity.ball import Ball
 from analyzer_common.common.entity.robot import Robot
 from analyzer_common.common.entity.agent import Agent
+from analyzer_common.mla.ball_possession.ballPossession import BallPossession
 from analyzer_common.mla.attack.kicks_radial import kicks_radial
 from analyzer_common.common.operations.measures import distance
