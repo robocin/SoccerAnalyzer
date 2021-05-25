@@ -1,8 +1,7 @@
 import pandas as pd
 
 def kicks_radial(): # inefficient
-    print('hi')
-"""    positions = []
+    positions = []
     attempts = [0,0,0]
     for i in range(1, Reader.how_many()): # games
         for j in range(len(games[i])): # cycle
@@ -17,4 +16,4 @@ def kicks_radial(): # inefficient
                     elif area_3.is_inside(spot):
                         attempts[2] += 1
     
-    return attempts"""
+    return attempts
