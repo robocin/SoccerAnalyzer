@@ -3,12 +3,11 @@ This program gets all the .csv files in a given directory (as an argument) and o
 Note that if a team is in more than one game, the mean stamina is calculated cumulatively
 """
 
-import sys
 import os
-from matplotlib import pyplot as plt
+import sys
+
 import pandas as pd
-import numpy as np
-from pandas.core.frame import DataFrame
+from matplotlib import pyplot as plt
 
 PLAYER_L1_STAMINA_COLUMN = 29
 PLAYER_R1_STAMINA_COLUMN = 370

@@ -12,7 +12,6 @@ def mean_of_lists(list_with_sublists):
         index_sum = 0
         # for each sublist
         for sub_list in list_with_sublists:
-            # sum index_sum with the value of this list at that index i
             index_sum += float(sub_list[i])
         # after all lists values have been taken in consideration, take the mean
         index_mean = index_sum / len(list_with_sublists)

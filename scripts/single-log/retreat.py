@@ -1,7 +1,9 @@
-import sys
-import os
-import pandas as pd
 import math
+import os
+import sys
+
+import pandas as pd
+
 """
     Pandas is needed to run this script.
     py retreat.py "location_to_log"

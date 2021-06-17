@@ -1,4 +1,3 @@
-from ..basic.point import Point
 class Field:
     ''' 
     A class to create a point somewhere in the field.

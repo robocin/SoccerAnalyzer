@@ -1,4 +1,3 @@
-import pandas as pd
 import json
 
 def df_count_duplicates(df, column_label):
