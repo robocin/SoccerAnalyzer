@@ -16,8 +16,8 @@ def run_all_match_analysis(match_object):
     # ADD ANALYSIS HERE
     # run all analysis and stores them in the analysis_value_tuple tuple
     #   each team mean stamina
-    team_l_mean_stamina = sm_team_mean_stamina(match_object)
-    team_r_mean_stamina = sm_team_mean_stamina(match_object)
+    team_l_mean_stamina = sm_team_mean_stamina(match_object, "l")
+    team_r_mean_stamina = sm_team_mean_stamina(match_object, "r")
 
     # ADD EACH COLUMN VALUE HERE
     # tuple containing the final values to be inserted each as a column in all_match_analysis
