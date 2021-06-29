@@ -1,5 +1,3 @@
-import pandas as pd
-
 def kicks_radial(): # inefficient
     positions = []
     attempts = [0,0,0]

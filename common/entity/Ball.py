@@ -1,5 +1,3 @@
-import warnings
-
 class Ball:
     ''' 
     A class to define the position of the ball in the field.

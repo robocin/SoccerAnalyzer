@@ -1,6 +1,7 @@
-import pandas as pd
-import matplotlib.pyplot as plt
 import sys
+
+import matplotlib.pyplot as plt
+import pandas as pd
 
 BALL_X = 10
 BALL_Y = 11

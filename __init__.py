@@ -1,10 +1,1 @@
-from AnalyzerCommon.common.basic.field import Field
-from AnalyzerCommon.common.basic.field import Field2D
-from AnalyzerCommon.common.basic.game import Game
-from AnalyzerCommon.common.basic.point import Point
-from AnalyzerCommon.common.entity.ball import Ball
-from AnalyzerCommon.common.entity.robot import Robot
-from AnalyzerCommon.common.entity.agent import Agent
-from AnalyzerCommon.common.analysis.ball_possession.ballPossession import BallPossession
-from AnalyzerCommon.common.analysis.attack.kicks_radial import kicks_radial
-from AnalyzerCommon.common.operations.measures import distance
+

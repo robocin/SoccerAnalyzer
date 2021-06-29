@@ -1,3 +1,3 @@
 from .agent import Agent
-from .ball import Ball
+from .Ball import Ball
 from .robot import Robot
