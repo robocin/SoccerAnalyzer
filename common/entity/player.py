@@ -1,7 +1,3 @@
-# from AnalyzerCommon.common.basic.Position import Position
-# from AnalyzerCommon.common.basic.Event import Event
-
-
 class Player:
     def __init__(self, team_name=None, team_side=None, player_id=None, dataframe=None):
 

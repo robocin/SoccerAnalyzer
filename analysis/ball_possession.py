@@ -1,59 +1,47 @@
-from AnalyzerCommon.common.basic.point import Point
-from AnalyzerCommon.common.basic.point import Point
 from AnalyzerCommon.common.operations.measures import distance
+from ..common.basic.match import Match
+from AnalyzerCommon.common.basic.point import Point
 
 
 class BallPossession:
     """
         Used to calculate the simple ball possession of the game.
-
         BallPossession(dataFrame)
-
         Attributes
         ----------
             private:
                 leftSideTeamPossession : int
                     amount of cycles the left team was closest to the ball
-
                 rightSideTeamPossession : int
                     amount of cycles the right team was closest to the ball
-
                 currentGame : common.basic.game.Game
                     a Game object of the current game
-
                 BALL_X_COLUMN : int
                     ball x position in the dataframe
-
                 BALL_Y_COLUMN : int
                     ball y position in the dataframe
-
         Methods
         -------
             private:
                 filterPlaymode(playmode : str) -> None
                     filters the currentGame dataframe and returns a filtered copy
-
                 closestPlayerSide(cycle : int,
                                 playerLeftPosition : common.basic.point.Point,
                                 playerRightPosition : common.basic.point.Point,
                                 ballPositionThisCycle : common.basic.point.Point) -> str
                     returns the closest player of the ball in the cycle passed as argument
-
                 calculate() -> None
                     populates the leftSideTeamPossession and rightSideTeamPossession
-
             public:
                 getCurrentGame() -> pandas.Dataframe
                     returns the dataframe of the current game being analyzed
-
                 get() -> [a,b]
                     returns the leftSideTeamPossession(a) and rightSideTeamPossession(b) in percentual
-
                 newGame(game : DataFrame)
                     updates the object with new game and calculates the new ball possession
-
     """
-    def __init__(self, dataFrame : Game):
+
+    def __init__(self, dataFrame):
         self.__leftSideTeamPossession = 0
         self.__rightSideTeamPossession = 0
         self.__currentGame = dataFrame
@@ -61,27 +49,49 @@ class BallPossession:
         self.__BALL_Y_COLUMN = 11
         self.__calculate()
 
-    def newGame(self, dataFrame : Game):
+    def newGame(self, dataFrame):
         self.__currentGame = dataFrame
         self.__calculate()
 
     def getCurrentGame(self):
         return self.__currentGame
 
-    def __filterPlaymode(self, playmode : str):
+    def __filterPlaymode(self, playmode: str):
         return self.__currentGame[self.__currentGame['playmode'] == playmode]
 
+
+    def __calculate(self):
+
+        filteredGame = self.__filterPlaymode('play_on')
+
+        playerLeftPosition = Point()
+        playerRightPosition = Point()
+        ballPositionThisCycle = Point()
+
+        for currentCycle, row in filteredGame.iterrows():
+
+            closestSide = self.__closestPlayerSide(currentCycle,
+                                                   playerLeftPosition,
+                                                   playerRightPosition,
+                                                   ballPositionThisCycle)
+
+            if closestSide == 'left':
+                self.__leftSideTeamPossession += 1
+            else:
+                self.__rightSideTeamPossession += 1
+
+
     def __closestPlayerSide(self,
-                            cycle : int,
-                            playerLeftPosition : Point,
-                            playerRightPosition : Point,
-                            ballPositionThisCycle : Point):
-        
+                            cycle: int,
+                            playerLeftPosition: Point,
+                            playerRightPosition: Point,
+                            ballPositionThisCycle: Point):
+
         currentCycle = cycle
-        
+
         ball_x = self.__currentGame.iloc[currentCycle, self.__BALL_X_COLUMN]
         ball_y = self.__currentGame.iloc[currentCycle, self.__BALL_Y_COLUMN]
-        
+
         ballPositionThisCycle.x = ball_x
         ballPositionThisCycle.y = ball_y
 
@@ -110,26 +120,6 @@ class BallPossession:
         else:
             return "right"
 
-    def __calculate(self):
-        
-        filteredGame = self.__filterPlaymode('play_on')
-
-        playerLeftPosition = Point()
-        playerRightPosition = Point()
-        ballPositionThisCycle = Point()
-
-        for currentCycle, row in filteredGame.iterrows():
-
-            closestSide = self.__closestPlayerSide(currentCycle,
-                                                   playerLeftPosition,
-                                                   playerRightPosition,
-                                                   ballPositionThisCycle)
-            
-            if closestSide == 'left':
-                self.__leftSideTeamPossession += 1
-            else:
-                self.__rightSideTeamPossession += 1
-
-    def get(self):
+    def show_result(self):
         total = self.__leftSideTeamPossession + self.__rightSideTeamPossession
-        return [self.__leftSideTeamPossession/total, self.__rightSideTeamPossession/total]
+        return [self.__leftSideTeamPossession / total, self.__rightSideTeamPossession / total]

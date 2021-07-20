@@ -1,16 +1,14 @@
-from AnalyzerCommon.common.entity.Player import Player
-from AnalyzerCommon.common.entity.Ball import Ball
-
+from .player import Player
 
 class Team:
-    def __init__(self, side: str = None, dataframe=None):
+    def __init__(self, name: str = None, side: str = None):
         """
         :param side: "l" for left or "r" for right side of the soccer field
         """
 
         # Initialization of variables #
         #   core vars
-        self.__name = None
+        self.__name = name
         # self.__color = None
         self.__side = side
         self.__players = []
@@ -29,18 +27,19 @@ class Team:
         # self.__penalties_scored = []
 
         # organize data #
-        self.set_name(dataframe[f"team_name_{side}"][0].lower())
+        #self.set_name(dataframe[f"team_name_{side}"][0].lower())
 
-        players_list = []
+    """        players_list = []
         for i in range(0, 11):
             players_list.append(Player(team_name=self.get_name(), team_side=side, player_id=i+1, dataframe=dataframe))
         self.set_players(players_list)
+    """
 
     # setters and getters #
 
-    # set
-    def set_name(self, name):
-        self.__name = name
+    @property
+    def name(self):
+        return self.__name
 
     # def set_color(self, color):
     #     self.__color = color
