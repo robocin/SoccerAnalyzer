@@ -1,5 +1,5 @@
 from AnalyzerCommon.common.abstract.abstract_analysis import AbstractAnalysis
-from AnalyzerCommon.common.utility.finders import find_unique_event_ocurrences
+from AnalyzerCommon.common.utility.finders import find_last_unique_event_ocurrences
 
 
 class Corner(AbstractAnalysis):
@@ -20,8 +20,8 @@ class Corner(AbstractAnalysis):
         self.__occurrences()
 
     def __occurrences(self):
-        self.__left_team_occurrences = find_unique_event_ocurrences(self.__df, "corner_kick_l")
-        self.__right_team_occurrences = find_unique_event_ocurrences(self.__df, "corner_kick_r")
+        self.__left_team_occurrences = find_last_unique_event_ocurrences(self.__df, "corner_kick_l")
+        self.__right_team_occurrences = find_last_unique_event_ocurrences(self.__df, "corner_kick_r")
 
     def t_occ_l(self):
         return self.__left_team_occurrences
