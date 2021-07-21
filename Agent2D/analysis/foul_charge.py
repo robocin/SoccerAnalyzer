@@ -1,5 +1,5 @@
 from AnalyzerCommon.common.abstract.abstract_analysis import AbstractAnalysis
-from AnalyzerCommon.common.basic.point import Point
+from AnalyzerCommon.common.geometric.point import Point
 
 class FoulCharge(AbstractAnalysis):
     def __init__(self, dataframe=None):

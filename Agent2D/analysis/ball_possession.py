@@ -1,6 +1,5 @@
 from AnalyzerCommon.common.operations.measures import distance
-from AnalyzerCommon.common.basic.match import Match
-from AnalyzerCommon.common.basic.point import Point
+from AnalyzerCommon.common.geometric.point import Point
 
 
 class BallPossession:
