@@ -1,8 +1,8 @@
 from .factory.abstract_factory import AbstractFactory
 
 from AnalyzerCommon.common.basic.match import Match
-from AnalyzerCommon.Agent2D.analysis import BallPossession
-from AnalyzerCommon.Agent2D.analysis import FoulCharge
+from AnalyzerCommon.Agent2D.analysis.ball_possession import BallPossession
+from AnalyzerCommon.Agent2D.analysis.foul_charge import FoulCharge
 
 class MatchAnalyzer(AbstractFactory):
     def __init__(self, match : Match):
