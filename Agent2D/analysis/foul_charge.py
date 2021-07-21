@@ -1,4 +1,4 @@
-from AnalyzerCommon.Agent2D.analysis.abstract.abstract_analysis import AbstractAnalysis
+from AnalyzerCommon.common.abstract.abstract_analysis import AbstractAnalysis
 from AnalyzerCommon.common.basic.point import Point
 
 class FoulCharge(AbstractAnalysis):

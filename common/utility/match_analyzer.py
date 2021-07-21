@@ -1,4 +1,4 @@
-from .factory.abstract_factory import AbstractFactory
+from AnalyzerCommon.common.abstract.abstract_factory import AbstractFactory
 
 from AnalyzerCommon.common.basic.match import Match
 from AnalyzerCommon.Agent2D.analysis.ball_possession import BallPossession
