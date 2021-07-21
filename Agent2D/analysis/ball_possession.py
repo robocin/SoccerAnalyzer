@@ -1,5 +1,5 @@
 from AnalyzerCommon.common.operations.measures import distance
-from ..common.basic.match import Match
+from AnalyzerCommon.common.basic.match import Match
 from AnalyzerCommon.common.basic.point import Point
 
 
@@ -120,6 +120,6 @@ class BallPossession:
         else:
             return "right"
 
-    def show_result(self):
+    def results(self):
         total = self.__leftSideTeamPossession + self.__rightSideTeamPossession
         return [self.__leftSideTeamPossession / total, self.__rightSideTeamPossession / total]

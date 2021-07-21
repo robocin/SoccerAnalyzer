@@ -1,9 +1,8 @@
 from .factory.abstract_factory import AbstractFactory
 
 from AnalyzerCommon.common.basic.match import Match
-from AnalyzerCommon.analysis.ball_possession import BallPossession
-from AnalyzerCommon.analysis.foul_charge import FoulCharge
-from AnalyzerCommon.analysis.nova_analise import NovaAnalise
+from AnalyzerCommon.Agent2D.analysis import BallPossession
+from AnalyzerCommon.Agent2D.analysis import FoulCharge
 
 class MatchAnalyzer(AbstractFactory):
     def __init__(self, match : Match):
@@ -13,7 +12,6 @@ class MatchAnalyzer(AbstractFactory):
         #self.__team_mean_stamina = None
         self.__ball_possession = None
         self.__foul_charge = None
-        self.__nova_analise = None
 
         self._run_analysis()
 
@@ -34,29 +32,19 @@ class MatchAnalyzer(AbstractFactory):
 
         # ball possession
         print("Instantiating ball possession")
-        #self.__ball_possession = BallPossession(self.match.getDataframe())
         print("Running ball possession")
+        self.__ball_possession = BallPossession(self.__match.dataframe)
 
         # foul charge
         print("Instantiating foul charge")
-        #self.__foul_charge = FoulCharge(self.match.getDataframe())
         print("Running foul charge")
+        self.__foul_charge = FoulCharge(self.__match.dataframe)
 
-        # foul charge quantity
-        print("Running foul charge quantity")
-
-        # foul charge proportion
-        print("Running foul charge proportion")
-
-        # Nova analise criada
-        self.__nova_analise = NovaAnalise(self.match)
 
     def collect_analysis(self):
         print("------------------------------------------------------")
         print("Collecting analysis...")
-
-        self.analysis_dict['team_l_name'] = self.match.team_left.name
-        self.analysis_dict['team_r_name'] = self.match.team_right.name
-
-    def gd(self):
-        return self.analysis_dict
+        print("Ball possession")
+        print(self.__ball_possession.results())
+        print("Foul charge")
+        print(self.__foul_charge.results())
