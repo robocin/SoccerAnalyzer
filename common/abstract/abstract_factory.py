@@ -7,5 +7,5 @@ class AbstractFactory(metaclass=ABCMeta):
         pass
 
     @abstractmethod
-    def collect_analysis(self):
+    def collect(self):
         pass

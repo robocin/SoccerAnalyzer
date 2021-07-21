@@ -41,7 +41,7 @@ class MatchAnalyzer(AbstractFactory):
         self.__foul_charge = FoulCharge(self.__match.dataframe)
 
 
-    def collect_analysis(self):
+    def collect(self):
         print("------------------------------------------------------")
         print("Collecting analysis...")
         print("Ball possession")
