@@ -23,7 +23,7 @@ class Match:
 
     @property
     def dataframe(self):
-        return self.__dataframe
+        return self.__df
 
     @property
     def teams(self):
