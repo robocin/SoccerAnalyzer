@@ -12,11 +12,13 @@ def analysis(match_object):
 	# aqui voce pode fazer alguma manipulação com os dados ( a análise em si). nesse caso não estou fazendo nenhuma análise, apenas passando ball_x da forma que a função recebeu.
 	df = match_object.dataframe
 	show_time =  list(df["show_time"])
+	ball_x =  list(df["ball_x"])
 
 	# 2 - Formatação
 	# agora é só preparar os dados finais em um dicionário e retornar-los como uma string json
 	resultDict = {
-		"show_time" : show_time 
+		"show_time" : show_time,
+		"ball_x" : ball_x 
 	}
 	resultJson = json.dumps(resultDict)
 
@@ -53,4 +55,4 @@ def hello_world():
 
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port='5001')
+    app.run(host='0.0.0.0', port='5000')
