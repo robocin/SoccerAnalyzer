@@ -1,4 +1,3 @@
-AnalyzerBackend==1.0
 Flask==1.1.2
 Flask-Cors==3.0.10
 numpy==1.19.5
