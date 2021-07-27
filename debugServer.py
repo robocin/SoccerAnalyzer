@@ -35,7 +35,7 @@ cors = CORS(app, resource={
     }
 })
 
-@app.route("/getData", methods=['GET'])
+@app.route("/", methods=['GET'])
 def hello_world():
 	# reads .csv
 	df = pd.read_csv('20200229162107-ThunderLeague_1-vs-RoboCIn_2.rcg.csv')	
@@ -53,4 +53,4 @@ def hello_world():
 
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port='5002')
+    app.run(host='0.0.0.0', port='5001')
