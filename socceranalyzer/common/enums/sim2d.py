@@ -12,12 +12,3 @@ class SIM2D(Enum):
     def __str__(self):
         return self.value
 
-
-class VSS(Enum):
-    def __str__(self):
-        return self.value
-
-
-class SSL(Enum):
-    def __str__(self):
-        return self.value

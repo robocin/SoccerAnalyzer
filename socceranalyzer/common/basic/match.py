@@ -1,11 +1,11 @@
 import pandas
 
 from SoccerAnalyzer.socceranalyzer.common.entity.team import Team
-from SoccerAnalyzer.socceranalyzer.common.utility.enums import SIM2D, VSS, SSL
+
 
 class Match:
     def __init__(self, dataframe: pandas.DataFrame, category):
-        self.category = category
+        self.__category = category
 
         self.__df = dataframe
         self.__teams = ()
@@ -29,6 +29,10 @@ class Match:
     @property
     def dataframe(self):
         return self.__df
+
+    @property
+    def category(self):
+        return self.__category
 
     @property
     def teams(self):

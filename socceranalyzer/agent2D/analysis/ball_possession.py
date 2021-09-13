@@ -1,19 +1,22 @@
 from SoccerAnalyzer.socceranalyzer.common.operations.measures import distance
 from SoccerAnalyzer.socceranalyzer.common.geometric.point import Point
-
+from SoccerAnalyzer.socceranalyzer.common.chore.mediator import Mediator
+from SoccerAnalyzer.socceranalyzer.common.collections.collections import StringListItem
+from SoccerAnalyzer.socceranalyzer.common.collections.collections import StringListPositions
+from SoccerAnalyzer.socceranalyzer.common.enums.sim2d import SIM2D
 
 class BallPossession:
     """
         Used to calculate the simple ball possession of the game.
-        BallPossession(dataFrame)
+        BallPossession(pandas.DataFrame)
         Attributes
         ----------
             private:
-                leftSideTeamPossession : int
+                left_team_possession : int
                     amount of cycles the left team was closest to the ball
-                rightSideTeamPossession : int
+                right_team_possession : int
                     amount of cycles the right team was closest to the ball
-                currentGame : common.basic.game.Game
+                current_game : common.basic.game.Game
                     a Game object of the current game
                 BALL_X_COLUMN : int
                     ball x position in the dataframe
@@ -23,102 +26,105 @@ class BallPossession:
         -------
             private:
                 filterPlaymode(playmode : str) -> None
-                    filters the currentGame dataframe and returns a filtered copy
-                closestPlayerSide(cycle : int,
-                                playerLeftPosition : common.basic.point.Point,
-                                playerRightPosition : common.basic.point.Point,
-                                ballPositionThisCycle : common.basic.point.Point) -> str
+                    filters the current_game dataframe and returns a filtered copy
+                closest_player_side(cycle : int,
+                                player_left_position : common.basic.point.Point,
+                                player_right_position : common.basic.point.Point,
+                                ball_position_this_cycle : common.basic.point.Point) -> str
                     returns the closest player of the ball in the cycle passed as argument
                 calculate() -> None
-                    populates the leftSideTeamPossession and rightSideTeamPossession
+                    populates the left_team_possession and right_team_possession
             public:
-                getCurrentGame() -> pandas.Dataframe
+                getcurrent_game_log() -> pandas.Dataframe
                     returns the dataframe of the current game being analyzed
                 get() -> [a,b]
-                    returns the leftSideTeamPossession(a) and rightSideTeamPossession(b) in percentual
+                    returns the left_team_possession(a) and right_team_possession(b) in percentual
                 newGame(game : DataFrame)
                     updates the object with new game and calculates the new ball possession
     """
 
-    def __init__(self, dataFrame):
-        self.__leftSideTeamPossession = 0
-        self.__rightSideTeamPossession = 0
-        self.__currentGame = dataFrame
+    def __init__(self, data_frame, category):
+        self.__left_team_possession = 0
+        self.__right_team_possession = 0
+        self.__category = category
+        self.__current_game_log = data_frame
         self.__BALL_X_COLUMN = 10
         self.__BALL_Y_COLUMN = 11
         self.__calculate()
 
-    def newGame(self, dataFrame):
-        self.__currentGame = dataFrame
-        self.__calculate()
+    @property
+    def category(self):
+        return self.__category
 
-    def getCurrentGame(self):
-        return self.__currentGame
-
-    def __filterPlaymode(self, playmode: str):
-        return self.__currentGame[self.__currentGame['playmode'] == playmode]
+    def __filter_playmode(self, playmode: str):
+        return self.__current_game_log[self.__current_game_log[str(self.category.PLAYMODE)] == playmode]
 
 
     def __calculate(self):
 
-        filteredGame = self.__filterPlaymode('play_on')
+        filtered_game = self.__filter_playmode('play_on')
 
-        playerLeftPosition = Point()
-        playerRightPosition = Point()
-        ballPositionThisCycle = Point()
+        player_left_position = Point()
+        player_right_position = Point()
+        ball_position_this_cycle = Point()
 
-        for currentCycle, row in filteredGame.iterrows():
+        for current_cycle, row in filtered_game.iterrows():
 
-            closestSide = self.__closestPlayerSide(currentCycle,
-                                                   playerLeftPosition,
-                                                   playerRightPosition,
-                                                   ballPositionThisCycle)
+            closest_side = self.__closest_player_side(current_cycle,
+                                                   player_left_position,
+                                                   player_right_position,
+                                                   ball_position_this_cycle)
 
-            if closestSide == 'left':
-                self.__leftSideTeamPossession += 1
+            if closest_side == 'left':
+                self.__left_team_possession += 1
             else:
-                self.__rightSideTeamPossession += 1
+                self.__right_team_possession += 1
 
 
-    def __closestPlayerSide(self,
+    def __closest_player_side(self,
                             cycle: int,
-                            playerLeftPosition: Point,
-                            playerRightPosition: Point,
-                            ballPositionThisCycle: Point):
+                            player_left_position: Point,
+                            player_right_position: Point,
+                            ball_position_this_cycle: Point):
 
-        currentCycle = cycle
+        current_cycle = cycle
 
-        ball_x = self.__currentGame.iloc[currentCycle, self.__BALL_X_COLUMN]
-        ball_y = self.__currentGame.iloc[currentCycle, self.__BALL_Y_COLUMN]
+        ball_x = self.__current_game_log.loc[current_cycle, str(self.category.BALL_X)]
+        ball_y = self.__current_game_log.loc[current_cycle, str(self.category.BALL_Y)]
 
-        ballPositionThisCycle.x = ball_x
-        ballPositionThisCycle.y = ball_y
+        ball_position_this_cycle.x = ball_x
+        ball_position_this_cycle.y = ball_y
 
-        closestRight = 1000
-        closestLeft = 1000
+        closest_right = 1000
+        closest_left = 1000
 
-        for i in range(1, 11):
-            playerLeftPosition.x = self.__currentGame.loc[currentCycle, "player_l{}_x".format(i)]
-            playerLeftPosition.y = self.__currentGame.loc[currentCycle, "player_l{}_y".format(i)]
+        players_left = Mediator.players_left_position(self.category, False)
+        players_right = Mediator.players_right_position(self.category, False)
 
-            playerLeftDistance = distance(playerLeftPosition, ballPositionThisCycle)
+        # 10 players only because goalkeeper is not checked in this analysis
+        for i in range(0, 10):
+            player_left_position.x = self.__current_game_log.loc[current_cycle, players_left.items[i].x]
+            player_left_position.y = self.__current_game_log.loc[current_cycle, players_left.items[i].y]
 
-            if playerLeftDistance <= closestLeft:
-                closestLeft = playerLeftDistance
+            player_left_distance = distance(player_left_position, ball_position_this_cycle)
 
-            playerRightPosition.x = self.__currentGame.loc[currentCycle, "player_r{}_x".format(i)]
-            playerRightPosition.y = self.__currentGame.loc[currentCycle, "player_r{}_y".format(i)]
+            if player_left_distance <= closest_left:
+                closest_left = player_left_distance
 
-            playerRightDistance = distance(playerRightPosition, ballPositionThisCycle)
+            player_right_position.x = self.__current_game_log.loc[current_cycle, players_right.items[i].x]
+            player_right_position.y = self.__current_game_log.loc[current_cycle, players_right.items[i].y]
 
-            if playerRightDistance <= closestRight:
-                closestRight = playerRightDistance
+            player_right_distance = distance(player_right_position, ball_position_this_cycle)
 
-        if closestLeft < closestRight:
+            if player_right_distance <= closest_right:
+                closest_right = player_right_distance
+
+        if closest_left < closest_right:
             return "left"
         else:
             return "right"
 
     def results(self):
-        total = self.__leftSideTeamPossession + self.__rightSideTeamPossession
-        return [self.__leftSideTeamPossession / total, self.__rightSideTeamPossession / total]
+        total = self.__left_team_possession + self.__right_team_possession
+        return [self.__left_team_possession / total, self.__right_team_possession / total]
+

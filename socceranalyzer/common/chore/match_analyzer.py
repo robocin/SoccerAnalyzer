@@ -1,7 +1,10 @@
 from SoccerAnalyzer.socceranalyzer.common.abstract.abstract_factory import AbstractFactory
 
 from SoccerAnalyzer.socceranalyzer.common.basic.match import Match
-from SoccerAnalyzer.socceranalyzer.common.utility.enums import SIM2D, SSL, VSS
+from SoccerAnalyzer.socceranalyzer.common.enums.sim2d import SIM2D
+from SoccerAnalyzer.socceranalyzer.common.enums.ssl import SSL
+from SoccerAnalyzer.socceranalyzer.common.enums.vss import VSS
+from SoccerAnalyzer.socceranalyzer.common.chore.mediator import Mediator
 from SoccerAnalyzer.socceranalyzer.agent2D.analysis.ball_possession import BallPossession
 from SoccerAnalyzer.socceranalyzer.agent2D.analysis.foul_charge import FoulCharge
 
@@ -32,7 +35,7 @@ class MatchAnalyzer(AbstractFactory):
     def _run_analysis(self):
         if self.__cat is SIM2D:
             setattr(self, "__ball_possession", None)
-            self.__ball_possession = BallPossession(self.__match.dataframe)
+            self.__ball_possession = BallPossession(self.__match.dataframe, SIM2D)
 
             setattr(self, "__foul_charge", None)
             self.__foul_charge = FoulCharge(self.__match.dataframe)
