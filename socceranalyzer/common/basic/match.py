@@ -3,6 +3,7 @@ from ..entity.team import Team
 class Match:
     def __init__(self, dataFrame):
         self.__df = dataFrame
+        self.__category = ""
         self.__teams = ()
         self.__team_left_name = ""
         self.__team_right_name = ""
@@ -23,7 +24,7 @@ class Match:
 
     @property
     def dataframe(self):
-        return self.__dataframe
+        return self.__df
 
     @property
     def teams(self):

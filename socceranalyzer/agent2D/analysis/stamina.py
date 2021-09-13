@@ -1,5 +1,5 @@
 import json
-from AnalyzerCommon.common.operations.means import mean_of_lists
+from SoccerAnalyzer.socceranalyzer.common.operations.means import mean_of_lists
 
 def sm_team_mean_stamina(match_object, team_side: str):
     """

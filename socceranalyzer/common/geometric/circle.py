@@ -1,5 +1,4 @@
-from AnalyzerCommon.common.geometric.point import Point
-from AnalyzerCommon.common.operations.measures import distance
+from SoccerAnalyzer.socceranalyzer.common.operations.measures import distance
 
 class Circle:
     def __init__(self, radius, center):

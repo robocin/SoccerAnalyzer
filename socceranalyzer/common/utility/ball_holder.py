@@ -1,5 +1,5 @@
-from AnalyzerCommon.common.geometric.point import Point
-from AnalyzerCommon.common.geometric.circle import Circle
+from SoccerAnalyzer.socceranalyzer.common.geometric.point import Point
+from SoccerAnalyzer.socceranalyzer.common.geometric.circle import Circle
 
 
 def ball_holder(cycle, df):

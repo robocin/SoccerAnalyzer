@@ -1,5 +1,5 @@
-from AnalyzerCommon.common.geometric.point import Point
-from AnalyzerCommon.common.operations.measures import distance
+from SoccerAnalyzer.socceranalyzer.common.geometric.point import Point
+from SoccerAnalyzer.socceranalyzer.common.operations.measures import distance
 
 
 def closer_to_ball(cycle, df):

@@ -1,5 +1,5 @@
-from AnalyzerCommon.common.abstract.abstract_analysis import AbstractAnalysis
-from AnalyzerCommon.common.utility.finders import find_last_unique_event_ocurrences
+from SoccerAnalyzer.socceranalyzer.common.abstract.abstract_analysis import AbstractAnalysis
+from SoccerAnalyzer.socceranalyzer.common.utility.finders import find_last_unique_event_ocurrences
 
 
 class Corner(AbstractAnalysis):

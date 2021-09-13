@@ -1,20 +1,20 @@
-from AnalyzerCommon.common.abstract.abstract_factory import AbstractFactory
+from SoccerAnalyzer.socceranalyzer.common.abstract.abstract_factory import AbstractFactory
 
-from AnalyzerCommon.common.basic.match import Match
-from AnalyzerCommon.Agent2D.analysis.ball_possession import BallPossession
-from AnalyzerCommon.Agent2D.analysis.foul_charge import FoulCharge
+from SoccerAnalyzer.socceranalyzer.common.basic.match import Match
+from SoccerAnalyzer.socceranalyzer.agent2D.analysis.ball_possession import BallPossession
+from SoccerAnalyzer.socceranalyzer.agent2D.analysis.foul_charge import FoulCharge
+
 
 class MatchAnalyzer(AbstractFactory):
-    def __init__(self, match : Match):
+    def __init__(self, match: Match = None):
         self.__match = match
         self.__analysis_dict = {}
 
-        #self.__team_mean_stamina = None
+        # Analysis
         self.__ball_possession = None
         self.__foul_charge = None
 
         self._run_analysis()
-
 
     @property
     def match(self):
@@ -25,11 +25,6 @@ class MatchAnalyzer(AbstractFactory):
         return self.__analysis_dict
 
     def _run_analysis(self):
-        #team mean stamina
-        print("------------------------------------------------------")
-        print("Instantiating mean stamina")
-        print("Running mean stamina")
-
         # ball possession
         print("Instantiating ball possession")
         print("Running ball possession")
@@ -40,8 +35,7 @@ class MatchAnalyzer(AbstractFactory):
         print("Running foul charge")
         self.__foul_charge = FoulCharge(self.__match.dataframe)
 
-
-    def collect(self):
+    def collect_results(self):
         print("------------------------------------------------------")
         print("Collecting analysis...")
         print("Ball possession")

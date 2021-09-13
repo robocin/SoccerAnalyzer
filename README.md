@@ -61,8 +61,8 @@ These inputs are **mandatory**, otherwise there will be no data to be analyzed.
 ```python
 import pandas as pd
 
-from SoccerAnalyzer.common.utility.match_analyzer import MatchAnalyzer
-from SoccerAnalyzer.common.basic.match import Match
+from SoccerAnalyzer.socceranalyzer.common import MatchAnalyzer
+from SoccerAnalyzer.socceranalyzer.common import Match
 
 logfile_path = "location/to/log/file.csv"
 dataframe = pd.read_csv(logfile_path)

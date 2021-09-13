@@ -1,4 +1,4 @@
-from AnalyzerCommon.common.abstract.abstract_analysis import AbstractAnalysis\
+from SoccerAnalyzer.socceranalyzer.common.abstract.abstract_analysis import AbstractAnalysis\
 
 
 class Playmodes(AbstractAnalysis):
