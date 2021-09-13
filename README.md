@@ -32,9 +32,7 @@ on your machine or virtual environment use setup.py outside the module as:
 
 ```
 $ cd path/to/SoccerAnalyzer
-$ mv SoccerAnalyzer/setup.py .
-$ python setup.py build
-$ python setup.py install
+$ pip install .
 ```
 ## Getting Started
 This package is capable of delivering built-in analysis that were already
