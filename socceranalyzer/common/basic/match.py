@@ -1,9 +1,13 @@
-from ..entity.team import Team
+import pandas
+
+from SoccerAnalyzer.socceranalyzer.common.entity.team import Team
+from SoccerAnalyzer.socceranalyzer.common.utility.enums import SIM2D, VSS, SSL
 
 class Match:
-    def __init__(self, dataFrame):
-        self.__df = dataFrame
-        self.__category = ""
+    def __init__(self, dataframe: pandas.DataFrame, category):
+        self.category = category
+
+        self.__df = dataframe
         self.__teams = ()
         self.__team_left_name = ""
         self.__team_right_name = ""
@@ -92,17 +96,16 @@ class Match:
 
 
     def __build(self):
-
-        team_l_name = self.__df.loc[1, "team_name_l"]
-        team_r_name = self.__df.loc[1, "team_name_r"]
+        team_l_name = self.__df.loc[1, str(self.category.TEAM_LEFT)]
+        team_r_name = self.__df.loc[1, str(self.category.TEAM_RIGHT)]
 
         self.__teams = (Team(team_l_name, "left"), Team(team_r_name, "right"))
         self.__team_left_name = team_l_name
         self.__team_right_name = team_r_name
 
         last_line = self.__df.shape[0] - 1
-        score_l = self.__df.loc[last_line, "team_score_l"]
-        score_r = self.__df.loc[last_line, "team_score_r"]
+        score_l = self.__df.loc[last_line, str(self.category.TEAM_LEFT_SCORE)]
+        score_r = self.__df.loc[last_line, str(self.category.TEAM_RIGHT_SCORE)]
 
         self.__score_left = score_l
         self.__score_right = score_r
