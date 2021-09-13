@@ -1,11 +1,11 @@
-from setuptools import setup, find_packages
-
-with open('requirements.txt') as fp:
-    install_requires = fp.read()
+from setuptools import setup
 
 setup(
-    name='AnalyzerCommon',
-    version='1.0',
-    packages=find_packages(),
-    install_requires=install_requires
+    name='socceranalyzer',
+    description='2DSIM, VSS and SSL data analysis package',
+    url='https://github.com/robocin/socceranalyzer',
+    author='Felipe Nunes, Mateus Soares, Bruna Alves',
+    version='1.2.0',
+    packages=['socceranalyzer'],
+    install_requires=['pandas', 'numpy']
 )
