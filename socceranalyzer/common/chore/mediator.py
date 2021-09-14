@@ -41,8 +41,8 @@ class Mediator:
                     slp.items.append(StringListItem(f'player_r{i}_x', f'player_r{i}_y'))
 
             return slp
-        elif category is Category.VSS:
+        elif category is VSS:
             raise NotImplementedError
 
-        elif category is Category.SSL:
+        elif category is SSL:
             raise NotImplementedError
