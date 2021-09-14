@@ -1,6 +1,11 @@
+from enum import Enum
+
 import pandas
 
 from SoccerAnalyzer.socceranalyzer.common.entity.team import Team
+from SoccerAnalyzer.socceranalyzer.common.enums.vss import VSS
+from SoccerAnalyzer.socceranalyzer.common.enums.sim2d import SIM2D
+from SoccerAnalyzer.socceranalyzer.common.enums.ssl import SSL
 
 
 class Match:
@@ -39,8 +44,8 @@ class Match:
         return self.__teams
 
     @teams.setter
-    def teams(self, tuple):
-        self.__teams = tuple
+    def teams(self, t):
+        self.__teams = t
 
     @property
     def team_left(self):
@@ -100,26 +105,36 @@ class Match:
 
 
     def __build(self):
-        team_l_name = self.__df.loc[1, str(self.category.TEAM_LEFT)]
-        team_r_name = self.__df.loc[1, str(self.category.TEAM_RIGHT)]
 
-        self.__teams = (Team(team_l_name, "left"), Team(team_r_name, "right"))
-        self.__team_left_name = team_l_name
-        self.__team_right_name = team_r_name
-
-        last_line = self.__df.shape[0] - 1
-        score_l = self.__df.loc[last_line, str(self.category.TEAM_LEFT_SCORE)]
-        score_r = self.__df.loc[last_line, str(self.category.TEAM_RIGHT_SCORE)]
-
-        self.__score_left = score_l
-        self.__score_right = score_r
-
-        if score_l > score_r:
-            self.__winning_team = team_l_name
-            self.__losing_team = team_r_name
-        elif score_l < score_r:
-            self.__winning_team = team_r_name
-            self.__losing_team = team_l_name
+        try:
+            if self.category is None:
+                raise ValueError('A Match requires a Category as argument and none was given')
+            elif self.category is not SIM2D:
+                raise RuntimeError(f'This version of SoccerAnalyzer does not support {self.category} matches.\n'
+                                   f'Please visit https://github.com/robocin/SoccerAnalyzer for more information.')
+        except RuntimeError:
+            raise
         else:
-            self.__winning_team = "draw"
-            self.__losing_team = "draw"
+            team_l_name = self.__df.loc[1, str(self.category.TEAM_LEFT)]
+            team_r_name = self.__df.loc[1, str(self.category.TEAM_RIGHT)]
+
+            self.__teams = (Team(team_l_name, "left"), Team(team_r_name, "right"))
+            self.__team_left_name = team_l_name
+            self.__team_right_name = team_r_name
+
+            last_line = self.__df.shape[0] - 1
+            score_l = self.__df.loc[last_line, str(self.category.TEAM_LEFT_SCORE)]
+            score_r = self.__df.loc[last_line, str(self.category.TEAM_RIGHT_SCORE)]
+
+            self.__score_left = score_l
+            self.__score_right = score_r
+
+            if score_l > score_r:
+                self.__winning_team = team_l_name
+                self.__losing_team = team_r_name
+            elif score_l < score_r:
+                self.__winning_team = team_r_name
+                self.__losing_team = team_l_name
+            else:
+                self.__winning_team = "draw"
+                self.__losing_team = "draw"

@@ -29,16 +29,20 @@ class MatchAnalyzer(AbstractFactory):
         return self.__match
 
     @property
+    def category(self):
+        return self.__cat
+
+    @property
     def analysis_dict(self):
         return self.__analysis_dict
 
     def _run_analysis(self):
         if self.__cat is SIM2D:
             setattr(self, "__ball_possession", None)
-            self.__ball_possession = BallPossession(self.__match.dataframe, SIM2D)
+            self.__ball_possession = BallPossession(self.__match.dataframe, self.category)
 
             setattr(self, "__foul_charge", None)
-            self.__foul_charge = FoulCharge(self.__match.dataframe)
+            self.__foul_charge = FoulCharge(self.__match.dataframe, self.category)
 
         elif self.__cat is SSL:
             raise NotImplementedError

@@ -1,34 +1,23 @@
 from SoccerAnalyzer.socceranalyzer.common.abstract.abstract_analysis import AbstractAnalysis
 from SoccerAnalyzer.socceranalyzer.common.geometric.point import Point
 
+
 class FoulCharge(AbstractAnalysis):
-    def __init__(self, dataframe=None):
+    def __init__(self, dataframe=None, category=None):
         self.__dataframe = dataframe
-        self.__ball_x_row = 10
-        self.__ball_y_row = 11
+        self.__category = category
         self.__team_left_charges = []
         self.__team_right_charges = []
+
         self._analyze()
-
-    @property
-    def ball_x(self):
-        return self.__ball_x_row
-
-    @ball_x.setter
-    def ball_x(self, val: int):
-        self.__ball_x_row = val
-
-    @property
-    def ball_y(self):
-        return self.__ball_y_row
-
-    @ball_y.setter
-    def ball_y(self, val: int):
-        self.__ball_y_row = val
 
     @property
     def left_charges(self):
         return self.__team_left_charges
+
+    @property
+    def category(self):
+        return self.__category
 
     @left_charges.setter
     def left_charges(self, val: Point):
@@ -49,20 +38,22 @@ class FoulCharge(AbstractAnalysis):
         quantities = self.quantity()
         total = quantities[0] + quantities[1]
 
-        return (quantities[0]/total, quantities[1]/total)
+        return (quantities[0] / total, quantities[1] / total)
 
     def _analyze(self):
         for i in range(len(self.__dataframe)):
-            if (self.__dataframe.iloc[i, 1] == "foul_charge_l" and self.__dataframe.iloc[i - 1, 1] != "foul_charge_l"):
+            if (self.__dataframe.loc[i, str(self.category.PLAYMODE)] == str(self.category.FAULT_COMMITED_L)
+                    and self.__dataframe.loc[i - 1, str(self.category.PLAYMODE)] != str(
+                        self.category.FAULT_COMMITED_L)):
 
-                self.left_charges = Point(int(self.__dataframe.iloc[i, self.ball_x]),
-                                          int(self.__dataframe.iloc[i, self.ball_y]))
+                self.left_charges = Point(int(self.__dataframe.loc[i, str(self.category.BALL_X)]),
+                                          int(self.__dataframe.loc[i, str(self.category.BALL_Y)]))
 
-            elif (self.__dataframe.iloc[i, 1] == "foul_charge_r" and self.__dataframe.iloc[i - 1, 1] != "foul_charge_r"):
+            elif (self.__dataframe.loc[i, str(self.category.PLAYMODE)] == str(self.category.FAULT_COMMITED_R)
+                  and self.__dataframe.loc[i - 1, str(self.category.PLAYMODE)] != str(self.category.FAULT_COMMITED_R)):
 
-                self.right_charges = Point(int(self.__dataframe.iloc[i, self.ball_x]),
-                                           int(self.__dataframe.iloc[i, self.ball_y]))
-
+                self.right_charges = Point(int(self.__dataframe.loc[i, str(self.category.BALL_X)]),
+                                           int(self.__dataframe.loc[i, str(self.category.BALL_X)]))
 
     def results(self):
         return (self.left_charges, self.right_charges)
