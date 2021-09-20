@@ -4,9 +4,9 @@ from SoccerAnalyzer.socceranalyzer.common.basic.match import Match
 from SoccerAnalyzer.socceranalyzer.common.enums.sim2d import SIM2D
 from SoccerAnalyzer.socceranalyzer.common.enums.ssl import SSL
 from SoccerAnalyzer.socceranalyzer.common.enums.vss import VSS
-from SoccerAnalyzer.socceranalyzer.common.chore.mediator import Mediator
-from SoccerAnalyzer.socceranalyzer.agent2D.analysis.ball_possession import BallPossession
-from SoccerAnalyzer.socceranalyzer.agent2D.analysis.foul_charge import FoulCharge
+from SoccerAnalyzer.socceranalyzer.common.analysis.ball_possession import BallPossession
+from SoccerAnalyzer.socceranalyzer.common.analysis.foul_charge import FoulCharge
+from SoccerAnalyzer.socceranalyzer.common.analysis.playmodes import Playmodes
 
 
 class MatchAnalyzer(AbstractFactory):
@@ -44,6 +44,9 @@ class MatchAnalyzer(AbstractFactory):
             setattr(self, "__foul_charge", None)
             self.__foul_charge = FoulCharge(self.__match.dataframe, self.category)
 
+            setattr(self, "__playmodes", None)
+            self.__playmodes = Playmodes(self.__match.dataframe, self.category)
+
         elif self.__cat is SSL:
             raise NotImplementedError
             # add SSL analysis
@@ -59,3 +62,5 @@ class MatchAnalyzer(AbstractFactory):
         print(self.__ball_possession.results())
         print("Foul charge")
         print(self.__foul_charge.results())
+        print("Playmodes")
+        print(self.__playmodes.results())
