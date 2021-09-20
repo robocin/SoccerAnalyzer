@@ -1,4 +1,5 @@
 from SoccerAnalyzer.socceranalyzer.common.abstract.abstract_factory import AbstractFactory
+from SoccerAnalyzer.socceranalyzer.common.evaluators.ball_holder import BallHolder
 
 from SoccerAnalyzer.socceranalyzer.common.basic.match import Match
 from SoccerAnalyzer.socceranalyzer.common.enums.sim2d import SIM2D
@@ -35,6 +36,10 @@ class MatchAnalyzer(AbstractFactory):
     @property
     def analysis_dict(self):
         return self.__analysis_dict
+
+    @property
+    def ball_holder(self):
+        return BallHolder(self.match.dataframe, self.match.category)
 
     def _run_analysis(self):
         if self.__cat is SIM2D:
