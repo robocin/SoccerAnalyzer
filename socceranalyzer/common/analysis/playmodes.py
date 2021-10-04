@@ -13,15 +13,9 @@ class Playmodes(AbstractAnalysis):
     def category(self):
         return self.__category
 
-    def values(self):
-        playmode = []
-        counts = []
-
-        for k, v in self.results().items():
-            playmode.append(k)
-            counts.append(v)
-
-        return playmode, counts
+    @property
+    def dataframe(self):
+        return self.__df
 
     def _analyze(self):
         data = self.__df[str(self.category.PLAYMODE)].value_counts()
@@ -36,4 +30,20 @@ class Playmodes(AbstractAnalysis):
             self.__playmode_dictionary[key] = value
 
     def results(self):
-        return self.__playmode_dictionary
+        playmode = []
+        counts = []
+
+        for k, v in self.__playmode_dictionary.items():
+            playmode.append(k)
+            counts.append(v)
+
+        return playmode, counts
+
+    def describe(self):
+        pms, foo = self.results()
+
+        print(f'This game had {len(pms)} different playmodes which were:\n'
+              f' {pms}')
+
+    def serialize(self):
+        return NotImplementedError

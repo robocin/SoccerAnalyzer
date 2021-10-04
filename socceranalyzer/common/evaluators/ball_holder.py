@@ -3,7 +3,7 @@ from SoccerAnalyzer.socceranalyzer.common.geometric.circle import Circle
 from SoccerAnalyzer.socceranalyzer.common.chore.mediator import Mediator
 from SoccerAnalyzer.socceranalyzer.common.utility.slicers import PlaymodeSlicer
 
-class BallHolder:
+class BallHolderEvaluator:
     def __init__(self, dataframe, category):
         self.__df = dataframe
         self.__category = category

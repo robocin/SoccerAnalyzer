@@ -10,6 +10,8 @@ class SIM2D(Enum):
     TEAM_RIGHT = "team_name_r"
     TEAM_LEFT_SCORE = "team_score_l"
     TEAM_RIGHT_SCORE = "team_score_r"
+    TEAM_LEFT_CORNER = "corner_kick_l"
+    TEAM_RIGHT_CORNER = "corner_kick_r"
 
     def __str__(self):
         return self.value

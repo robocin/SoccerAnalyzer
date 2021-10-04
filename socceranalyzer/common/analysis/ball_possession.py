@@ -48,8 +48,8 @@ class BallPossession:
         self.__right_team_possession = 0
         self.__category = category
         self.__current_game_log = data_frame
-        self.__BALL_X_COLUMN = 10
-        self.__BALL_Y_COLUMN = 11
+        self.__total = 0
+
         self.__calculate()
 
     def __str__(self):
@@ -59,9 +59,6 @@ class BallPossession:
     @property
     def category(self):
         return self.__category
-
-    def values(self):
-        return self.results()
 
     def __filter_playmode(self, playmode: str):
         return self.__current_game_log[self.__current_game_log[str(self.category.PLAYMODE)] == playmode]
@@ -87,6 +84,7 @@ class BallPossession:
             else:
                 self.__right_team_possession += 1
 
+        self.__total = self.__right_team_possession + self.__left_team_possession
 
     def __closest_player_side(self,
                             cycle: int,
@@ -132,6 +130,13 @@ class BallPossession:
             return "right"
 
     def results(self):
-        total = self.__left_team_possession + self.__right_team_possession
-        return (self.__left_team_possession / total, self.__right_team_possession / total)
+        return (self.__left_team_possession / self.__total, self.__right_team_possession / self.__total)
 
+    def describe(self):
+        name_l = self.__current_game_log.loc[1, str(self.category.TEAM_LEFT)]
+        name_r = self.__current_game_log.loc[1, str(self.category.TEAM_RIGHT)]
+        print(f'{name_l}: {self.__left_team_possession/self.__total}\n' 
+                f'{name_r}: {self.__right_team_possession/self.__total}')
+
+    def serialize(self):
+        raise NotImplementedError

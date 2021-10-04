@@ -1,5 +1,5 @@
 from SoccerAnalyzer.socceranalyzer.common.abstract.abstract_factory import AbstractFactory
-from SoccerAnalyzer.socceranalyzer.common.evaluators.ball_holder import BallHolder
+from SoccerAnalyzer.socceranalyzer.common.evaluators.ball_holder import BallHolderEvaluator
 
 from SoccerAnalyzer.socceranalyzer.common.basic.match import Match
 from SoccerAnalyzer.socceranalyzer.common.enums.sim2d import SIM2D
@@ -8,6 +8,9 @@ from SoccerAnalyzer.socceranalyzer.common.enums.vss import VSS
 from SoccerAnalyzer.socceranalyzer.common.analysis.ball_possession import BallPossession
 from SoccerAnalyzer.socceranalyzer.common.analysis.foul_charge import FoulCharge
 from SoccerAnalyzer.socceranalyzer.common.analysis.playmodes import Playmodes
+from SoccerAnalyzer.socceranalyzer.common.analysis.corners_occurrencies import CornersOcurrencies
+from SoccerAnalyzer.socceranalyzer.common.analysis.time_after_corner import TimeAfterCorner
+
 
 
 class MatchAnalyzer(AbstractFactory):
@@ -16,6 +19,10 @@ class MatchAnalyzer(AbstractFactory):
         self.__cat = match.category
         self.__analysis_dict = {}
 
+        # evaluators
+        self.__ball_holder_evaluator = None
+        self.__shoot_evaluator = None
+
         try:
             if self.__cat is None:
                 raise ValueError('MatchAnalyzer requires a Category as argument and none was given')
@@ -23,6 +30,7 @@ class MatchAnalyzer(AbstractFactory):
             print(err)
             raise
         else:
+            self._generate_evaluators()
             self._run_analysis()
 
     @property
@@ -36,6 +44,10 @@ class MatchAnalyzer(AbstractFactory):
     @property
     def foul_charge(self):
         return self.__foul_charge
+
+    @property
+    def corners(self):
+        return self.__corners_occurrencies
 
     @property
     def playmodes(self):
@@ -52,6 +64,7 @@ class MatchAnalyzer(AbstractFactory):
     @property
     def final_score(self):
         return f'{self.__match.team_left_name} {self.__match.score_left} x {self.__match.score_right} {self.__match.team_right_name}'
+
     @property
     def category(self):
         return self.__cat
@@ -70,15 +83,20 @@ class MatchAnalyzer(AbstractFactory):
         BallPossession = ("BallPossession", True)
         FoulCharge = ("FoulCharge", True)
         Playmodes = ("Playmodes", True)
+        Corners = ("Corners", True)
         TimeAfterCorner = ("TimeAfterCorner", False)
         TimeAfterFreeKick = ("TimeAfterFreeKick", False)
         TimeAfterSideKick = ("TimeAfterSideKick", False)
 
-        analysis = [BallPossession, FoulCharge, Playmodes, TimeAfterCorner, TimeAfterFreeKick, TimeAfterSideKick]
+        analysis = [BallPossession, FoulCharge, Playmodes, Corners, TimeAfterCorner, TimeAfterFreeKick,
+                    TimeAfterSideKick]
 
         for a in analysis:
             if a[1]:
                 print(a[0])
+
+    def _generate_evaluators(self):
+        pass
 
     def _run_analysis(self):
         if self.__cat is SIM2D:
@@ -90,6 +108,12 @@ class MatchAnalyzer(AbstractFactory):
 
             setattr(self, "__playmodes", None)
             self.__playmodes = Playmodes(self.__match.dataframe, self.category)
+
+            setattr(self, "__corners", None)
+            self.__corners_occurrencies = CornersOcurrencies(self.__match.dataframe, self.category)
+
+            #setattr(self, "__time_after_corner", None)
+            #self.__time_after_corner = TimeAfterCorner(self.__match.dataframe, self.category)
 
         elif self.__cat is SSL:
             raise NotImplementedError
