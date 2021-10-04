@@ -40,6 +40,23 @@ class FoulCharge(AbstractAnalysis):
 
         return (quantities[0] / total, quantities[1] / total)
 
+    def positions(self, side=None):
+        all_positions = []
+        if side is not None:
+            if side.lower()[0] == "l":
+                for p in self.__team_right_charges:
+                    all_positions.append((p.x, p.y))
+            elif side.lower()[0] == "r":
+                for p in self.__team_right_charges:
+                    all_positions.append((p.x, p.y))
+        else:
+            for p in self.__team_right_charges:
+                all_positions.append((p.x, p.y))
+            for p in self.__team_right_charges:
+                all_positions.append((p.x, p.y))
+
+        return all_positions
+
     def _analyze(self):
         for i in range(len(self.__dataframe)):
             if (self.__dataframe.loc[i, str(self.category.PLAYMODE)] == str(self.category.FAULT_COMMITED_L)

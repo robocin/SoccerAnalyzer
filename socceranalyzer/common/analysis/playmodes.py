@@ -13,6 +13,16 @@ class Playmodes(AbstractAnalysis):
     def category(self):
         return self.__category
 
+    def values(self):
+        playmode = []
+        counts = []
+
+        for k, v in self.results().items():
+            playmode.append(k)
+            counts.append(v)
+
+        return playmode, counts
+
     def _analyze(self):
         data = self.__df[str(self.category.PLAYMODE)].value_counts()
 

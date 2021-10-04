@@ -52,9 +52,16 @@ class BallPossession:
         self.__BALL_Y_COLUMN = 11
         self.__calculate()
 
+    def __str__(self):
+        values = self.results()
+        return f'Team left: {values[0]}\nTeam right: {values[1]}'
+
     @property
     def category(self):
         return self.__category
+
+    def values(self):
+        return self.results()
 
     def __filter_playmode(self, playmode: str):
         return self.__current_game_log[self.__current_game_log[str(self.category.PLAYMODE)] == playmode]
@@ -126,5 +133,5 @@ class BallPossession:
 
     def results(self):
         total = self.__left_team_possession + self.__right_team_possession
-        return [self.__left_team_possession / total, self.__right_team_possession / total]
+        return (self.__left_team_possession / total, self.__right_team_possession / total)
 

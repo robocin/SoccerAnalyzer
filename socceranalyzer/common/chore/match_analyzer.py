@@ -30,16 +30,55 @@ class MatchAnalyzer(AbstractFactory):
         return self.__match
 
     @property
+    def ball_possession(self):
+        return self.__ball_possession
+
+    @property
+    def foul_charge(self):
+        return self.__foul_charge
+
+    @property
+    def playmodes(self):
+        return self.__playmodes
+
+    @property
+    def winner(self):
+        return self.__match.winning_team
+
+    @property
+    def loser(self):
+        return self.__match.losing_team
+
+    @property
+    def final_score(self):
+        return f'{self.__match.team_left_name} {self.__match.score_left} x {self.__match.score_right} {self.__match.team_right_name}'
+    @property
     def category(self):
         return self.__cat
 
     @property
     def analysis_dict(self):
-        return self.__analysis_dict
+        raise NotImplementedError
+        # return self.__analysis_dict
 
     @property
     def ball_holder(self):
-        return BallHolder(self.match.dataframe, self.match.category)
+        raise NotImplementedError
+        # return BallHolder(self.match.dataframe, self.match.category)
+
+    def available(self):
+        BallPossession = ("BallPossession", True)
+        FoulCharge = ("FoulCharge", True)
+        Playmodes = ("Playmodes", True)
+        TimeAfterCorner = ("TimeAfterCorner", False)
+        TimeAfterFreeKick = ("TimeAfterFreeKick", False)
+        TimeAfterSideKick = ("TimeAfterSideKick", False)
+
+        analysis = [BallPossession, FoulCharge, Playmodes, TimeAfterCorner, TimeAfterFreeKick, TimeAfterSideKick]
+
+        for a in analysis:
+            if a[1]:
+                print(a[0])
 
     def _run_analysis(self):
         if self.__cat is SIM2D:
