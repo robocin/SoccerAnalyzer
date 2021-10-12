@@ -1,4 +1,4 @@
-from SoccerAnalyzer.socceranalyzer.common.abstract.abstract_analysis import AbstractAnalysis
+from socceranalyzer.common.abstract.abstract_analysis import AbstractAnalysis
 
 class TimeAfterCorner(AbstractAnalysis):
     def __init__(self, dataframe, category):

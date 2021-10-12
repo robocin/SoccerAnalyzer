@@ -1,15 +1,15 @@
-from SoccerAnalyzer.socceranalyzer.common.abstract.abstract_factory import AbstractFactory
-from SoccerAnalyzer.socceranalyzer.common.evaluators.ball_holder import BallHolderEvaluator
+from socceranalyzer.common.abstract.abstract_factory import AbstractFactory
+from socceranalyzer.common.evaluators.ball_holder import BallHolderEvaluator
 
-from SoccerAnalyzer.socceranalyzer.common.basic.match import Match
-from SoccerAnalyzer.socceranalyzer.common.enums.sim2d import SIM2D
-from SoccerAnalyzer.socceranalyzer.common.enums.ssl import SSL
-from SoccerAnalyzer.socceranalyzer.common.enums.vss import VSS
-from SoccerAnalyzer.socceranalyzer.common.analysis.ball_possession import BallPossession
-from SoccerAnalyzer.socceranalyzer.common.analysis.foul_charge import FoulCharge
-from SoccerAnalyzer.socceranalyzer.common.analysis.playmodes import Playmodes
-from SoccerAnalyzer.socceranalyzer.common.analysis.corners_occurrencies import CornersOcurrencies
-from SoccerAnalyzer.socceranalyzer.common.analysis.time_after_corner import TimeAfterCorner
+from socceranalyzer.common.basic.match import Match
+from socceranalyzer.common.enums.sim2d import SIM2D
+from socceranalyzer.common.enums.ssl import SSL
+from socceranalyzer.common.enums.vss import VSS
+from socceranalyzer.common.analysis.ball_possession import BallPossession
+from socceranalyzer.common.analysis.foul_charge import FoulCharge
+from socceranalyzer.common.analysis.playmodes import Playmodes
+from socceranalyzer.common.analysis.corners_occurrencies import CornersOcurrencies
+from socceranalyzer.common.analysis.time_after_corner import TimeAfterCorner
 
 
 

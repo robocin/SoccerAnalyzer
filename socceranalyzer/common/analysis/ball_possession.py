@@ -1,9 +1,9 @@
-from SoccerAnalyzer.socceranalyzer.common.operations.measures import distance
-from SoccerAnalyzer.socceranalyzer.common.geometric.point import Point
-from SoccerAnalyzer.socceranalyzer.common.chore.mediator import Mediator
-from SoccerAnalyzer.socceranalyzer.common.collections.collections import StringListItem
-from SoccerAnalyzer.socceranalyzer.common.collections.collections import StringListPositions
-from SoccerAnalyzer.socceranalyzer.common.enums.sim2d import SIM2D
+from socceranalyzer.common.operations.measures import distance
+from socceranalyzer.common.geometric.point import Point
+from socceranalyzer.common.chore.mediator import Mediator
+from socceranalyzer.common.collections.collections import StringListItem
+from socceranalyzer.common.collections.collections import StringListPositions
+from socceranalyzer.common.enums.sim2d import SIM2D
 
 class BallPossession:
     """
