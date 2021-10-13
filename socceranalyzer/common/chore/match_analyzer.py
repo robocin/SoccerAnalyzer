@@ -8,6 +8,8 @@ from SoccerAnalyzer.socceranalyzer.common.enums.vss import VSS
 from SoccerAnalyzer.socceranalyzer.common.analysis.ball_possession import BallPossession
 from SoccerAnalyzer.socceranalyzer.common.analysis.foul_charge import FoulCharge
 from SoccerAnalyzer.socceranalyzer.common.analysis.playmodes import Playmodes
+from SoccerAnalyzer.socceranalyzer.common.analysis.penalty import Penalty
+from SoccerAnalyzer.socceranalyzer.common.analysis.ball_history import BallHistory
 from SoccerAnalyzer.socceranalyzer.common.analysis.corners_occurrencies import CornersOcurrencies
 from SoccerAnalyzer.socceranalyzer.common.analysis.time_after_corner import TimeAfterCorner
 
@@ -46,6 +48,10 @@ class MatchAnalyzer(AbstractFactory):
         return self.__foul_charge
 
     @property
+    def penalty(self):
+        return self.__penalty
+
+    @property
     def corners(self):
         return self.__corners_occurrencies
 
@@ -53,17 +59,14 @@ class MatchAnalyzer(AbstractFactory):
     def playmodes(self):
         return self.__playmodes
 
-    @property
     def winner(self):
         return self.__match.winning_team
 
-    @property
     def loser(self):
         return self.__match.losing_team
 
-    @property
     def final_score(self):
-        return f'{self.__match.team_left_name} {self.__match.score_left} x {self.__match.score_right} {self.__match.team_right_name}'
+        print(f'{self.__match.team_left_name} {self.__match.score_left} x {self.__match.score_right} {self.__match.team_right_name}')
 
     @property
     def category(self):
@@ -84,11 +87,13 @@ class MatchAnalyzer(AbstractFactory):
         FoulCharge = ("FoulCharge", True)
         Playmodes = ("Playmodes", True)
         Corners = ("Corners", True)
+        Penalty = ("Penalty", True)
+        BallHistory = ("BallHistory", True)
         TimeAfterCorner = ("TimeAfterCorner", False)
         TimeAfterFreeKick = ("TimeAfterFreeKick", False)
         TimeAfterSideKick = ("TimeAfterSideKick", False)
 
-        analysis = [BallPossession, FoulCharge, Playmodes, Corners, TimeAfterCorner, TimeAfterFreeKick,
+        analysis = [BallPossession, FoulCharge, Penalty, BallHistory, Playmodes, Corners, TimeAfterCorner, TimeAfterFreeKick,
                     TimeAfterSideKick]
 
         for a in analysis:
@@ -106,11 +111,17 @@ class MatchAnalyzer(AbstractFactory):
             setattr(self, "__foul_charge", None)
             self.__foul_charge = FoulCharge(self.__match.dataframe, self.category)
 
+            setattr(self, "__penalty", None)
+            self.__penalty = Penalty(self.__match.dataframe, self.category)
+
             setattr(self, "__playmodes", None)
             self.__playmodes = Playmodes(self.__match.dataframe, self.category)
 
             setattr(self, "__corners", None)
             self.__corners_occurrencies = CornersOcurrencies(self.__match.dataframe, self.category)
+
+            setattr(self, "__ball_history", None)
+            self.__ball_history = BallHistory(self.__match.dataframe, self.category)
 
             #setattr(self, "__time_after_corner", None)
             #self.__time_after_corner = TimeAfterCorner(self.__match.dataframe, self.category)

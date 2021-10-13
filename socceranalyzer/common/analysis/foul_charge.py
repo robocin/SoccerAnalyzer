@@ -77,8 +77,8 @@ class FoulCharge(AbstractAnalysis):
         return all_positions
 
     def describe(self):
-        name_l = self.dataframe.loc[1, self.category.TEAM_LEFT]
-        name_r = self.dataframe.loc[1, self.category.TEAM_RIGHT]
+        name_l = self.dataframe.loc[1, str(self.category.TEAM_LEFT)]
+        name_r = self.dataframe.loc[1, str(self.category.TEAM_RIGHT)]
         print(f'{name_l} commited {len(self.__team_left_charges)} faults against {name_r}.\n'
               f'That is {self.proportion()[0]*100}% of the total.'
               f'To see the x and y positions use results(side)\n'
@@ -86,6 +86,8 @@ class FoulCharge(AbstractAnalysis):
         print(f'{name_r} commited {len(self.__team_right_charges)} faults against {name_l}.\n'
               f'That is {self.proportion()[1]*100}% of the total\n'
               f'To see the x and y positions use results(side)\n')
+
+        print(f'The game had a total of {len(self.__team_left_charges) + len(self.__team_right_charges)}')
 
     def serialize(self):
         raise NotImplementedError
