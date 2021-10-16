@@ -11,6 +11,7 @@ from SoccerAnalyzer.socceranalyzer.common.analysis.playmodes import Playmodes
 from SoccerAnalyzer.socceranalyzer.common.analysis.penalty import Penalty
 from SoccerAnalyzer.socceranalyzer.common.analysis.ball_history import BallHistory
 from SoccerAnalyzer.socceranalyzer.common.analysis.corners_occurrencies import CornersOcurrencies
+from SoccerAnalyzer.socceranalyzer.agent2D.analysis.tester_free_kick import TesterFK
 from SoccerAnalyzer.socceranalyzer.common.analysis.time_after_corner import TimeAfterCorner
 
 
@@ -42,6 +43,10 @@ class MatchAnalyzer(AbstractFactory):
     @property
     def ball_possession(self):
         return self.__ball_possession
+
+    @property
+    def tester_free_kick(self):
+        return self.__tester_free_kick
 
     @property
     def foul_charge(self):
@@ -89,11 +94,12 @@ class MatchAnalyzer(AbstractFactory):
         Corners = ("Corners", True)
         Penalty = ("Penalty", True)
         BallHistory = ("BallHistory", True)
+        TesterFK = ("Tester Free Kick", True)
         TimeAfterCorner = ("TimeAfterCorner", False)
         TimeAfterFreeKick = ("TimeAfterFreeKick", False)
         TimeAfterSideKick = ("TimeAfterSideKick", False)
 
-        analysis = [BallPossession, FoulCharge, Penalty, BallHistory, Playmodes, Corners, TimeAfterCorner, TimeAfterFreeKick,
+        analysis = [BallPossession, FoulCharge, Penalty, BallHistory, Playmodes, Corners, TesterFK,TimeAfterCorner, TimeAfterFreeKick,
                     TimeAfterSideKick]
 
         for a in analysis:
@@ -107,6 +113,9 @@ class MatchAnalyzer(AbstractFactory):
         if self.__cat is SIM2D:
             setattr(self, "__ball_possession", None)
             self.__ball_possession = BallPossession(self.__match.dataframe, self.category)
+
+            setattr(self, "__tester_free_kick", None)
+            self.__tester_free_kick = TesterFK(self.__match.dataframe, self.category)
 
             setattr(self, "__foul_charge", None)
             self.__foul_charge = FoulCharge(self.__match.dataframe, self.category)
@@ -135,11 +144,4 @@ class MatchAnalyzer(AbstractFactory):
             # add SSL analysis
 
     def collect_results(self):
-        print("------------------------------------------------------")
-        print("Collecting analysis...")
-        print("Ball possession")
-        print(self.__ball_possession.results())
-        print("Foul charge")
-        print(self.__foul_charge.results())
-        print("Playmodes")
-        print(self.__playmodes.results())
+        raise NotImplementedError

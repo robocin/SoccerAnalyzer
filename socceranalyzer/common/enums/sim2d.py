@@ -15,6 +15,8 @@ class SIM2D(Enum):
     TEAM_RIGHT_CORNER = "corner_kick_r"
     PENALTY_TO_LEFT = "penalty_ready_l"
     PENALTY_TO_RIGHT = "penalty_ready_r"
+    FK_LEFT = "free_kick_l"
+    FK_RIGHT = "free_kick_r"
 
     def __str__(self):
         return self.value
