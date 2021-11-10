@@ -12,7 +12,7 @@ from SoccerAnalyzer.socceranalyzer.common.analysis.penalty import Penalty
 from SoccerAnalyzer.socceranalyzer.common.analysis.ball_history import BallHistory
 from SoccerAnalyzer.socceranalyzer.common.analysis.corners_occurrencies import CornersOcurrencies
 from SoccerAnalyzer.socceranalyzer.agent2D.analysis.tester_free_kick import TesterFK
-from SoccerAnalyzer.socceranalyzer.common.analysis.time_after_corner import TimeAfterCorner
+from SoccerAnalyzer.socceranalyzer.common.analysis.time_after_events import TimeAfterEvents
 
 
 
@@ -95,12 +95,9 @@ class MatchAnalyzer(AbstractFactory):
         Penalty = ("Penalty", True)
         BallHistory = ("BallHistory", True)
         TesterFK = ("Tester Free Kick", True)
-        TimeAfterCorner = ("TimeAfterCorner", False)
-        TimeAfterFreeKick = ("TimeAfterFreeKick", False)
-        TimeAfterSideKick = ("TimeAfterSideKick", False)
+        TimeAfterEvents = ("TimeAfterEvents", False)
 
-        analysis = [BallPossession, FoulCharge, Penalty, BallHistory, Playmodes, Corners, TesterFK,TimeAfterCorner, TimeAfterFreeKick,
-                    TimeAfterSideKick]
+        analysis = [BallPossession, FoulCharge, Penalty, BallHistory, Playmodes, Corners, TesterFK, TimeAfterEvents]
 
         for a in analysis:
             if a[1]:
@@ -128,6 +125,11 @@ class MatchAnalyzer(AbstractFactory):
 
             setattr(self, "__corners", None)
             self.__corners_occurrencies = CornersOcurrencies(self.__match.dataframe, self.category)
+
+            setattr(self, "__time_after_events", None)
+            self.__time_after_events = TimeAfterEvents(self.__match.dataframe, self.category,
+                                                       self.__corners_occurrencies.results(),
+                                                       self.__foul_charge.results(tuple=True))
 
             setattr(self, "__ball_history", None)
             self.__ball_history = BallHistory(self.__match.dataframe, self.category)

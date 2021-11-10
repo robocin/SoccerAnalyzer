@@ -59,20 +59,23 @@ class FoulCharge(AbstractAnalysis):
                 self.right_charges = Point(int(self.__dataframe.loc[i, str(self.category.BALL_X)]),
                                            int(self.__dataframe.loc[i, str(self.category.BALL_X)]))
 
-    def results(self, side=None):
+    def results(self, side=None, tuple=False):
         all_positions = []
-        if side is not None:
-            if side.lower()[0] == "l":
-                for p in self.__team_right_charges:
-                    all_positions.append((p.x, p.y))
-            elif side.lower()[0] == "r":
-                for p in self.__team_right_charges:
-                    all_positions.append((p.x, p.y))
+        if tuple:
+            return (self.__team_left_charges, self.__team_right_charges)
         else:
-            for p in self.__team_right_charges:
-                all_positions.append((p.x, p.y))
-            for p in self.__team_right_charges:
-                all_positions.append((p.x, p.y))
+            if side is not None:
+                if side.lower()[0] == "l":
+                    for p in self.__team_right_charges:
+                        all_positions.append((p.x, p.y))
+                elif side.lower()[0] == "r":
+                    for p in self.__team_right_charges:
+                        all_positions.append((p.x, p.y))
+            else:
+                for p in self.__team_right_charges:
+                    all_positions.append((p.x, p.y))
+                for p in self.__team_right_charges:
+                    all_positions.append((p.x, p.y))
 
         return all_positions
 

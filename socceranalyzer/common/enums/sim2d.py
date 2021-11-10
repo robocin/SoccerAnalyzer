@@ -3,6 +3,7 @@ from enum import Enum
 class SIM2D(Enum):
     GAME_TIME = "show_time"
     PLAYMODE = 'playmode'
+    RUNNING_GAME = "play_on"
     FAULT_COMMITED_L = "foul_charge_l"
     FAULT_COMMITED_R = "foul_charge_r"
     BALL_X = 'ball_x'
@@ -17,6 +18,8 @@ class SIM2D(Enum):
     PENALTY_TO_RIGHT = "penalty_ready_r"
     FK_LEFT = "free_kick_l"
     FK_RIGHT = "free_kick_r"
+    GOAL_SCORED_L = "goal_l"
+    GOAL_SCORED_R = "goal_r"
 
     def __str__(self):
         return self.value
