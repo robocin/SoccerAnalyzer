@@ -13,7 +13,7 @@ from SoccerAnalyzer.socceranalyzer.common.analysis.ball_history import BallHisto
 from SoccerAnalyzer.socceranalyzer.common.analysis.corners_occurrencies import CornersOcurrencies
 from SoccerAnalyzer.socceranalyzer.agent2D.analysis.tester_free_kick import TesterFK
 from SoccerAnalyzer.socceranalyzer.common.analysis.time_after_events import TimeAfterEvents
-
+from SoccerAnalyzer.socceranalyzer.common.analysis.stamina import Stamina
 
 
 class MatchAnalyzer(AbstractFactory):
@@ -57,6 +57,10 @@ class MatchAnalyzer(AbstractFactory):
         return self.__penalty
 
     @property
+    def stamina(self):
+        return self.__stamina
+
+    @property
     def corners(self):
         return self.__corners_occurrencies
 
@@ -96,8 +100,10 @@ class MatchAnalyzer(AbstractFactory):
         BallHistory = ("BallHistory", True)
         TesterFK = ("Tester Free Kick", True)
         TimeAfterEvents = ("TimeAfterEvents", False)
+        Stamina = ("Stamina", True)
 
-        analysis = [BallPossession, FoulCharge, Penalty, BallHistory, Playmodes, Corners, TesterFK, TimeAfterEvents]
+        analysis = [BallPossession, FoulCharge, Penalty, Stamina, BallHistory,
+                    Playmodes, Corners, TesterFK, TimeAfterEvents]
 
         for a in analysis:
             if a[1]:
@@ -133,6 +139,9 @@ class MatchAnalyzer(AbstractFactory):
 
             setattr(self, "__ball_history", None)
             self.__ball_history = BallHistory(self.__match.dataframe, self.category)
+
+            setattr(self, "__stamina", None)
+            self.__stamina = Stamina(self.__match.dataframe, self.category)
 
             #setattr(self, "__time_after_corner", None)
             #self.__time_after_corner = TimeAfterCorner(self.__match.dataframe, self.category)
