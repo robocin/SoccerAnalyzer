@@ -46,3 +46,31 @@ class Mediator:
 
         elif category is SSL:
             raise NotImplementedError
+
+    @staticmethod
+    def players_left_stamina_attr(category):
+        string_list = []
+        if category is SIM2D:
+            for i in range(1, 12):
+                string_list.append(f'player_l{i}_stamina')
+        elif category is VSS:
+            raise NotImplementedError
+
+        elif category is SSL:
+            raise NotImplementedError
+
+        return string_list
+
+    @staticmethod
+    def players_right_stamina_attr(category):
+        string_list = []
+        if category is SIM2D:
+            for i in range(1, 12):
+                string_list.append(f'player_r{i}_stamina')
+        elif category is VSS:
+            raise NotImplementedError
+
+        elif category is SSL:
+            raise NotImplementedError
+
+        return string_list
