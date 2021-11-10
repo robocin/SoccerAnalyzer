@@ -7,5 +7,13 @@ class AbstractAnalysis(metaclass=ABCMeta):
         pass
 
     @abstractmethod
+    def describe(self):
+        pass
+
+    @abstractmethod
     def results(self):
+        pass
+
+    @abstractmethod
+    def serialize(self):
         pass
