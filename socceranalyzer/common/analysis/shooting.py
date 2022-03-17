@@ -166,8 +166,36 @@ class Shooting(AbstractAnalysis):
             self.__check_goal(i)
         self.__shooting_stats_df = DataFrame(self.__shooting_stats)
 
+    def get_total_team_shots(self, team: str):
+        if team != 'l' and team != 'r':
+            raise Exception('Team must be l or r')
+        return self.__shooting_stats_df[self.__shooting_stats_df.team == team].shape[0]
+
+    def get_team_on_target_shots(self, team: str):
+        if team != 'l' and team != 'r':
+            raise Exception('Team must be l or r')
+        return self.__shooting_stats_df[(self.__shooting_stats_df.team == team) & self.__shooting_stats_df.on_target == True].shape[0]
+    
+    def get_total_team_xG(self, team: str):
+        if team != 'l' and team != 'r':
+            raise Exception('Team must be l or r')
+        return self.__shooting_stats_df[self.__shooting_stats_df.team == team]['xG'].sum()
+
     def describe(self):
-        pass
+        name_l = self.__df.loc[1, str(self.category.TEAM_LEFT)]
+        left_shots = self.get_total_team_shots('l')
+        left_on_target_shots = self.get_team_on_target_shots('l')
+        left_xG = self.get_total_team_xG('l')
+        name_r = self.__df.loc[1, str(self.category.TEAM_RIGHT)]
+        right_shots = self.get_total_team_shots('r')
+        right_on_target_shots = self.get_team_on_target_shots('r')
+        right_xG = self.get_total_team_xG('r')
+
+        print(f'{name_l}   |   {name_r}\n'
+              f'{left_shots}   shots   {right_shots}\n'
+              f'{left_on_target_shots}   on target   {right_on_target_shots}\n'
+              f'{left_xG}   xG   {right_xG}\n'
+              f'{left_xG/left_shots}   xG/Shot   {right_xG/right_shots}')
 
     def results(self):
         return self.__shooting_stats
