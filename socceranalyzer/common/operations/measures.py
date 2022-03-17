@@ -1,7 +1,7 @@
 import math
 
 
-def distance(point, position):
+def distance(point, position) -> float:
     """
     Returns the distance between a point and the position of the object.
 
@@ -10,16 +10,39 @@ def distance(point, position):
                     position (Point): Another Point object
 
             Returns:
-                    dist (int): integer value of the distance
+                    dist (float): value of the distance
     """
     dist = math.sqrt(pow(position.x - point.x, 2) + pow(position.y - point.y, 2))
 
     return dist
 
 def distance_sqrd(p1: list[float], p2: list[float]) -> float:
+    """
+    Returns the distance squared between two points.
+
+            Parameters:
+                    p1 (list[float]): First point
+                    p2 (list[float]): Second point
+
+            Returns:
+                    dist^2 (float): integer value of the distance squared
+    """
     return (p1[0] - p2[0])**2 + (p1[1] - p2[1])**2
 
 def line_intersection(line1: tuple[tuple[float, float]], line2: tuple[tuple[float, float]]) -> tuple[float, float]:
+    """
+    Returns a tuple where lines intersect.
+
+            Parameters:
+                    line1 (tuple[tuple[float, float]]): First line
+                    line2 (tuple[tuple[float, float]]): Second line
+
+            Returns:
+                    (x, y) (tuple[float, float]): Point where lines intersect
+
+            Raises:
+                    Exception('lines do not intersect!')
+    """
     def det(a, b):
             return a[0] * b[1] - a[1] * b[0]
 
@@ -40,6 +63,16 @@ def dot(v1: list[float], v2: list[float]) -> float:
     return result
 
 def is_point_inside_triangle(a: list[float], b: list[float], c: list[float], point: list[float]) -> bool:
+    """
+    Returns a boolean indicating if point is inside triangle.
+
+            Parameters:
+                    a, b, c (list[float]): Triangle vertices
+                    point (list[float]): Point
+
+            Returns:
+                    is_inside (bool): Indicates if point is inside triangle defined by vertices
+    """
     v0 = [c[0] - a[0], c[1] - a[1]]
     v1 = [b[0] - a[0], b[1] - a[1]]
     v2 = [point[0] - a[0], point[1] - a[1]]
