@@ -15,6 +15,56 @@ XG_MODEL_VARIABLES = ['angle','distance', 'players_in_between']
 XG_MODEL_PARAMS = [2.678591, 1.788279, -0.164496, -0.671407]
 
 class Shooting(AbstractAnalysis):
+    """
+        Used to calculate simple and advanced shooting stats for specified game.
+
+        Shooting(dataframe: pandas.DataFrame, category)
+        
+        Attributes
+        ----------
+            private:
+                shooting_stats : dict
+                    shooting stats in Python dict format for the game
+                shooting_stats_df : pands.DataFrame
+                    shooting stats in DataFrame format for the game
+                play_on_cycles : list[int]
+                    list with game's play on cycles
+                last_shooter : str
+                    name of last player to register a shot
+                    
+        Methods
+        -------
+            private:
+                filter_playmode(playmode : str) -> pandas.DataFrame
+                    filters the __df dataframe and returns a filtered copy
+                get_kicker(cycle : int) -> str
+                    returns the first player to register a counting_kick or counting_tackle change at cycle
+                get_players_inside_area(cycle: int, a: list[float], b: list[float], c: list[float]) -> int
+                    returns players inside triangular area defined by vertices
+                calculate_xG(sh: dict[str, float]) -> float
+                    calculates goal probability based on MODEL_VARIABLES
+                update_shot_data(cycle: int, player: str, x: float, y: float, players_inside: int, on_target: int) -> None
+                    populates the shooting_stats dict
+                check_shot(cycle: int) -> None
+                    checks for a shot at cycle
+                check_goal(cycle: int) -> None
+                    checks for a goal at cycle
+            public:
+                _analyze() -> None
+                    performs match analysis
+                get_total_team_shots(team: str) -> int
+                    returns the total team shots
+                get_team_on_target_shots(team: str) -> int
+                    returns the total team on target shots
+                get_total_team_xG(team: str) -> float
+                    returns team total xG for the match
+                describe() -> None
+                    shows table like structure of the match shooting summary
+                results() -> dict
+                    returns match detailed shooting stats as a Python dict
+                results_as_dataframe() -> pandas.DataFrame:
+                    returns match detailed shooting stats as a pandas.DataFrame
+    """
     def __init__(self, dataframe: DataFrame, category):
         self.__category = category
         self.__df = dataframe
@@ -31,10 +81,28 @@ class Shooting(AbstractAnalysis):
     def dataframe(self):
         return self.__df
 
-    def __filter_playmode(self, playmode: str):
+    def __filter_playmode(self, playmode: str) -> DataFrame:
+        """
+        Returns filtered match DataFrame based on playmode.
+
+            Parameters:
+                    playmode (str): Playmode of interest
+            
+            Returns:
+                    df (DataFrame): Filtered pandas DataFrame
+        """
         return self.__df[self.__df[str(self.__category.PLAYMODE)] == playmode]
 
-    def __get_kicker(self, cycle):
+    def __get_kicker(self, cycle: int) -> str:
+        """
+        Returns the first player to register a counting_kick or counting_tackle change at cycle.
+
+            Parameters:
+                    cycle (int): Current index being evaluated
+            
+            Returns:
+                    player (str): Player name or ''.
+        """
         for i in range(1, 12):
             for side in ['l', 'r']:
                 player = 'player_{}{}'.format(side, i)
@@ -51,6 +119,16 @@ class Shooting(AbstractAnalysis):
         return ''
 
     def __get_players_inside_area(self, cycle: int, a: list[float], b: list[float], c: list[float]) -> int:
+        """
+        Returns the amount of players inside triangular area.
+
+            Parameters:
+                    cycle (int): Current index being evaluated
+                    a, b, c (list[float]): The vertices of the triangle
+            
+            Returns:
+                    players_inside (int): Players inside the triangle at specified cycle.
+        """
         players_inside = 0
         for i in range(1, 12):
             for side in ['l', 'r']:
@@ -61,13 +139,33 @@ class Shooting(AbstractAnalysis):
         return players_inside
 
     def __calculate_xG(self, sh: dict[str, float]) -> float:
+        """
+        Returns the calculated xG for a shot.
+
+            Parameters:
+                    sh (dict[str, float]): A dictionary with MODEL_VARIABLES as keys
+
+            Returns:
+                    xG (float): Calculated goal probability for the shot
+        """
         bsum=XG_MODEL_PARAMS[0]
         for i,v in enumerate(XG_MODEL_VARIABLES):
             bsum=bsum+XG_MODEL_PARAMS[i+1]*sh[v]
         xG = 1 - 1/(1+exp(bsum))
         return xG
 
-    def __update_shot_data(self, cycle: int, player: str, x: float, y: float, players_inside: int, on_target: bool):
+    def __update_shot_data(self, cycle: int, player: str, x: float, y: float, players_inside: int, on_target: int):
+        """
+        Calculates angle, distance, show_time from a registered shot and updates the shooting stats list.
+
+            Parameters:
+                    cycle (int): Indicates the index being evaluated                    
+                    player (str): Player name
+                    x (float): Normalized x position
+                    y (float): Normalized y position
+                    players_inside (int): Indicates the amount of players between the shooter and the goal
+                    on_target (int): Indicates if the registered shot was on target
+        """
         dist = distance(Point(x,y), Point(R_GOAL_POS[0], R_GOAL_POS[1]))
         p1 = distance_sqrd([x,y], R_GOAL_TOP_BAR)
         p2 = distance_sqrd([x,y], R_GOAL_BOTTOM_BAR)
@@ -91,7 +189,13 @@ class Shooting(AbstractAnalysis):
         }
         self.__shooting_stats.append(data)
 
-    def __check_shoot(self, cycle):
+    def __check_shot(self, cycle: int):
+        """
+        Checks if a shot ocurred at the specified index.
+
+            Parameters:
+                    cycle (int): Indicates the index to look for on match DataFrame
+        """
         if not self.__df.loc[cycle, str(self.__category.GAME_TIME)] in self.__play_on_cycles:
             return
 
@@ -114,7 +218,7 @@ class Shooting(AbstractAnalysis):
                     x = abs(pos_x)
                     y = (-1)*pos_y
                     players_inside = self.__get_players_inside_area(cycle,[pos_x,pos_y],L_GOAL_TOP_BAR,L_GOAL_BOTTOM_BAR)
-                    self.__update_shot_data(cycle,self.__last_shooter,x,y,players_inside,False)  
+                    self.__update_shot_data(cycle,self.__last_shooter,x,y,players_inside,0)  
                 elif abs(y_right) <= 7.5:
                     self.__last_shooter = kicker
                     pos_x = self.__df.loc[cycle, f'{kicker}_x']
@@ -122,7 +226,7 @@ class Shooting(AbstractAnalysis):
                     x = abs(pos_x)
                     y = (-1)*pos_y
                     players_inside = self.__get_players_inside_area(cycle,[pos_x,pos_y],L_GOAL_TOP_BAR,L_GOAL_BOTTOM_BAR)
-                    self.__update_shot_data(cycle,self.__last_shooter,x,y,players_inside,True)
+                    self.__update_shot_data(cycle,self.__last_shooter,x,y,players_inside,1)
             # Left team registered shot
             elif(kicker != '' and 'l' in kicker.split('_')[-1] and self.__df.loc[cycle, f'{kicker}_x'] > 0 and self.__df.loc[cycle, 'ball_vx'] != 0):
                 # print(cycle)
@@ -137,15 +241,21 @@ class Shooting(AbstractAnalysis):
                     x = self.__df.loc[cycle, f'{kicker}_x']
                     y = self.__df.loc[cycle, f'{kicker}_y']
                     players_inside = self.__get_players_inside_area(cycle,[x,y],R_GOAL_TOP_BAR,R_GOAL_BOTTOM_BAR)
-                    self.__update_shot_data(cycle,self.__last_shooter,x,y,players_inside,False)
+                    self.__update_shot_data(cycle,self.__last_shooter,x,y,players_inside,0)
                 elif abs(y_left) <= 7.5:
                     self.__last_shooter = kicker
                     x = self.__df.loc[cycle, f'{kicker}_x']
                     y = self.__df.loc[cycle, f'{kicker}_y']
                     players_inside = self.__get_players_inside_area(cycle,[x,y],R_GOAL_TOP_BAR,R_GOAL_BOTTOM_BAR)
-                    self.__update_shot_data(cycle,self.__last_shooter,x,y,players_inside,True)
+                    self.__update_shot_data(cycle,self.__last_shooter,x,y,players_inside,1)
 
-    def __check_goal(self, cycle):
+    def __check_goal(self, cycle: int):
+        """
+        Checks if playmode at index indicates a goal.
+
+            Parameters:
+                    cycle (int): Indicates the index to look for on match DataFrame
+        """
         split_play_mode = self.__df.loc[cycle, str(self.category.PLAYMODE)].rsplit('_')
         mode = split_play_mode[0]
         side = split_play_mode[1]
@@ -160,28 +270,61 @@ class Shooting(AbstractAnalysis):
                     self.__shooting_stats[-1]['goal'] = 1
 
     def _analyze(self):
+        """
+        Performs match shooting analysis.
+        """
         self.__play_on_cycles = list(self.__filter_playmode('play_on')[str(self.category.GAME_TIME)])
         for i, _ in self.__df.iterrows():
-            self.__check_shoot(i)
+            self.__check_shot(i)
             self.__check_goal(i)
         self.__shooting_stats_df = DataFrame(self.__shooting_stats)
 
-    def get_total_team_shots(self, team: str):
+    def get_total_team_shots(self, team: str) -> int:
+        """
+        Returns total team shots during the match.
+
+            Parameters:
+                    team ('l' | 'r'): String indicating the team
+
+            Returns:
+                    shots (int): The amount registered shots
+        """
         if team != 'l' and team != 'r':
             raise Exception('Team must be l or r')
         return self.__shooting_stats_df[self.__shooting_stats_df.team == team].shape[0]
 
-    def get_team_on_target_shots(self, team: str):
+    def get_team_on_target_shots(self, team: str) -> int:
+        """
+        Returns total team on target shots during the match.
+
+            Parameters:
+                    team ('l' | 'r'): String indicating the team
+
+            Returns:
+                    on_target_shots (int): The amount of on target shots
+        """
         if team != 'l' and team != 'r':
             raise Exception('Team must be l or r')
         return self.__shooting_stats_df[(self.__shooting_stats_df.team == team) & self.__shooting_stats_df.on_target == True].shape[0]
     
-    def get_total_team_xG(self, team: str):
+    def get_total_team_xG(self, team: str) -> float:
+        """
+        Returns total team xG during the match.
+
+            Parameters:
+                    team ('l' | 'r'): String indicating the team
+
+            Returns:
+                    xG (float): goal probability between 0 and 1
+        """
         if team != 'l' and team != 'r':
             raise Exception('Team must be l or r')
         return self.__shooting_stats_df[self.__shooting_stats_df.team == team]['xG'].sum()
 
     def describe(self):
+        """
+        Shows a table with teams shooting stats.
+        """
         name_l = self.__df.loc[1, str(self.category.TEAM_LEFT)]
         left_shots = self.get_total_team_shots('l')
         left_on_target_shots = self.get_team_on_target_shots('l')
@@ -197,8 +340,45 @@ class Shooting(AbstractAnalysis):
               f'{left_xG}   xG   {right_xG}\n'
               f'{left_xG/left_shots}   xG/Shot   {right_xG/right_shots}')
 
-    def results(self):
+    def results(self) -> dict:
+        """
+        Returns the shooting stats as a dict.
+
+            Returns:
+                    dict:
+                        show_time(int): Game running time,
+                        player (str): The player who registered the shot,
+                        team ('r' | 'l'): The team in which the player is on,
+                        x (float): Normalized x position,
+                        y (float): Normalized y position,
+                        distance (float): Distance from (x,y) to goal center,
+                        angle (float in radians): Angle between the shot location and the goal posts,
+                        on_target (int): Indicates if the shot was on target,
+                        players_in_between (int): Indicates the amount of players between the shooter and the goal,
+                        xG (float): Goal probability between 0 and 1,
+                        goal (int): Indicates if the shot was a goal. 
+        """
         return self.__shooting_stats
+
+    def results_as_dataframe(self) -> DataFrame:
+        """
+        Returns the shooting stats as pandas.DataFrame.
+
+            Returns:
+                    DataFrame:
+                        show_time(int): Game running time,
+                        player (str): The player who registered the shot,
+                        team ('r' | 'l'): The team in which the player is on,
+                        x (float): Normalized x position,
+                        y (float): Normalized y position,
+                        distance (float): Distance from (x,y) to goal center,
+                        angle (float in radians): Angle between the shot location and the goal posts,
+                        on_target (int): Indicates if the shot was on target,
+                        players_in_between (int): Indicates the amount of players between the shooter and the goal,
+                        xG (float): Goal probability between 0 and 1,
+                        goal (int): Indicates if the shot was a goal. 
+        """
+        return self.__shooting_stats_df
 
     def serialize(self):
         return NotImplementedError
