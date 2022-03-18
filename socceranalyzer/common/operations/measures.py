@@ -61,33 +61,3 @@ def dot(v1: list[float], v2: list[float]) -> float:
     for m, n in zip(v1,v2):
         result += m*n
     return result
-
-def is_point_inside_triangle(a: list[float], b: list[float], c: list[float], point: list[float]) -> bool:
-    """
-    Returns a boolean indicating if point is inside triangle.
-
-            Parameters:
-                    a, b, c (list[float]): Triangle vertices
-                    point (list[float]): Point
-
-            Returns:
-                    is_inside (bool): Indicates if point is inside triangle defined by vertices
-    """
-    v0 = [c[0] - a[0], c[1] - a[1]]
-    v1 = [b[0] - a[0], b[1] - a[1]]
-    v2 = [point[0] - a[0], point[1] - a[1]]
-
-    # Compute dot products
-    dot00 = dot(v0, v0)
-    dot01 = dot(v0, v1)
-    dot02 = dot(v0, v2)
-    dot11 = dot(v1, v1)
-    dot12 = dot(v1, v2)
-
-    # Compute barycentric coordinates
-    invDenom = 1.0 / (dot00 * dot11 - dot01 * dot01)
-    u = (dot11 * dot02 - dot01 * dot12) * invDenom
-    v = (dot00 * dot12 - dot01 * dot02) * invDenom
-
-    # Check if point is in triangle
-    return (u >= 0.) and (v >= 0.) and(u + v < 1.)
