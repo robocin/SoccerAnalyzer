@@ -2,6 +2,7 @@ from pandas import DataFrame
 from socceranalyzer.common.abstract.abstract_analysis import AbstractAnalysis
 from socceranalyzer.common.geometric.point import Point
 from socceranalyzer.common.operations.measures import *
+from socceranalyzer.common.utility.slicers import PlaymodeSlicer
 from math import sqrt, acos
 from numpy import exp
 
@@ -35,8 +36,6 @@ class Shooting(AbstractAnalysis):
         Methods
         -------
             private:
-                filter_playmode(playmode : str) -> pandas.DataFrame
-                    filters the __df dataframe and returns a filtered copy
                 get_kicker(cycle : int) -> str
                     returns the first player to register a counting_kick or counting_tackle change at cycle
                 get_players_inside_area(cycle: int, a: list[float], b: list[float], c: list[float]) -> int
@@ -80,18 +79,6 @@ class Shooting(AbstractAnalysis):
     @property
     def dataframe(self):
         return self.__df
-
-    def __filter_playmode(self, playmode: str) -> DataFrame:
-        """
-        Returns filtered match DataFrame based on playmode.
-
-            Parameters:
-                    playmode (str): Playmode of interest
-            
-            Returns:
-                    df (DataFrame): Filtered pandas DataFrame
-        """
-        return self.__df[self.__df[str(self.__category.PLAYMODE)] == playmode]
 
     def __get_kicker(self, cycle: int) -> str:
         """
@@ -273,7 +260,7 @@ class Shooting(AbstractAnalysis):
         """
         Performs match shooting analysis.
         """
-        self.__play_on_cycles = list(self.__filter_playmode('play_on')[str(self.category.GAME_TIME)])
+        self.__play_on_cycles = list(PlaymodeSlicer.slice(self.dataframe, 'play_on')[str(self.category.GAME_TIME)])
         for i, _ in self.__df.iterrows():
             self.__check_shot(i)
             self.__check_goal(i)
