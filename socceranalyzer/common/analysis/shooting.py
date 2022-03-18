@@ -1,6 +1,7 @@
 from pandas import DataFrame
 from socceranalyzer.common.abstract.abstract_analysis import AbstractAnalysis
 from socceranalyzer.common.geometric.point import Point
+from socceranalyzer.common.geometric.triangle import Triangle
 from socceranalyzer.common.operations.measures import *
 from socceranalyzer.common.utility.slicers import PlaymodeSlicer
 from math import sqrt, acos
@@ -117,11 +118,14 @@ class Shooting(AbstractAnalysis):
                     players_inside (int): Players inside the triangle at specified cycle.
         """
         players_inside = 0
+        a = Point(a[0], a[1])
+        b = Point(b[0], b[1])
+        c = Point(c[0], c[1])
         for i in range(1, 12):
             for side in ['l', 'r']:
                 player = 'player_{}{}'.format(side, i)                
-                agent_pos = [self.__df.loc[cycle, f'{player}_x'], self.__df.loc[cycle, f'{player}_y']]
-                if is_point_inside_triangle(a, b, c, agent_pos):
+                agent_pos = Point(self.__df.loc[cycle, f'{player}_x'], self.__df.loc[cycle, f'{player}_y'])
+                if Triangle(a, b, c).is_inside(agent_pos):
                     players_inside += 1
         return players_inside
 
