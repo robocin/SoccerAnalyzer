@@ -57,6 +57,16 @@ def line_intersection(line1: tuple[tuple[float, float]], line2: tuple[tuple[floa
     return x, y
 
 def dot(v1: list[float], v2: list[float]) -> float:
+    """
+    Returns the dot product between v1 and v2.
+
+        Parameters:
+                    v1 (list[float]): Vector 1
+                    v2 (list[float]): Vector 2
+
+            Returns:
+                    result (float): The dot product between vector 1 and vector 2
+    """
     result = 0.0
     for m, n in zip(v1,v2):
         result += m*n
