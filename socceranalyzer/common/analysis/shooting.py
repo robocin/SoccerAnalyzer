@@ -4,15 +4,11 @@ from socceranalyzer.common.geometric.point import Point
 from socceranalyzer.common.geometric.triangle import Triangle
 from socceranalyzer.common.operations.measures import *
 from socceranalyzer.common.utility.slicers import PlaymodeSlicer
+from socceranalyzer.common.enums.sim2d import Landmarks
 from math import sqrt, acos
 from numpy import exp
 
-R_GOAL_POS = [52.5, 0]
-R_GOAL_TOP_BAR = [52.5, 7.01]
-R_GOAL_BOTTOM_BAR = [52.5, -7.01]
-L_GOAL_POS = [-52.5, 0]
-L_GOAL_TOP_BAR = [-52.5, 7.01]
-L_GOAL_BOTTOM_BAR = [-52.5, -7.01]
+
 XG_MODEL_VARIABLES = ['angle','distance', 'players_in_between']
 XG_MODEL_PARAMS = [2.678591, 1.788279, -0.164496, -0.671407]
 
@@ -157,10 +153,10 @@ class Shooting(AbstractAnalysis):
                     players_inside (int): Indicates the amount of players between the shooter and the goal
                     on_target (int): Indicates if the registered shot was on target
         """
-        dist = distance(Point(x,y), Point(R_GOAL_POS[0], R_GOAL_POS[1]))
-        p1 = distance_sqrd([x,y], R_GOAL_TOP_BAR)
-        p2 = distance_sqrd([x,y], R_GOAL_BOTTOM_BAR)
-        p3 = distance_sqrd(R_GOAL_TOP_BAR, R_GOAL_BOTTOM_BAR)
+        dist = distance(Point(x,y), Point(Landmarks.R_GOAL_POS.value[0], Landmarks.R_GOAL_POS.value[1]))
+        p1 = distance_sqrd([x,y], Landmarks.R_GOAL_TOP_BAR.value)
+        p2 = distance_sqrd([x,y], Landmarks.R_GOAL_BOTTOM_BAR.value)
+        p3 = distance_sqrd(Landmarks.R_GOAL_TOP_BAR.value, Landmarks.R_GOAL_BOTTOM_BAR.value)
         p12 = sqrt(p1)
         p13 = sqrt(p2)
         angle = acos((p1+p2-p3)/(2*p12*p13))
@@ -208,7 +204,7 @@ class Shooting(AbstractAnalysis):
                     pos_y = self.__df.loc[cycle, f'{kicker}_y']
                     x = abs(pos_x)
                     y = (-1)*pos_y
-                    players_inside = self.__get_players_inside_area(cycle,[pos_x,pos_y],L_GOAL_TOP_BAR,L_GOAL_BOTTOM_BAR)
+                    players_inside = self.__get_players_inside_area(cycle,[pos_x,pos_y],Landmarks.L_GOAL_TOP_BAR.value,Landmarks.L_GOAL_BOTTOM_BAR.value)
                     self.__update_shot_data(cycle,self.__last_shooter,x,y,players_inside,0)  
                 elif abs(y_right) <= 7.5:
                     self.__last_shooter = kicker
@@ -216,7 +212,7 @@ class Shooting(AbstractAnalysis):
                     pos_y = self.__df.loc[cycle, f'{kicker}_y']
                     x = abs(pos_x)
                     y = (-1)*pos_y
-                    players_inside = self.__get_players_inside_area(cycle,[pos_x,pos_y],L_GOAL_TOP_BAR,L_GOAL_BOTTOM_BAR)
+                    players_inside = self.__get_players_inside_area(cycle,[pos_x,pos_y],Landmarks.L_GOAL_TOP_BAR.value,Landmarks.L_GOAL_BOTTOM_BAR.value)
                     self.__update_shot_data(cycle,self.__last_shooter,x,y,players_inside,1)
             # Left team registered shot
             elif(kicker != '' and 'l' in kicker.split('_')[-1] and self.__df.loc[cycle, f'{kicker}_x'] > 0 and self.__df.loc[cycle, 'ball_vx'] != 0):
@@ -231,13 +227,13 @@ class Shooting(AbstractAnalysis):
                     self.__last_shooter = kicker
                     x = self.__df.loc[cycle, f'{kicker}_x']
                     y = self.__df.loc[cycle, f'{kicker}_y']
-                    players_inside = self.__get_players_inside_area(cycle,[x,y],R_GOAL_TOP_BAR,R_GOAL_BOTTOM_BAR)
+                    players_inside = self.__get_players_inside_area(cycle,[x,y],Landmarks.R_GOAL_TOP_BAR.value,Landmarks.R_GOAL_BOTTOM_BAR.value)
                     self.__update_shot_data(cycle,self.__last_shooter,x,y,players_inside,0)
                 elif abs(y_left) <= 7.5:
                     self.__last_shooter = kicker
                     x = self.__df.loc[cycle, f'{kicker}_x']
                     y = self.__df.loc[cycle, f'{kicker}_y']
-                    players_inside = self.__get_players_inside_area(cycle,[x,y],R_GOAL_TOP_BAR,R_GOAL_BOTTOM_BAR)
+                    players_inside = self.__get_players_inside_area(cycle,[x,y],Landmarks.R_GOAL_TOP_BAR.value,Landmarks.R_GOAL_BOTTOM_BAR.value)
                     self.__update_shot_data(cycle,self.__last_shooter,x,y,players_inside,1)
 
     def __check_goal(self, cycle: int):
