@@ -1,19 +1,20 @@
-from SoccerAnalyzer.socceranalyzer.common.abstract.abstract_factory import AbstractFactory
-from SoccerAnalyzer.socceranalyzer.common.evaluators.ball_holder import BallHolderEvaluator
+from socceranalyzer.common.abstract.abstract_factory import AbstractFactory
+from socceranalyzer.common.analysis.shooting import Shooting
+from socceranalyzer.common.evaluators.ball_holder import BallHolderEvaluator
 
-from SoccerAnalyzer.socceranalyzer.common.basic.match import Match
-from SoccerAnalyzer.socceranalyzer.common.enums.sim2d import SIM2D
-from SoccerAnalyzer.socceranalyzer.common.enums.ssl import SSL
-from SoccerAnalyzer.socceranalyzer.common.enums.vss import VSS
-from SoccerAnalyzer.socceranalyzer.common.analysis.ball_possession import BallPossession
-from SoccerAnalyzer.socceranalyzer.common.analysis.foul_charge import FoulCharge
-from SoccerAnalyzer.socceranalyzer.common.analysis.playmodes import Playmodes
-from SoccerAnalyzer.socceranalyzer.common.analysis.penalty import Penalty
-from SoccerAnalyzer.socceranalyzer.common.analysis.ball_history import BallHistory
-from SoccerAnalyzer.socceranalyzer.common.analysis.corners_occurrencies import CornersOcurrencies
-from SoccerAnalyzer.socceranalyzer.agent2D.analysis.tester_free_kick import TesterFK
-from SoccerAnalyzer.socceranalyzer.common.analysis.time_after_events import TimeAfterEvents
-from SoccerAnalyzer.socceranalyzer.common.analysis.stamina import Stamina
+from socceranalyzer.common.basic.match import Match
+from socceranalyzer.common.enums.sim2d import SIM2D
+from socceranalyzer.common.enums.ssl import SSL
+from socceranalyzer.common.enums.vss import VSS
+from socceranalyzer.common.analysis.ball_possession import BallPossession
+from socceranalyzer.common.analysis.foul_charge import FoulCharge
+from socceranalyzer.common.analysis.playmodes import Playmodes
+from socceranalyzer.common.analysis.penalty import Penalty
+from socceranalyzer.common.analysis.ball_history import BallHistory
+from socceranalyzer.common.analysis.corners_occurrencies import CornersOcurrencies
+from socceranalyzer.agent2D.analysis.tester_free_kick import TesterFK
+from socceranalyzer.common.analysis.time_after_events import TimeAfterEvents
+from socceranalyzer.common.analysis.stamina import Stamina
 
 
 class MatchAnalyzer(AbstractFactory):
@@ -68,6 +69,10 @@ class MatchAnalyzer(AbstractFactory):
     def playmodes(self):
         return self.__playmodes
 
+    @property
+    def shooting(self):
+        return self.__shooting
+
     def winner(self):
         return self.__match.winning_team
 
@@ -101,9 +106,10 @@ class MatchAnalyzer(AbstractFactory):
         TesterFK = ("Tester Free Kick", True)
         TimeAfterEvents = ("TimeAfterEvents", False)
         Stamina = ("Stamina", True)
+        Shooting = ("Shooting", True)
 
         analysis = [BallPossession, FoulCharge, Penalty, Stamina, BallHistory,
-                    Playmodes, Corners, TesterFK, TimeAfterEvents]
+                    Playmodes, Corners, TesterFK, TimeAfterEvents, Shooting]
 
         for a in analysis:
             if a[1]:
@@ -142,6 +148,9 @@ class MatchAnalyzer(AbstractFactory):
 
             setattr(self, "__stamina", None)
             self.__stamina = Stamina(self.__match.dataframe, self.category)
+
+            setattr(self, "__shooting", None)
+            self.__shooting = Shooting(self.__match.dataframe, self.category)
 
             #setattr(self, "__time_after_corner", None)
             #self.__time_after_corner = TimeAfterCorner(self.__match.dataframe, self.category)
