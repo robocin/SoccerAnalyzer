@@ -1,5 +1,5 @@
-from SoccerAnalyzer.socceranalyzer.common.abstract.abstract_analysis import AbstractAnalysis
-from SoccerAnalyzer.socceranalyzer.common.utility.finders import find_last_unique_event_ocurrences
+from socceranalyzer.common.abstract.abstract_analysis import AbstractAnalysis
+from socceranalyzer.common.utility.finders import find_last_unique_event_ocurrences
 
 class CornersOcurrencies(AbstractAnalysis):
     def __init__(self, dataframe, category):

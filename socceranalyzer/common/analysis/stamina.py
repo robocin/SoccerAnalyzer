@@ -1,6 +1,6 @@
-from SoccerAnalyzer.socceranalyzer.common.abstract.abstract_analysis import AbstractAnalysis
-from SoccerAnalyzer.socceranalyzer.common.enums.sim2d import SIM2D
-from SoccerAnalyzer.socceranalyzer.common.chore.mediator import Mediator
+from socceranalyzer.common.abstract.abstract_analysis import AbstractAnalysis
+from socceranalyzer.common.enums.sim2d import SIM2D
+from socceranalyzer.common.chore.mediator import Mediator
 
 class Stamina(AbstractAnalysis):
     def __init__(self, dataframe, category):

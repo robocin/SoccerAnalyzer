@@ -2,10 +2,10 @@ from enum import Enum
 
 import pandas
 
-from SoccerAnalyzer.socceranalyzer.common.entity.team import Team
-from SoccerAnalyzer.socceranalyzer.common.enums.vss import VSS
-from SoccerAnalyzer.socceranalyzer.common.enums.sim2d import SIM2D
-from SoccerAnalyzer.socceranalyzer.common.enums.ssl import SSL
+from socceranalyzer.common.entity.team import Team
+from socceranalyzer.common.enums.vss import VSS
+from socceranalyzer.common.enums.sim2d import SIM2D
+from socceranalyzer.common.enums.ssl import SSL
 
 
 class Match:

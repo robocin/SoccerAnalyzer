@@ -1,8 +1,8 @@
-from SoccerAnalyzer.socceranalyzer.common.enums.sim2d import SIM2D
-from SoccerAnalyzer.socceranalyzer.common.enums.ssl import SSL
-from SoccerAnalyzer.socceranalyzer.common.enums.vss import VSS
-from SoccerAnalyzer.socceranalyzer.common.collections.collections import StringListPositions
-from SoccerAnalyzer.socceranalyzer.common.collections.collections import StringListItem
+from socceranalyzer.common.enums.sim2d import SIM2D
+from socceranalyzer.common.enums.ssl import SSL
+from socceranalyzer.common.enums.vss import VSS
+from socceranalyzer.common.collections.collections import StringListPositions
+from socceranalyzer.common.collections.collections import StringListItem
 
 class Mediator:
     @staticmethod

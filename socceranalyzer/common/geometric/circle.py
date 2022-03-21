@@ -1,4 +1,4 @@
-from SoccerAnalyzer.socceranalyzer.common.operations.measures import distance
+from socceranalyzer.common.operations.measures import distance
 
 class Circle:
     def __init__(self, radius, center):

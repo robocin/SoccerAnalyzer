@@ -1,5 +1,5 @@
-from SoccerAnalyzer.socceranalyzer.common.abstract.abstract_analysis import AbstractAnalysis
-from SoccerAnalyzer.socceranalyzer.common.geometric.point import Point
+from socceranalyzer.common.abstract.abstract_analysis import AbstractAnalysis
+from socceranalyzer.common.geometric.point import Point
 
 
 class BallHistory(AbstractAnalysis):
