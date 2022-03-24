@@ -61,9 +61,7 @@ These inputs are **mandatory**, otherwise there will be no data to be analyzed.
 ```python
 import pandas as pd
 
-from SoccerAnalyzer import MatchAnalyzer
-from SoccerAnalyzer import Match
-from SoccerAnalyzer import SIM2D
+from socceranalyzer import MatchAnalyzer, Match, SIM2D
 
 logfile_path = "location/to/log/file.csv"
 dataframe = pd.read_csv(logfile_path)

@@ -43,7 +43,8 @@ class Field:
         self.__penalty_area = penalty_area
 
 class Field2D(Field):
-    # raise NotImplementedError
+    def __init__(self):
+        raise NotImplementedError
     """
         self.width = 105
         self.height = 68

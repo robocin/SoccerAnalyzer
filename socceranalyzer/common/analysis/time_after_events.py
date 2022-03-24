@@ -1,6 +1,6 @@
-from SoccerAnalyzer.socceranalyzer.common.abstract.abstract_analysis import AbstractAnalysis
-from SoccerAnalyzer.socceranalyzer.common.collections.collections import ThresholdCollection
-from SoccerAnalyzer.socceranalyzer.common.evaluators.closer_to_ball import closer_to_ball
+from socceranalyzer.common.abstract.abstract_analysis import AbstractAnalysis
+from socceranalyzer.common.collections.collections import ThresholdCollection
+from socceranalyzer.common.evaluators.closer_to_ball import closer_to_ball
 
 
 class TimeAfterEvents(AbstractAnalysis):

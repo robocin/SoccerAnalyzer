@@ -1,7 +1,7 @@
-from SoccerAnalyzer.socceranalyzer.common.geometric.point import Point
-from SoccerAnalyzer.socceranalyzer.common.geometric.circle import Circle
-from SoccerAnalyzer.socceranalyzer.common.chore.mediator import Mediator
-from SoccerAnalyzer.socceranalyzer.common.utility.slicers import PlaymodeSlicer
+from socceranalyzer.common.geometric.point import Point
+from socceranalyzer.common.geometric.circle import Circle
+from socceranalyzer.common.chore.mediator import Mediator
+from socceranalyzer.common.utility.slicers import PlaymodeSlicer
 
 class BallHolderEvaluator:
     def __init__(self, dataframe, category):

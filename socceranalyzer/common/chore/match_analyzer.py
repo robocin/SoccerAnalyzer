@@ -1,5 +1,4 @@
 from socceranalyzer.common.abstract.abstract_factory import AbstractFactory
-from socceranalyzer.common.analysis.shooting import Shooting
 from socceranalyzer.common.evaluators.ball_holder import BallHolderEvaluator
 
 from socceranalyzer.common.basic.match import Match
@@ -15,6 +14,7 @@ from socceranalyzer.common.analysis.corners_occurrencies import CornersOcurrenci
 from socceranalyzer.agent2D.analysis.tester_free_kick import TesterFK
 from socceranalyzer.common.analysis.time_after_events import TimeAfterEvents
 from socceranalyzer.common.analysis.stamina import Stamina
+from socceranalyzer.common.analysis.shooting import Shooting
 
 
 class MatchAnalyzer(AbstractFactory):
