@@ -1,5 +1,6 @@
 from socceranalyzer.common.operations.measures import distance
 
+
 class Circle:
     def __init__(self, radius, center):
         self.__radius = radius
