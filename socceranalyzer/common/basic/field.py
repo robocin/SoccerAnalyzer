@@ -22,12 +22,13 @@ class Field:
                 penalty_area: Rectangle
                     defines the penalty area in the field
     """
-    def __init__(self, width, length, center, small_penalty_area, penalty_area):
-        self.__width: float = width
-        self.__length: float = length
-        self.__center: socceranalyzer.Point = center
-        self.__small_penalty_area: socceranalyzer.Rectangle = small_penalty_area
-        self.__penalty_area: socceranalyzer.Rectangle = penalty_area
+    def __init__(self, width: float, length: float, center: socceranalyzer.Point,
+                 small_penalty_area: socceranalyzer.Rectangle, penalty_area: socceranalyzer.Rectangle):
+        self.__width = width
+        self.__length = length
+        self.__center = center
+        self.__small_penalty_area = small_penalty_area
+        self.__penalty_area = penalty_area
 
 
 class Field2D(Field):
