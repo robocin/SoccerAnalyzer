@@ -73,13 +73,28 @@ class MatchAnalyzer(AbstractFactory):
     def shooting(self):
         return self.__shooting
 
-    def winner(self):
+    def winner(self) -> str:
+        """
+        Returns the name of the winning team.
+        
+                Returns:
+                        winning_team (str): Name of the winning team.
+        """
         return self.__match.winning_team
 
-    def loser(self):
+    def loser(self) -> str:
+        """
+        Returns the name of the losing team.
+        
+                Returns:
+                        losing_team (str): Name of the losing team.
+        """
         return self.__match.losing_team
 
     def final_score(self):
+        """
+        Shows the final score.
+        """
         print(f'{self.__match.team_left_name} {self.__match.score_left} x {self.__match.score_right} {self.__match.team_right_name}')
 
     @property
@@ -97,6 +112,9 @@ class MatchAnalyzer(AbstractFactory):
         # return BallHolder(self.match.dataframe, self.match.category)
 
     def available(self):
+        """
+        Shows currently available analysis.
+        """
         BallPossession = ("BallPossession", True)
         FoulCharge = ("FoulCharge", True)
         Playmodes = ("Playmodes", True)
