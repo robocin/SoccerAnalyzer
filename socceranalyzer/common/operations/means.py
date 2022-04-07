@@ -1,4 +1,4 @@
-def mean_of_lists(list_with_sublists):
+def mean_of_lists(list_with_sublists: list[list]):
     """
        Returns a list in which each index is the mean of the same index from all the other lists
        ---
