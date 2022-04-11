@@ -1,9 +1,9 @@
 import pandas as pd
 from socceranalyzer import MatchAnalyzer, Match, SIM2D
 
-logfile_path = "../data/20190705100545-RoboCIn_1-vs-HillStone_0.rcg.csv"
+logfile_path = "../output_log/20190706112224-HillStone_3-vs-RoboCIn_1.rcg.csv"
 dataframe = pd.read_csv(logfile_path)
 
 match_object = Match(dataframe, SIM2D)
 match_analyzer = MatchAnalyzer(match_object)
-match_analyzer.ball_possession.describe()
+match_analyzer.intercept_counter.describe()
