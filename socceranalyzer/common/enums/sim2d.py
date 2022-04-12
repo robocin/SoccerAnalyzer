@@ -1,13 +1,22 @@
 from enum import Enum
 
 class SIM2D(Enum):
+    """
+        This class is a parent of enum.Enum.
+        Python 3.4 or above is needed to use this class.
+        It's purpose is to map all parameters of SIM2D with the
+        same keys used in other categories. The keys are used inside
+        the analysis for them to be category agnostic.
+        
+        All parameters are strings
+    """
     GAME_TIME = "show_time"
-    PLAYMODE = 'playmode'
+    PLAYMODE = "playmode"
     RUNNING_GAME = "play_on"
     FAULT_COMMITED_L = "foul_charge_l"
     FAULT_COMMITED_R = "foul_charge_r"
-    BALL_X = 'ball_x'
-    BALL_Y = 'ball_y'
+    BALL_X = "ball_x"
+    BALL_Y = "ball_y"
     TEAM_LEFT = "team_name_l"
     TEAM_RIGHT = "team_name_r"
     TEAM_LEFT_SCORE = "team_score_l"
