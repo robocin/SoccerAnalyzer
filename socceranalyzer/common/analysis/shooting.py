@@ -367,6 +367,9 @@ class Shooting(AbstractAnalysis):
         """
         return self.__shooting_stats_df
 
-    def serialize(self):
-        return NotImplementedError
+    def serialize(self) -> list[dict]:
+        """
+        Returns the shooting stats as json serializable object.
+        """
+        return self.__shooting_stats
     
