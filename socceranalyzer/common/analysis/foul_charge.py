@@ -3,6 +3,23 @@ from socceranalyzer.common.geometric.point import Point
 
 
 class FoulCharge(AbstractAnalysis):
+    """
+        Used to calculate faults committed by both teams and the positions where they happened.
+
+        Attributes
+        ----------
+            private:
+                dataframe : pandas.Dataframe
+                    match's log to be analyzed
+                category : enum
+                    match's category (2D, VSS or SSL)
+                team_left_charges : [(x, y)]
+                    list containing tuples relative to the positions (x and y) where faults committed by the left team
+                    happened
+                team_right_charges : [(x, y)]
+                    list containing tuples relative to the positions (x and y) where faults committed by the right team
+                    happened
+    """
     def __init__(self, dataframe=None, category=None):
         self.__dataframe = dataframe
         self.__category = category
@@ -46,6 +63,10 @@ class FoulCharge(AbstractAnalysis):
 
     def _analyze(self):
         for i in range(len(self.__dataframe)):
+            """
+                For every cycle in the log, investigates wether a fault happened and updates one of the lists if 
+                it is really the case.
+            """
             if (self.__dataframe.loc[i, str(self.category.PLAYMODE)] == str(self.category.FAULT_COMMITED_L)
                     and self.__dataframe.loc[i - 1, str(self.category.PLAYMODE)] != str(
                         self.category.FAULT_COMMITED_L)):
@@ -60,6 +81,29 @@ class FoulCharge(AbstractAnalysis):
                                            int(self.__dataframe.loc[i, str(self.category.BALL_X)]))
 
     def results(self, side=None, tuple=False):
+        """
+            Returns the positions of fouls charges.
+
+            If no side is given, returns information for both sides.
+
+            If tuple is set to true, returns a tuple containing left and right teams charges, respectively.
+
+            Parameters
+            ----------
+            side: str, optional
+                Specific team to be analyzed (default is None).
+
+            tuple: bool, optional
+                Wether the result should be a tuple containing both teams' information (default is False).
+
+            Returns
+            -------
+            tuple
+                a tuple containing both teams charges, if tuple parameter is set to True.
+
+            list
+                a list containing charges from the team given in side parameter, or from both if none was given.
+        """
         all_positions = []
         if tuple:
             return (self.__team_left_charges, self.__team_right_charges)
@@ -80,6 +124,9 @@ class FoulCharge(AbstractAnalysis):
         return all_positions
 
     def describe(self):
+        """
+            Provides how many faults each team committed and their proportions relative to the total.
+        """
         name_l = self.dataframe.loc[1, str(self.category.TEAM_LEFT)]
         name_r = self.dataframe.loc[1, str(self.category.TEAM_RIGHT)]
         print(f'{name_l} commited {len(self.__team_left_charges)} faults against {name_r}.\n'
