@@ -19,6 +19,23 @@ class FoulCharge(AbstractAnalysis):
                 team_right_charges : [(x, y)]
                     list containing tuples relative to the positions (x and y) where faults committed by the right team
                     happened
+
+        Methods
+        -------
+            private:
+                quantity() -> (int, int)
+                    returns a tuple containing how many faults left and right team committed, respectively
+                proportion() -> (float, float)
+                    returns a tuple containing the proportion of faults committed by left and right team, respectively 
+                _analyze() -> None
+                    for every cycle in the log, investigates wether a fault happened and updates one of the lists if 
+                    it is really the case.
+
+            public:
+                results(side: str, tuple: bool) -> (list[Point], list[Point]) or list[Point]
+                    returns the positions of fouls charges
+                describe() -> None
+                    provides how many faults each team committed and their proportions relative to the total.
     """
     def __init__(self, dataframe=None, category=None):
         self.__dataframe = dataframe
@@ -53,9 +70,21 @@ class FoulCharge(AbstractAnalysis):
         self.__team_right_charges.append(val)
 
     def quantity(self):
+        """
+            Returns
+            -------
+            tuple
+                a tuple containing how many faults left and right team committed, respectively
+        """
         return (len(self.__team_left_charges), len(self.__team_right_charges))
 
     def proportion(self):
+        """
+            Returns
+            -------
+            tuple
+                a tuple containing the proportion of faults committed by left and right team, respectively
+        """
         quantities = self.quantity()
         total = quantities[0] + quantities[1]
 
