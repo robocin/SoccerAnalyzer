@@ -2,6 +2,31 @@ from socceranalyzer.common.abstract.abstract_analysis import AbstractAnalysis
 
 
 class Playmodes(AbstractAnalysis):
+    """
+        Used to calculate how many unique playmodes happened in the match along with their counts
+
+        Attributes
+        ----------
+            private:
+                dataframe : pandas.Dataframe
+                    match's log to be analyzed
+                category : enum
+                    match's category (2D, VSS or SSL)
+                playmode_dictionary : dict
+                    a dictionary with playmodes as keys and how many times they appeared as values
+
+        Methods
+        -------
+            private:
+                _analyze() -> None
+                    finds every penalty in the match and appends each one to the respective team
+
+            public:
+                results() -> (list[str], list[int])
+                    returns which playmodes appeared and their counts, respectively
+                describe() -> None
+                    provides which playmodes appeared
+    """
     def __init__(self, dataframe, category):
         self.__category = category
         self.__df = dataframe
@@ -30,6 +55,12 @@ class Playmodes(AbstractAnalysis):
             self.__playmode_dictionary[key] = value
 
     def results(self):
+        """
+            Returns
+            -------
+            tuple
+                a tuple containing which playmodes appeared and their counts, respectively
+        """
         playmode = []
         counts = []
 
@@ -40,6 +71,9 @@ class Playmodes(AbstractAnalysis):
         return playmode, counts
 
     def describe(self):
+        """
+            Provides which playmodes appeared
+        """
         pms, foo = self.results()
 
         print(f'This game had {len(pms)} different playmodes which were:\n'
