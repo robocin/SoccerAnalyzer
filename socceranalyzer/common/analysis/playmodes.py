@@ -3,7 +3,7 @@ from socceranalyzer.common.abstract.abstract_analysis import AbstractAnalysis
 
 class Playmodes(AbstractAnalysis):
     """
-        Used to calculate how many unique playmodes happened in the match along with their counts
+        Used to calculate how many unique playmodes happened in the match along with their counts.
 
         Attributes
         ----------
@@ -19,7 +19,7 @@ class Playmodes(AbstractAnalysis):
         -------
             private:
                 _analyze() -> None
-                    finds every penalty in the match and appends each one to the respective team
+                    finds every playmode in the match and how many times they appeared
 
             public:
                 results() -> (list[str], list[int])
@@ -43,6 +43,9 @@ class Playmodes(AbstractAnalysis):
         return self.__df
 
     def _analyze(self):
+        """
+            Finds every playmode in the match and how many times they appeared.
+        """
         data = self.__df[str(self.category.PLAYMODE)].value_counts()
 
         playmodes = data.index.to_list()
@@ -56,10 +59,7 @@ class Playmodes(AbstractAnalysis):
 
     def results(self):
         """
-            Returns
-            -------
-            tuple
-                a tuple containing which playmodes appeared and their counts, respectively
+            Returns a tuple containing which playmodes appeared and their counts, respectively.
         """
         playmode = []
         counts = []
@@ -72,7 +72,7 @@ class Playmodes(AbstractAnalysis):
 
     def describe(self):
         """
-            Provides which playmodes appeared
+            Provides which playmodes appeared.
         """
         pms, foo = self.results()
 
