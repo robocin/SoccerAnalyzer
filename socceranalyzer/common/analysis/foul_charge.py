@@ -13,10 +13,10 @@ class FoulCharge(AbstractAnalysis):
                     match's log to be analyzed
                 category : enum
                     match's category (2D, VSS or SSL)
-                team_left_charges : [(x, y)]
+                team_left_charges : list[Point]
                     list containing tuples relative to the positions (x and y) where faults committed by the left team
                     happened
-                team_right_charges : [(x, y)]
+                team_right_charges : list[Point]
                     list containing tuples relative to the positions (x and y) where faults committed by the right team
                     happened
 
