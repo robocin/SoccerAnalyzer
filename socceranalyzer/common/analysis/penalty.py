@@ -21,7 +21,7 @@ class Penalty(AbstractAnalysis):
         -------
             private:
                 _analyze() -> None
-                    finds every penalty in the match and appends each one to the respective team
+                    finds every penalty in the match and appends each one to the respective team's list
 
             public:
                 results() -> (list[int], list[int])
@@ -47,7 +47,7 @@ class Penalty(AbstractAnalysis):
 
     def _analyze(self):
         """
-            Finds every penalty in the match and appends each one to the respective team's list
+            Finds every penalty in the match and appends each one to the respective team's list.
         """
         # penalty in favor of left side
         t_dataframe = self.dataframe[self.dataframe[str(self.category.PLAYMODE)] == self.category.PENALTY_TO_LEFT]
@@ -59,13 +59,13 @@ class Penalty(AbstractAnalysis):
 
     def results(self):
         """
-            Returns the moments when left and right team had penalties in their favor, respectively
+            Returns the moments when left and right team had penalties in their favor, respectively.
         """
         return (self.__penalty_left, self.__penalty_right)
 
     def describe(self):
         """
-            Provides how many penalties happened in the match
+            Provides how many penalties happened in the match.
         """
         print(f'This game had {len(self.__penalty_left) + len(self.__penalty_right)} penalties.\n')
 
