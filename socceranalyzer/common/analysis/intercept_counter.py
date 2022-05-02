@@ -5,6 +5,7 @@ from socceranalyzer.common.chore.mediator import Mediator
 from socceranalyzer.common.collections.collections import StringListItem
 from socceranalyzer.common.collections.collections import StringListPositions
 from socceranalyzer.common.enums.sim2d import SIM2D
+from socceranalyzer.common.evaluators.kick import kick
 
 class InterceptCounter:
     def __init__(self, data_frame, category):
@@ -36,11 +37,11 @@ class InterceptCounter:
 
         for current_cycle, row in game_log.iterrows():
             if not pass_r:
-                pass_r = self.__ball_kick(current_cycle, 'r')
+                pass_r = kick(current_cycle, 'r', game_log)
             else:
                 pass_l = False
                 
-                if game_log['playmode'][current_cycle] == 'kick_in_l':
+                if game_log[str(self.category.PLAYMODE)][current_cycle] == 'kick_in_l':
                     pass_r  = False
                     continue
                 
@@ -54,7 +55,7 @@ class InterceptCounter:
                         
                     try:
                         for l in range(5):
-                            if game_log['playmode'][current_cycle+l] in ['kick_off_l', 'foul_charge_l']:
+                            if game_log[str(self.category.PLAYMODE)][current_cycle+l] in ['kick_off_l', str(self.category.FAULT_COMMITED_L)]:
                                 self.__left_team_interceptions -= 1
                                 break
                     except: 
@@ -62,11 +63,11 @@ class InterceptCounter:
             
 
             if not pass_l:
-                pass_l = self.__ball_kick(current_cycle, 'l')
+                pass_l = kick(current_cycle, 'l', game_log)
             else:
                 pass_r = False
                 
-                if game_log['playmode'][current_cycle] == 'kick_in_r':
+                if game_log[str(self.category.PLAYMODE)][current_cycle] == 'kick_in_r':
                     pass_l  = False
                     continue
 
@@ -80,7 +81,7 @@ class InterceptCounter:
                     
                     try:
                         for l in range(5):
-                            if game_log['playmode'][current_cycle+l] in ['kick_off_r', 'foul_charge_r']:
+                            if game_log[str(self.category.PLAYMODE)][current_cycle+l] in ['kick_off_r',  str(self.category.FAULT_COMMITED_R)]:
                                 self.__right_team_interceptions -= 1
                                 break
                     except: 
@@ -88,12 +89,6 @@ class InterceptCounter:
                 
 
             
-
-    def __ball_kick(self, cycle: int, team: str):
-        for j in range(1,12):
-            if cycle != 0 and (self.__current_game_log[f"player_{team}{j}_counting_kick"][cycle] > self.__current_game_log[f'player_{team}{j}_counting_kick'][cycle-1]):
-                return True
-        return False
 
     def __define_player_possession(self, cycle, player_left_position: Point, player_right_position: Point):
         player_influence_radius = 0.7
