@@ -139,13 +139,13 @@ class FoulCharge(AbstractAnalysis):
         else:
             if side is not None:
                 if side.lower()[0] == "l":
-                    for p in self.__team_right_charges:
+                    for p in self.__team_left_charges:
                         all_positions.append((p.x, p.y))
                 elif side.lower()[0] == "r":
                     for p in self.__team_right_charges:
                         all_positions.append((p.x, p.y))
             else:
-                for p in self.__team_right_charges:
+                for p in self.__team_left_charges:
                     all_positions.append((p.x, p.y))
                 for p in self.__team_right_charges:
                     all_positions.append((p.x, p.y))
