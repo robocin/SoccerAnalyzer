@@ -1,4 +1,4 @@
-from socceranalyzer.common.abstract.abstract_analysis import AbstractAnalysis
+from socceranalyzer.common.analysis.abstract_analysis import AbstractAnalysis
 from socceranalyzer.common.enums.sim2d import SIM2D
 from socceranalyzer.common.chore.mediator import Mediator
 

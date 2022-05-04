@@ -1,4 +1,4 @@
-from socceranalyzer.common.abstract.abstract_factory import AbstractFactory
+from socceranalyzer.common.chore.abstract_factory import AbstractFactory
 from socceranalyzer.common.evaluators.ball_holder import BallHolderEvaluator
 
 from socceranalyzer.common.basic.match import Match
