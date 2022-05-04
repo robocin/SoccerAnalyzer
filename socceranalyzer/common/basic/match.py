@@ -1,5 +1,3 @@
-from enum import Enum
-
 import pandas
 
 from socceranalyzer.common.entity.team import Team
@@ -9,7 +7,54 @@ from socceranalyzer.common.enums.ssl import SSL
 
 
 class Match:
-    def __init__(self, dataframe: pandas.DataFrame, category):
+    """
+        A class that represents a soccer match and its core components such as
+        players, fouls, corners, etc
+
+        Match(dataframe: pandas.DataFrame, category: enum)
+
+        Attributes
+        ----------
+            public through @properties:
+                df: dataframe
+                    the pandas object that contains the game data
+                teams: tuple
+                    a immutable object with the name of both teams
+                team_left_name: str
+                    a string containing he left team name in the df
+                team_right_name: str
+                    a string containing he right team name in the df
+                score_left: int
+                    a integer value with the final score of the left team
+                score_right: int
+                    a integer value with the final score of the right team
+                winning_team: string
+                    a string with the name of the team that won the game
+                losing_team: string
+                    a string with the name of the team that lost the game
+                players_left: [player]
+                    a list of players objects from the left team
+                player_right: [player]
+                    a list of players objects from the right team
+                ball: ball
+                    the game's ball object
+                fouls: [int]
+                    a list with integers referencing the cycle of foul occurrences
+                goals: [int]
+                    a list with integers referencing the cycle of goals occurrences
+                corners: [int]
+                    a list with integers referencing the cycle of corners occurrences
+
+        Methods
+        -------
+            private:
+                build() -> None:
+                    populates all fields with the contents from the dataframe given at instantiation
+
+
+
+    """
+    def __init__(self, dataframe: pandas.DataFrame, category: SIM2D | SSL | VSS):
         self.__category = category
 
         self.__df = dataframe
@@ -103,9 +148,13 @@ class Match:
     def corners(self):
         return self.__corners
 
-
     def __build(self):
+        """
+            Runs when a Match objected is created to populate its attributes with
+            the given dataframe.
 
+            :return: None
+        """
         try:
             if self.category is None:
                 raise ValueError('A Match requires a Category as argument and none was given')

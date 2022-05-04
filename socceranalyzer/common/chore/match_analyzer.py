@@ -18,6 +18,64 @@ from socceranalyzer.common.analysis.shooting import Shooting
 
 
 class MatchAnalyzer(AbstractFactory):
+    """
+        ==== Add new analysis in this class ====
+        - A class that represents a implementation of AbstractFactory. 
+        - Acts as a endpoint to connect all created analysis in the framework.
+        - Creates analysis objects, run them and then provide secure acess to it's computed values.
+        - At instantiation, it has no analysis. At runtime, generates analysis setted in self._run_analysis().
+        
+        MatchAnalyzer(math: Match)
+
+        Attributes
+        ----------
+            public through @properties:
+                match: Match
+                    Current match being analyzed. Same Match given as parameter.
+                ball_possession: BallPossession
+                    Object containing ball possession analysis
+                tester_free_kick: TesterFK
+                    Object containing free kick testing analysis
+                foul_charge: FoulCharge
+                    Object containing foul occurrences analysis
+                penalty: Penalty
+                    Object containing penalties analysis
+                stamina: Stamina
+                    Object containing stamina analysis
+                corners: Corners
+                    Object containing corners analysis
+                playmodes: Playmodes
+                    Object containing playmode analysis
+                shooting: Shooting
+                    Object containing shoots analysis
+                category: Enum
+                    Returns the Enum of the match category
+                analysis_dict: dict
+                    Returns a dictionary object with all current analysis and it's values.
+            
+        Methods
+        -------
+            public:    
+                winner: str
+                    String with the name of the game winner
+                loser: str
+                    String with the nae of the game loser
+                final_score: None
+                    Prints the result of the game
+                available: None
+                    Prints the current analysis being done (hardcoded)
+                collect_results:
+                    Returns a dictionary with built-in type values for usage
+                
+            private:
+                _run_analysis: None
+                    Creates analysis classes instances and run them.
+                _generate_evaluators: None
+                    Generates implemented evaluators
+
+
+
+    """
     def __init__(self, match: Match = None):
         self.__match = match
         self.__cat = match.category
@@ -73,15 +131,6 @@ class MatchAnalyzer(AbstractFactory):
     def shooting(self):
         return self.__shooting
 
-    def winner(self):
-        return self.__match.winning_team
-
-    def loser(self):
-        return self.__match.losing_team
-
-    def final_score(self):
-        print(f'{self.__match.team_left_name} {self.__match.score_left} x {self.__match.score_right} {self.__match.team_right_name}')
-
     @property
     def category(self):
         return self.__cat
@@ -96,7 +145,35 @@ class MatchAnalyzer(AbstractFactory):
         raise NotImplementedError
         # return BallHolder(self.match.dataframe, self.match.category)
 
+    def winner(self) -> str:
+        """
+        Returns the name of the winning team.
+        
+                Returns:
+                        winning_team (str): Name of the winning team.
+        """
+        return self.__match.winning_team
+
+    def loser(self) -> str:
+        """
+        Returns the name of the losing team.
+        
+                Returns:
+                        losing_team (str): Name of the losing team.
+        """
+        return self.__match.losing_team
+
+    def final_score(self):
+        """
+        Shows the final score.
+        """
+        print(f'{self.__match.team_left_name} {self.__match.score_left} x {self.__match.score_right} {self.__match.team_right_name}')
+
+
     def available(self):
+        """
+        Shows currently available analysis.
+        """
         BallPossession = ("BallPossession", True)
         FoulCharge = ("FoulCharge", True)
         Playmodes = ("Playmodes", True)

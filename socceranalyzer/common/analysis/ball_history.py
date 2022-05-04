@@ -1,9 +1,14 @@
+from enum import Enum
+import pandas
 from socceranalyzer.common.abstract.abstract_analysis import AbstractAnalysis
 from socceranalyzer.common.geometric.point import Point
 
 
 class BallHistory(AbstractAnalysis):
-    def __init__(self, dataframe, category):
+    """
+        Contains the position of the ball in all playmode=play_on moments of the game
+    """
+    def __init__(self, dataframe: pandas.DataFrame, category: Enum):
         self.__dataframe = dataframe
         self.__category = category
         self.__ball_positions = ()
@@ -19,7 +24,6 @@ class BallHistory(AbstractAnalysis):
         return self.__category
 
     def _analyze(self):
-        # ball
         x = self.dataframe[str(self.category.BALL_X)]
         y = self.dataframe[str(self.category.BALL_Y)]
         self.__ball_positions = (x, y)

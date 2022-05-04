@@ -5,6 +5,21 @@ from socceranalyzer.common.collections.collections import StringListPositions
 from socceranalyzer.common.collections.collections import StringListItem
 
 class Mediator:
+    """
+        Mediator is a class context dependent that provides values
+        based on the parameters (context) given to it. This class
+        provides attributes or lists of attributes for specific SIM2D, 
+        SSL or VSS categories.
+
+        Static Methods
+        --------------
+            players_right/left_position: StringListPositions
+                A list of strings containing the name of player position attributes
+                in SIM2D, SSL or VSS.
+            players_right/left_stamina_attr: StringListPositions
+                A list of strings containing the name of players stamina attributes in 
+                SIM2D.
+    """
     @staticmethod
     def players_left_position(category, gkeeper=True):
 
@@ -25,7 +40,6 @@ class Mediator:
 
         elif category is SSL:
             raise NotImplementedError
-
 
     @staticmethod
     def players_right_position(category, gkeeper=True):

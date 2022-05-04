@@ -10,7 +10,7 @@ class Point:
         y coordinates of the point in the field
     '''
 
-    def __init__(self, x=0, y=0):
+    def __init__(self, x=0.0, y=0.0):
         '''
         Constructs all the necessary attributes for the point object.
         Parameters
