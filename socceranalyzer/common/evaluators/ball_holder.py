@@ -1,7 +1,6 @@
-from socceranalyzer.common.geometric.point import Point
-from socceranalyzer.common.geometric.circle import Circle
-from socceranalyzer.common.chore.mediator import Mediator
-from socceranalyzer.common.utility.slicers import PlaymodeSlicer
+import pandas
+from socceranalyzer import SIM2D, SSL, VSS, Mediator, Point, Circle 
+
 
 class BallHolderEvaluator:
     """

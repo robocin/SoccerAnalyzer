@@ -1,5 +1,5 @@
-import socceranalyzer
-
+from socceranalyzer.common.geometric.point import Point
+from socceranalyzer.common.geometric.rectangle import Rectangle
 
 class Field:
     """"
@@ -22,8 +22,8 @@ class Field:
                 penalty_area: Rectangle
                     defines the penalty area in the field
     """
-    def __init__(self, width: float, length: float, center: socceranalyzer.Point,
-                 small_penalty_area: socceranalyzer.Rectangle, penalty_area: socceranalyzer.Rectangle):
+    def __init__(self, width: float, length: float, center: Point,
+                 small_penalty_area: Rectangle, penalty_area: Rectangle):
         self.__width = width
         self.__length = length
         self.__center = center
