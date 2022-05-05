@@ -11,7 +11,7 @@ from socceranalyzer.common.chore.abstract_factory import AbstractFactory
 from socceranalyzer.common.entity.team import Team
 from socceranalyzer.common.entity.agent import Agent
 from socceranalyzer.common.entity.ball import Ball
-from socceranalyzer.common.entity.abstract_robot import Robot
+from socceranalyzer.common.entity.abstract_robot import AbstractRobot
 
 # Enums
 from socceranalyzer.common.enums.sim2d import SIM2D, Landmarks
