@@ -22,10 +22,14 @@ from socceranalyzer.common.enums.ssl import SSL
 from socceranalyzer.common.chore.match_analyzer import MatchAnalyzer
 from socceranalyzer.common.chore.mediator import Mediator
 
+# Collections
+from socceranalyzer.common.collections.collections import EntityCollection
+
 # Evaluators
 from socceranalyzer.common.evaluators.ball_holder import BallHolderEvaluator
 from socceranalyzer.common.evaluators.closer_to_ball import closer_to_ball
 from socceranalyzer.common.evaluators.shoot_evaluator import ShootEvaluator
+from socceranalyzer.common.evaluators.player_detector import PlayerDetector
 
 # Geometric
 from socceranalyzer.common.geometric.circle import Circle

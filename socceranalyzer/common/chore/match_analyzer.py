@@ -232,8 +232,8 @@ class MatchAnalyzer(AbstractFactory):
             #self.__time_after_corner = TimeAfterCorner(self.__match.dataframe, self.category)
 
         elif self.__cat is SSL:
-            raise NotImplementedError
-            # add SSL analysis
+            setattr(self, "__heatmap", None)
+            self.__heatmap = Heatmap(self.__match.dataframe, self.category)
 
         elif self.__cat is VSS:
             raise NotImplementedError
