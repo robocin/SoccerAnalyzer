@@ -63,15 +63,26 @@ import pandas as pd
 
 from socceranalyzer import MatchAnalyzer, Match, SIM2D
 
-logfile_path = "location/to/log/file.csv"
-dataframe = pd.read_csv(logfile_path)
+SIM2D_LOGFILE_PATH = "location/to/log/file2d.csv"
+dataframe = pd.read_csv(SIM2D_LOGFILE_PATH)
 
 match_object = Match(dataframe, SIM2D)
 match_analyzer = MatchAnalyzer(match_object)
 match_analyzer.collect_results()
 ```
 #### SSL
-> Not available yet
+```python
+import pandas as pd
+
+from socceranalyzer import MatchAnalyzer, Match, SSL
+
+SSL_LOGFILE_PATH = "location/to/log/filessl.csv"
+dataframe = pd.read_csv(SSL_LOGFILE_PATH)
+
+match_object = Match(dataframe, SIM2D)
+match_analyzer = MatchAnalyzer(match_object)
+match_analyzer.collect_results()
+```
 
 #### VSS
 > Not available yet
