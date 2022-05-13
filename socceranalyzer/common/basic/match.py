@@ -59,12 +59,12 @@ class Match:
 
         self.__df = dataframe
         self.__teams = ()
-        self.__team_left_name = ""
-        self.__team_right_name = ""
-        self.__score_left = None
-        self.__score_right = None
-        self.__winning_team = ""
-        self.__losing_team = ""
+        self.__team_left_name: str = ""
+        self.__team_right_name: str = ""
+        self.__score_left: int = None
+        self.__score_right: int = None
+        self.__winning_team: str = ""
+        self.__losing_team: str = ""
         self.__players_left = []
         self.__players_right = []
         self.__ball = None
@@ -158,7 +158,7 @@ class Match:
         try:
             if self.category is None:
                 raise ValueError('A Match requires a Category as argument and none was given')
-            elif self.category is not SIM2D:
+            elif self.category is VSS: 
                 raise RuntimeError(f'This version of SoccerAnalyzer does not support {self.category} matches.\n'
                                    f'Please visit https://github.com/robocin/SoccerAnalyzer for more information.')
         except RuntimeError:
