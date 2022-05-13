@@ -1,6 +1,11 @@
 import pandas as pd
+from socceranalyzer import Match, SSL, MatchAnalyzer
 
-logpath = "../data/vss/rc-vs-thunder.csv"
+SSL_LOG_PATH = ""
+SIM2D_LOG_PATH = ""
+VSS_LOG_PATH = ""
 
-df = pd.read_csv(logpath)
-print(df.loc[0 , "showtime"] - df.loc[1, "showtime"])
+dataframe = pd.read_csv(SSL_LOG_PATH)
+
+m = Match(dataframe, SSL)
+ma = MatchAnalyzer(m)

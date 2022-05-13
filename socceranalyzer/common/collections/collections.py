@@ -3,7 +3,7 @@ from socceranalyzer.common.entity.ball import Ball
 from socceranalyzer.common.enums.sim2d import SIM2D
 from socceranalyzer.common.enums.ssl import SSL
 from socceranalyzer.common.enums.vss import VSS
-from socceranalyzer.common.evaluators.player_detector import PlayerDetector
+from socceranalyzer.common.evaluators.ingame_players import IngamePlayers
 
 
 class StringListPositions:
@@ -44,13 +44,13 @@ class ThresholdCollection:
         self.foul_thr = fk
 
 
-class EntityCollection:
+class PlayersCollection:
     def __init__(self, match: Match, category: SSL | SIM2D | VSS) -> None:
         self.__match = match
         self.__category: SSL | SIM2D | VSS = category
         
         if self.__category is SSL:
-            detector = PlayerDetector(self.__match)
+            detector = IngamePlayers(self.__match)
             left_players = detector.left_players()
             right_players = detector.right_players()
 
