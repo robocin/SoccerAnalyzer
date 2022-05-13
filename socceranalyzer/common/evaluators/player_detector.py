@@ -1,4 +1,3 @@
-from typing import List
 from socceranalyzer.common.basic.match import Match
 from socceranalyzer.common.enums.sim2d import SIM2D
 from socceranalyzer.common.enums.ssl import SSL 
