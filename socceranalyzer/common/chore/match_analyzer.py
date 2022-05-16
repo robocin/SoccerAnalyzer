@@ -11,6 +11,7 @@ from socceranalyzer.common.analysis.playmodes import Playmodes
 from socceranalyzer.common.analysis.penalty import Penalty
 from socceranalyzer.common.analysis.ball_history import BallHistory
 from socceranalyzer.common.analysis.corners_occurrencies import CornersOcurrencies
+from socceranalyzer.common.analysis.passing_accuracy import PassingAccuracy
 from socceranalyzer.agent2D.analysis.tester_free_kick import TesterFK
 from socceranalyzer.common.analysis.time_after_events import TimeAfterEvents
 from socceranalyzer.common.analysis.stamina import Stamina
@@ -124,6 +125,10 @@ class MatchAnalyzer(AbstractFactory):
         return self.__corners_occurrencies
 
     @property
+    def passing_accuracy(self):
+        return self.__passing_accuracy
+
+    @property
     def playmodes(self):
         return self.__playmodes
 
@@ -214,6 +219,9 @@ class MatchAnalyzer(AbstractFactory):
 
             setattr(self, "__corners", None)
             self.__corners_occurrencies = CornersOcurrencies(self.__match.dataframe, self.category)
+
+            setattr(self, "__passing_accuracy", None)
+            self.__passing_accuracy = PassingAccuracy(self.__match.dataframe, self.category)
 
             setattr(self, "__time_after_events", None)
             self.__time_after_events = TimeAfterEvents(self.__match.dataframe, self.category,
