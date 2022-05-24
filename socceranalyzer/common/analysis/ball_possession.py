@@ -4,6 +4,7 @@ from socceranalyzer.common.chore.mediator import Mediator
 from socceranalyzer.common.collections.collections import StringListItem
 from socceranalyzer.common.collections.collections import StringListPositions
 from socceranalyzer.common.enums.sim2d import SIM2D
+from socceranalyzer.common.evaluators.ball_holder import BallHolderEvaluator
 
 class BallPossession:
     """
@@ -74,10 +75,7 @@ class BallPossession:
 
         for current_cycle, row in filtered_game.iterrows():
 
-            closest_side = self.__closest_player_side(current_cycle,
-                                                   player_left_position,
-                                                   player_right_position,
-                                                   ball_position_this_cycle)
+            closest_side = BallHolderEvaluator(filtered_game).at(current_cycle)[2]
 
             if closest_side == 'left':
                 self.__left_team_possession += 1
