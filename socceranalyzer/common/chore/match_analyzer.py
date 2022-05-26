@@ -11,6 +11,7 @@ from socceranalyzer.common.analysis.playmodes import Playmodes
 from socceranalyzer.common.analysis.penalty import Penalty
 from socceranalyzer.common.analysis.ball_history import BallHistory
 from socceranalyzer.common.analysis.corners_occurrencies import CornersOcurrencies
+from socceranalyzer.common.analysis.intercept_counter import InterceptCounter
 from socceranalyzer.agent2D.analysis.tester_free_kick import TesterFK
 from socceranalyzer.common.analysis.time_after_events import TimeAfterEvents
 from socceranalyzer.common.analysis.stamina import Stamina
@@ -107,6 +108,10 @@ class MatchAnalyzer(AbstractFactory):
     @property
     def ball_possession(self):
         return self.__ball_possession
+    
+    @property
+    def intercept_counter(self):
+        return self.__intercept_counter
 
     @property
     def tester_free_kick(self):
@@ -205,6 +210,9 @@ class MatchAnalyzer(AbstractFactory):
         if self.__cat is SIM2D:
             setattr(self, "__ball_possession", None)
             self.__ball_possession = BallPossession(self.__match.dataframe, self.category)
+
+            setattr(self, "__intercept_counter", None)
+            self.__intercept_counter = InterceptCounter(self.__match.dataframe, self.category)
 
             setattr(self, "__tester_free_kick", None)
             self.__tester_free_kick = TesterFK(self.__match.dataframe, self.category)

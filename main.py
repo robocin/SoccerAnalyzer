@@ -8,5 +8,3 @@ logpath = "../../logs/ssl/robocin-er-force-robocup2021.csv"
 df = pd.read_csv(logpath)
 m = Match(df, SSL)
 ma = MatchAnalyzer(m)
-
-
