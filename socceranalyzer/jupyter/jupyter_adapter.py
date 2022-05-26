@@ -1,8 +1,9 @@
 from matplotlib.axes import Axes
 from matplotlib.figure import Figure
 import matplotlib.pyplot as plt
-from pyparsing import col
+import os
 
+import socceranalyzer
 from socceranalyzer.common.chore.match_analyzer import MatchAnalyzer
 
 
@@ -28,6 +29,14 @@ class JupyterAdapter:
 
         team_l_name = self.__match_analyzer.match.team_left_name
         team_r_name = self.__match_analyzer.match.team_right_name
+        
+        self.__config["name_left"] = team_l_name
+        self.__config["name_right"] = team_r_name
+        self.__config["left_label"] = team_l_name
+        self.__config["right_label"] = team_r_name
+        self.__config["shadow"] = True
+        self.__config["startangle"] = 90
+        self.__config["sim2d_field_img"] = f'{os.path.dirname(socceranalyzer.__file__)}/images/sim2d_field.png'
 
         # colorize my team
         if team_l_name == my_team_name:
@@ -37,12 +46,8 @@ class JupyterAdapter:
             self.__config["left_color"] = 'green'
             self.__config["right_color"] = 'red'
 
-        self.__config["left_label"] = team_l_name
-        self.__config["right_label"] = team_r_name
-        self.__config["shadow"] = True
-        self.__config["startangle"] = 90
 
-    def ball_possession_plot(self, width: int, height: int, title: str) -> None:
+    def ball_possession(self, width: int, height: int, title: str = "Ball Possession") -> None:
         
         left_possession, right_possession = self.__match_analyzer.ball_possession.results()
         
@@ -57,15 +62,35 @@ class JupyterAdapter:
 
         plt.show()
 
-    def _build_sim2d(self):
-        self.__ball_possession_plot(10, 5, "Ball Possession")
+    def fault_position(self, width: int, height: int, title: str = "Ball Possession"):
 
-    def _build_ssl(self):
-        pass
+        left_faults, right_faults = self.__match_analyzer.foul_charge.results(tuple=True)
 
-    def _build_vss(self):
-        pass
+        _, ax = plt.subplots(figsize=(width, height))
 
+        # Left team
+        lx_coordinates = [pos.x for pos in left_faults]
+        ly_coordinates = [pos.y for pos in left_faults]
 
-    
-    
+        # Right team
+        rx_coordinates = [pos.x for pos in right_faults]
+        ry_coordinates = [pos.y for pos in right_faults]
+
+        scatter_left = ax.scatter(lx_coordinates, ly_coordinates, 
+                                color = self.__config["left_color"],
+                                marker = 'o',
+                                s = 25)
+
+        scatter_right = ax.scatter(rx_coordinates, ry_coordinates,
+                                color = self.__config["right_color"],
+                                marker = 'o',
+                                s = 25)
+
+        ax.set_title(title)
+        ax.legend((scatter_left, scatter_right), (self.__config["name_left"], self.__config["name_right"]), scatterpoints = 1)
+        ax.margins(x = 1, y = 1)
+
+        img = plt.imread(self.__config["sim2d_field_img"])
+        ax.imshow(img, zorder = -1, extent=[-56, 56, -34, 34])
+
+        plt.show()
