@@ -6,8 +6,11 @@ from socceranalyzer.common.collections.collections import StringListItem
 from socceranalyzer.common.collections.collections import StringListPositions
 from socceranalyzer.common.enums.sim2d import SIM2D
 from socceranalyzer.common.evaluators.kick import kick
+from socceranalyzer.common.analysis.abstract_analysis import AbstractAnalysis
+from socceranalyzer.common.entity.team import Team
 
-class PassingAccuracy:
+
+class PassingAccuracy(AbstractAnalysis):
     """
         Used to calculate the passing accuracy of the game.
         PassingAccuracy(pandas.DataFrame)
@@ -29,7 +32,7 @@ class PassingAccuracy:
                 calculate() -> None:
                     Calculates all wrong and correct passes occurrences
                 define_player_possession(cycle: int, player_left_position: Point, player_right_position: Point, player_who_possesses: Bool) -> str, int
-                    Defines the team that is in the radius os the ball in a particular cycle, if player_who_possesses = True, also returns the index of the player who is in that area
+                    Defines the team that is in the radius of the ball in a particular cycle, if player_who_possesses = True, also returns the index of the player who is in that area
             public: 
                 results() -> (float, float)
                     returns the teams passing accuracy and total passes 
@@ -46,7 +49,7 @@ class PassingAccuracy:
         self.__category = category
         self.__current_game_log = data_frame
 
-        self.__calculate()
+        self._analyze()
 
     def __str__(self):
         values = self.results()
@@ -57,7 +60,7 @@ class PassingAccuracy:
         return self.__category
 
 
-    def __calculate(self):
+    def _analyze(self):
         game_log = self.__current_game_log
 
         correct_passes_l = 0
