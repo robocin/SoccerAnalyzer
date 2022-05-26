@@ -4,4 +4,4 @@
 .idea/*
 /dist/
 /*.egg-info
-main.py
+./main.py

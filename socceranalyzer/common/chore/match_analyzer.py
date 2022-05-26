@@ -194,12 +194,11 @@ class MatchAnalyzer(AbstractFactory):
 
     def _generate_evaluators(self):
         if self.__cat is SIM2D:
-            raise NotImplementedError
+            pass
         elif self.__cat is SSL:
             self.__evaluators = EvaluatorCollection(self.match)
         elif self.__cat is VSS:
             raise NotImplementedError
-
 
     def _run_analysis(self):
         if self.__cat is SIM2D:
