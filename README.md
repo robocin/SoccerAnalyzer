@@ -79,7 +79,7 @@ from socceranalyzer import MatchAnalyzer, Match, SSL
 SSL_LOGFILE_PATH = "location/to/log/filessl.csv"
 dataframe = pd.read_csv(SSL_LOGFILE_PATH)
 
-match_object = Match(dataframe, SIM2D)
+match_object = Match(dataframe, SSL)
 match_analyzer = MatchAnalyzer(match_object)
 match_analyzer.collect_results()
 ```
