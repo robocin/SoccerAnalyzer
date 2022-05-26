@@ -44,7 +44,7 @@ class ThresholdCollection:
         self.foul_thr = fk
 
 
-class EntityCollection:
+class PlayersCollection:
     def __init__(self, match: Match, category: SSL | SIM2D | VSS) -> None:
         self.__match = match
         self.__category: SSL | SIM2D | VSS = category
@@ -61,3 +61,25 @@ class EntityCollection:
     @property
     def category(self):
         return self.__category
+
+class EvaluatorCollection:
+    """
+    A collection of evaluators created for a specific category game.
+    """
+    def __init__(self, match: Match) -> None:
+        self.__evaluators: list = self._generateEvaluators(match)
+
+    @property
+    def evaluators(self):
+        return self.__evaluators
+
+    def _generateEvaluators(self, match: Match) -> list:
+        if match.category is SIM2D:
+            raise NotImplementedError
+
+        elif match.category is SSL: 
+            player_detector = PlayerDetector(match)
+            return [player_detector]
+
+        elif match.category is VSS:
+            raise NotImplementedError
