@@ -1,7 +1,7 @@
-from socceranalyzer.common.abstract.abstract_factory import AbstractFactory
-from socceranalyzer.common.evaluators.ball_holder import BallHolderEvaluator
+from socceranalyzer.common.chore.abstract_factory import AbstractFactory
 
 from socceranalyzer.common.basic.match import Match
+from socceranalyzer.common.collections.collections import EvaluatorCollection
 from socceranalyzer.common.enums.sim2d import SIM2D
 from socceranalyzer.common.enums.ssl import SSL
 from socceranalyzer.common.enums.vss import VSS
@@ -19,14 +19,69 @@ from socceranalyzer.common.analysis.shooting import Shooting
 
 
 class MatchAnalyzer(AbstractFactory):
+    """
+        ==== Add new analysis in this class ====
+        - A class that represents a implementation of AbstractFactory. 
+        - Acts as a endpoint to connect all created analysis in the framework.
+        - Creates analysis objects, run them and then provide secure acess to it's computed values.
+        - At instantiation, it has no analysis. At runtime, generates analysis setted in self._run_analysis().
+        
+        MatchAnalyzer(math: Match)
+
+        Attributes
+        ----------
+            public through @properties:
+                match: Match
+                    Current match being analyzed. Same Match given as parameter.
+                ball_possession: BallPossession
+                    Object containing ball possession analysis
+                tester_free_kick: TesterFK
+                    Object containing free kick testing analysis
+                foul_charge: FoulCharge
+                    Object containing foul occurrences analysis
+                penalty: Penalty
+                    Object containing penalties analysis
+                stamina: Stamina
+                    Object containing stamina analysis
+                corners: Corners
+                    Object containing corners analysis
+                playmodes: Playmodes
+                    Object containing playmode analysis
+                shooting: Shooting
+                    Object containing shoots analysis
+                category: Enum
+                    Returns the Enum of the match category
+                analysis_dict: dict
+                    Returns a dictionary object with all current analysis and it's values.
+            
+        Methods
+        -------
+            public:    
+                winner: str
+                    String with the name of the game winner
+                loser: str
+                    String with the nae of the game loser
+                final_score: None
+                    Prints the result of the game
+                available: None
+                    Prints the current analysis being done (hardcoded)
+                collect_results:
+                    Returns a dictionary with built-in type values for usage
+                
+            private:
+                _run_analysis: None
+                    Creates analysis classes instances and run them.
+                _generate_evaluators: None
+                    Generates implemented evaluators
+
+
+
+    """
     def __init__(self, match: Match = None):
         self.__match = match
         self.__cat = match.category
-        self.__analysis_dict = {}
-
-        # evaluators
-        self.__ball_holder_evaluator = None
-        self.__shoot_evaluator = None
+        self.__analysis_dict: dict[str, None] = {}
+        self.__evaluators: EvaluatorCollection = None
 
         try:
             if self.__cat is None:
@@ -41,6 +96,14 @@ class MatchAnalyzer(AbstractFactory):
     @property
     def match(self):
         return self.__match
+
+    @property
+    def category(self):
+        return self.__cat
+
+    @property
+    def evaluators(self):
+        return self.__evaluators.evaluators
 
     @property
     def ball_possession(self):
@@ -78,19 +141,6 @@ class MatchAnalyzer(AbstractFactory):
     def shooting(self):
         return self.__shooting
 
-    def winner(self):
-        return self.__match.winning_team
-
-    def loser(self):
-        return self.__match.losing_team
-
-    def final_score(self):
-        print(f'{self.__match.team_left_name} {self.__match.score_left} x {self.__match.score_right} {self.__match.team_right_name}')
-
-    @property
-    def category(self):
-        return self.__cat
-
     @property
     def analysis_dict(self):
         raise NotImplementedError
@@ -101,7 +151,34 @@ class MatchAnalyzer(AbstractFactory):
         raise NotImplementedError
         # return BallHolder(self.match.dataframe, self.match.category)
 
+    def winner(self) -> str:
+        """
+        Returns the name of the winning team.
+        
+                Returns:
+                        winning_team (str): Name of the winning team.
+        """
+        return self.__match.winning_team
+
+    def loser(self) -> str:
+        """
+        Returns the name of the losing team.
+        
+                Returns:
+                        losing_team (str): Name of the losing team.
+        """
+        return self.__match.losing_team
+
+    def final_score(self):
+        """
+        Shows the final score.
+        """
+        print(f'{self.__match.team_left_name} {self.__match.score_left} x {self.__match.score_right} {self.__match.team_right_name}')
+
     def available(self):
+        """
+        Shows currently available analysis.
+        """
         BallPossession = ("BallPossession", True)
         FoulCharge = ("FoulCharge", True)
         Playmodes = ("Playmodes", True)
@@ -121,7 +198,13 @@ class MatchAnalyzer(AbstractFactory):
                 print(a[0])
 
     def _generate_evaluators(self):
-        pass
+        if self.__cat is SIM2D:
+            raise NotImplementedError
+        elif self.__cat is SSL:
+            self.__evaluators = EvaluatorCollection(self.match)
+        elif self.__cat is VSS:
+            raise NotImplementedError
+
 
     def _run_analysis(self):
         if self.__cat is SIM2D:
@@ -164,12 +247,13 @@ class MatchAnalyzer(AbstractFactory):
             #self.__time_after_corner = TimeAfterCorner(self.__match.dataframe, self.category)
 
         elif self.__cat is SSL:
-            raise NotImplementedError
-            # add SSL analysis
+            pass
+            # setattr(self, "__heatmap", None)
+            # self.__heatmap = Heatmap(self.__match.dataframe, self.category)
 
         elif self.__cat is VSS:
             raise NotImplementedError
-            # add SSL analysis
+            # add VSS analysis
 
     def collect_results(self):
         raise NotImplementedError

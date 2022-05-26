@@ -1,9 +1,10 @@
 import pandas as pd
-from socceranalyzer import MatchAnalyzer, Match, SIM2D
+from socceranalyzer import Match, SSL, MatchAnalyzer
 
-logfile_path = "../output_log/20190706112224-HillStone_3-vs-RoboCIn_1.rcg.csv"
-dataframe = pd.read_csv(logfile_path)
+from socceranalyzer import Match, SIM2D, SSL, MatchAnalyzer
 
-match_object = Match(dataframe, SIM2D)
-match_analyzer = MatchAnalyzer(match_object)
-match_analyzer.intercept_counter.describe()
+logpath = "../../logs/ssl/robocin-er-force-robocup2021.csv"
+
+df = pd.read_csv(logpath)
+m = Match(df, SSL)
+ma = MatchAnalyzer(m)

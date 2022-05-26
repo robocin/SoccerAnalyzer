@@ -1,5 +1,5 @@
 from pandas import DataFrame
-from socceranalyzer.common.abstract.abstract_analysis import AbstractAnalysis
+from socceranalyzer.common.analysis.abstract_analysis import AbstractAnalysis
 from socceranalyzer.common.geometric.point import Point
 from socceranalyzer.common.geometric.triangle import Triangle
 from socceranalyzer.common.operations.measures import *
@@ -11,6 +11,7 @@ from numpy import exp
 
 XG_MODEL_VARIABLES = ['angle','distance', 'players_in_between']
 XG_MODEL_PARAMS = [2.678591, 1.788279, -0.164496, -0.671407]
+
 
 class Shooting(AbstractAnalysis):
     """
@@ -367,6 +368,8 @@ class Shooting(AbstractAnalysis):
         """
         return self.__shooting_stats_df
 
-    def serialize(self):
-        return NotImplementedError
-    
+    def serialize(self) -> list[dict]:
+        """
+        Returns the shooting stats as json serializable object.
+        """
+        return self.__shooting_stats

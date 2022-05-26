@@ -1,4 +1,6 @@
-class Ball:
+from socceranalyzer import AbstractEntity
+
+class Ball(AbstractEntity):
     ''' 
     A class to define the position of the ball in the field.
 
