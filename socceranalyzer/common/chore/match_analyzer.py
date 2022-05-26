@@ -97,6 +97,14 @@ class MatchAnalyzer(AbstractFactory):
         return self.__match
 
     @property
+    def category(self):
+        return self.__cat
+
+    @property
+    def evaluators(self):
+        return self.__evaluators.evaluators
+
+    @property
     def ball_possession(self):
         return self.__ball_possession
 
@@ -127,10 +135,6 @@ class MatchAnalyzer(AbstractFactory):
     @property
     def shooting(self):
         return self.__shooting
-
-    @property
-    def category(self):
-        return self.__cat
 
     @property
     def analysis_dict(self):

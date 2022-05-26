@@ -69,6 +69,10 @@ class EvaluatorCollection:
     def __init__(self, match: Match) -> None:
         self.__evaluators: list = self._generateEvaluators(match)
 
+    @property
+    def evaluators(self):
+        return self.__evaluators
+
     def _generateEvaluators(self, match: Match) -> list:
         if match.category is SIM2D:
             raise NotImplementedError
