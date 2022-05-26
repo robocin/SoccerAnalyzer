@@ -44,7 +44,7 @@ class ThresholdCollection:
         self.foul_thr = fk
 
 
-class EntityCollection:
+class PlayersCollection:
     def __init__(self, match: Match, category: SSL | SIM2D | VSS) -> None:
         self.__match = match
         self.__category: SSL | SIM2D | VSS = category

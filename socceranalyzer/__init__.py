@@ -23,7 +23,7 @@ from socceranalyzer.common.chore.match_analyzer import MatchAnalyzer
 from socceranalyzer.common.chore.mediator import Mediator
 
 # Collections
-from socceranalyzer.common.collections.collections import EntityCollection
+from socceranalyzer.common.collections.collections import PlayersCollection
 
 # Evaluators
 from socceranalyzer.common.evaluators.ball_holder import BallHolderEvaluator
