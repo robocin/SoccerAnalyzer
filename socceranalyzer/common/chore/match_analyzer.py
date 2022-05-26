@@ -1,6 +1,7 @@
 from socceranalyzer.common.chore.abstract_factory import AbstractFactory
 
 from socceranalyzer.common.basic.match import Match
+from socceranalyzer.common.collections.collections import EvaluatorCollection
 from socceranalyzer.common.enums.sim2d import SIM2D
 from socceranalyzer.common.enums.ssl import SSL
 from socceranalyzer.common.enums.vss import VSS
@@ -78,11 +79,8 @@ class MatchAnalyzer(AbstractFactory):
     def __init__(self, match: Match = None):
         self.__match = match
         self.__cat = match.category
-        self.__analysis_dict = {}
-
-        # evaluators
-        self.__ball_holder_evaluator = None
-        self.__shoot_evaluator = None
+        self.__analysis_dict: dict[str, None] = {}
+        self.__evaluators: EvaluatorCollection = None
 
         try:
             if self.__cat is None:
@@ -168,7 +166,6 @@ class MatchAnalyzer(AbstractFactory):
         """
         print(f'{self.__match.team_left_name} {self.__match.score_left} x {self.__match.score_right} {self.__match.team_right_name}')
 
-
     def available(self):
         """
         Shows currently available analysis.
@@ -192,7 +189,13 @@ class MatchAnalyzer(AbstractFactory):
                 print(a[0])
 
     def _generate_evaluators(self):
-        pass
+        if self.__cat is SIM2D:
+            raise NotImplementedError
+        elif self.__cat is SSL:
+            self.__evaluators = EvaluatorCollection(self.match)
+        elif self.__cat is VSS:
+            raise NotImplementedError
+
 
     def _run_analysis(self):
         if self.__cat is SIM2D:
@@ -232,12 +235,13 @@ class MatchAnalyzer(AbstractFactory):
             #self.__time_after_corner = TimeAfterCorner(self.__match.dataframe, self.category)
 
         elif self.__cat is SSL:
-            setattr(self, "__heatmap", None)
-            self.__heatmap = Heatmap(self.__match.dataframe, self.category)
+            # setattr(self, "__heatmap", None)
+            # self.__heatmap = Heatmap(self.__match.dataframe, self.category)
+            self.__dete
 
         elif self.__cat is VSS:
             raise NotImplementedError
-            # add SSL analysis
+            # add VSS analysis
 
     def collect_results(self):
         raise NotImplementedError
