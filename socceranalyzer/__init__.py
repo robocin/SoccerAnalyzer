@@ -1,3 +1,6 @@
+# Jupyter
+from socceranalyzer.jupyter.jupyter_adapter import JupyterAdapter
+
 # Basic
 from socceranalyzer.common.basic.match import Match
 from socceranalyzer.common.basic.field import Field, Field2D

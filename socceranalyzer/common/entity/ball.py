@@ -1,4 +1,4 @@
-from socceranalyzer import AbstractEntity
+from socceranalyzer.common.entity.abstract_entity import AbstractEntity
 
 class Ball(AbstractEntity):
     ''' 
