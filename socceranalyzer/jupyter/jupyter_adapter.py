@@ -1,6 +1,7 @@
 from matplotlib.axes import Axes
 from matplotlib.figure import Figure
 import matplotlib.pyplot as plt
+import seaborn as sns
 import os
 
 import socceranalyzer
@@ -90,7 +91,7 @@ class JupyterAdapter:
 
 
     def ball_possession(self, width: int, height: int, title: str = "Ball Possession") -> None:
-        
+        sns.set()
         left_possession, right_possession = self.__match_analyzer.ball_possession.results()
         
         _, ax = plt.subplots(figsize=(width, height))
@@ -106,7 +107,6 @@ class JupyterAdapter:
         plt.show()
 
     def fault_position(self, width: int, height: int, title: str = "Foul charges"):
-
         self._helper.team_color_validate()
     
         left_faults, right_faults = self.__match_analyzer.foul_charge.results(tuple=True)
@@ -143,7 +143,7 @@ class JupyterAdapter:
         self._helper.team_color_restore()
 
     def playmodes(self, width: int, height: int, title: str = "Playmodes"):
-        
+        sns.set()
         data = self.__match_analyzer.playmodes.results()
 
         fig, ax = plt.subplots(figsize =(16, 9))
