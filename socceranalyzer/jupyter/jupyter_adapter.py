@@ -105,7 +105,6 @@ class JupyterAdapter:
 
         plt.show()
 
-
     def fault_position(self, width: int, height: int, title: str = "Foul charges"):
 
         self._helper.team_color_validate()
@@ -142,3 +141,22 @@ class JupyterAdapter:
         plt.show()
 
         self._helper.team_color_restore()
+
+    def playmodes(self, width: int, height: int, title: str = "Playmodes"):
+        
+        data = self.__match_analyzer.playmodes.results()
+
+        fig, ax = plt.subplots(figsize =(16, 9))
+        ax.barh(data[0], data[1])
+
+        ax.xaxis.set_tick_params(pad = 5)
+        ax.yaxis.set_tick_params(pad = 10)
+
+        # Cosmetic config
+        ax.grid(visible = True, color ='grey',
+                linestyle ='-.', linewidth = 0.5,
+                alpha = 0.5)
+        ax.invert_yaxis()
+        ax.set_title('Playmodes' )
+
+        plt.show()
