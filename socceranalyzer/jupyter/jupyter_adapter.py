@@ -88,8 +88,6 @@ class JupyterAdapter:
             self.__config["alt_color"] = 'yellow'
             self.__config["autopct"] = '%.1f%%'
 
-        print(self.__config)
-
 
     def ball_possession(self, width: int, height: int, title: str = "Ball Possession") -> None:
         
