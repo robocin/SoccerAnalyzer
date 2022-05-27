@@ -45,6 +45,7 @@ class JupyterAdapter:
         else:
             self.__config["left_color"] = 'green'
             self.__config["right_color"] = 'red'
+            self.__config["autopct"] = '%.1f%%'
 
 
     def ball_possession(self, width: int, height: int, title: str = "Ball Possession") -> None:
@@ -56,7 +57,8 @@ class JupyterAdapter:
                 colors = [self.__config["left_color"], self.__config["right_color"]],
                 labels = [self.__config["left_label"], self.__config["right_label"]],
                 shadow = self.__config["shadow"],
-                startangle = self.__config["startangle"])
+                startangle = self.__config["startangle"],
+                autopct= self.__config["autopct"])
         
         ax.set_title(title)
 

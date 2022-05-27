@@ -1,3 +1,5 @@
+from time import time
+
 from socceranalyzer.common.chore.abstract_factory import AbstractFactory
 
 from socceranalyzer.common.basic.match import Match
@@ -89,8 +91,12 @@ class MatchAnalyzer(AbstractFactory):
             print(err)
             raise
         else:
+            begin: float = time()
             self._generate_evaluators()
             self._run_analysis()
+            end: float = time()
+
+            print(f'socceranalyzer: Ran all analysis in {end - begin} seconds.')
 
     @property
     def match(self):
