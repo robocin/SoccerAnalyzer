@@ -1,3 +1,4 @@
+from cProfile import label
 from matplotlib.axes import Axes
 from matplotlib.figure import Figure
 import matplotlib.pyplot as plt
@@ -14,6 +15,24 @@ class AdapterHelper:
         self.__initial_color: str = ""
         self.__config: dict[str, str] = config
 
+
+    def valid_player_unum(self, player_list) -> bool:
+        if player_list == []:
+            print(f'socceranalyzer: player_unum list is empty.')
+            return False
+
+        if(len(player_list) > 11):
+            print(f'socceranalyzer: player_unum list is too big.')
+            return False
+        
+        for unum in player_list:
+            if unum <= 0 or unum >= 12:
+                print(f'socceranalyzer: {unum} out of bounds.')
+                return False
+
+        return True
+
+
     def team_color_validate(self) -> None:
         alt_color = self.__config["alt_color"]
 
@@ -29,6 +48,7 @@ class AdapterHelper:
         if self.__team_side_altered != "":
             print(f'socceranalyzer: The {self.__team_side_altered} team has the same color of the field, changing {self.__team_side_altered}_color to {alt_color}.')
 
+
     def team_color_restore(self) -> None:
         if self.__team_side_altered == "":
             return
@@ -40,12 +60,8 @@ class AdapterHelper:
 
             print(f'socceranalyzer: Restored {self.__team_side_altered} team to it\'s initial color: {self.__initial_color}.')
 
-
-
         self.__initial_color = ""
         self.__team_side_altered = ""
-
-            
 
 class JupyterAdapter:
     def __init__(self, match_analyzer: MatchAnalyzer) -> None:
@@ -54,6 +70,7 @@ class JupyterAdapter:
         self._helper: AdapterHelper = AdapterHelper(self.__config)
 
         self.__init_config()
+
 
     def __init_config(self):
         """
@@ -106,7 +123,8 @@ class JupyterAdapter:
 
         plt.show()
 
-    def fault_position(self, width: int, height: int, title: str = "Foul charges"):
+
+    def fault_position(self, width: int = 10, height: int = 10, title: str = "Foul charges"):
         self._helper.team_color_validate()
     
         left_faults, right_faults = self.__match_analyzer.foul_charge.results(tuple=True)
@@ -142,11 +160,12 @@ class JupyterAdapter:
 
         self._helper.team_color_restore()
 
-    def playmodes(self, width: int, height: int, title: str = "Playmodes"):
+
+    def playmodes(self, width: int = 10, height: int = 15, title: str = "Playmodes"):
         sns.set()
         data = self.__match_analyzer.playmodes.results()
 
-        fig, ax = plt.subplots(figsize =(16, 9))
+        _, ax = plt.subplots(figsize =(width, height))
         ax.barh(data[0], data[1])
 
         ax.xaxis.set_tick_params(pad = 5)
@@ -157,6 +176,32 @@ class JupyterAdapter:
                 linestyle ='-.', linewidth = 0.5,
                 alpha = 0.5)
         ax.invert_yaxis()
-        ax.set_title('Playmodes' )
+        ax.set_title(title)
 
         plt.show()
+
+
+    def stamina(self, left_players_unum: list[int] = [], right_players_unum: list[int] = [], width: int = 20 , height: int = 10, title: str = "Stamina"):
+        sns.set()
+        left_players = self.__match_analyzer.stamina.stamina_left
+        right_players = self.__match_analyzer.stamina.stamina_right
+
+        if self._helper.valid_player_unum(left_players_unum) == True:
+
+            _, ax = plt.subplots(figsize=(width, height))
+
+            for ith_player in left_players_unum:
+                plt.plot(left_players[ith_player - 1], label=f'Player {ith_player}')
+
+            ax.set_title(title)
+            plt.show()
+
+        if self._helper.valid_player_unum(right_players_unum) == True:
+
+            _, ax = plt.subplots(figsize=(width, height))
+
+            for ith_player in right_players_unum:
+                plt.plot(right_players[ith_player - 1], label=f'Player {ith_player}')
+            
+            ax.set_title(title)
+            plt.show()
