@@ -161,7 +161,7 @@ class JupyterAdapter:
         self._helper.team_color_restore()
 
 
-    def playmodes(self, width: int = 10, height: int = 15, title: str = "Playmodes"):
+    def playmodes(self, width: int = 15, height: int = 10, title: str = "Playmodes"):
         sns.set()
         data = self.__match_analyzer.playmodes.results()
 
@@ -194,6 +194,7 @@ class JupyterAdapter:
                 plt.plot(left_players[ith_player - 1], label=f'Player {ith_player}')
 
             ax.set_title(title)
+            plt.legend()
             plt.show()
 
         if self._helper.valid_player_unum(right_players_unum) == True:
@@ -204,4 +205,5 @@ class JupyterAdapter:
                 plt.plot(right_players[ith_player - 1], label=f'Player {ith_player}')
             
             ax.set_title(title)
+            plt.legend()
             plt.show()
