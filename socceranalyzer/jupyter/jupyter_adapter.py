@@ -7,10 +7,50 @@ import socceranalyzer
 from socceranalyzer.common.chore.match_analyzer import MatchAnalyzer
 
 
+class AdapterHelper:
+    def __init__(self, config) -> None:
+        self.__team_side_altered: str = ""
+        self.__initial_color: str = ""
+        self.__config: dict[str, str] = config
+
+    def team_color_validate(self) -> None:
+        alt_color = self.__config["alt_color"]
+
+        if self.__config["left_color"] == "green":
+            self.__team_side_altered = "left"
+            self.__initial_color = "green"
+            self.__config["left_color"] = self.__config["alt_color"]
+        elif self.__config["right_color"] == "green":
+            self.__team_side_altered = "right"
+            self.__initial_color = "green"
+            self.__config["right_color"] = self.__config["alt_color"]
+
+        if self.__team_side_altered != "":
+            print(f'socceranalyzer: The {self.__team_side_altered} team has the same color of the field, changing {self.__team_side_altered}_color to {alt_color}.')
+
+    def team_color_restore(self) -> None:
+        if self.__team_side_altered == "":
+            return
+        else:
+            if self.__team_side_altered == "left":
+                self.__config["left_color"] = self.__initial_color
+            else:
+                self.__config["right_color"] = self.__initial_color
+
+            print(f'socceranalyzer: Restored {self.__team_side_altered} team to it\'s initial color: {self.__initial_color}.')
+
+
+
+        self.__initial_color = ""
+        self.__team_side_altered = ""
+
+            
+
 class JupyterAdapter:
     def __init__(self, match_analyzer: MatchAnalyzer) -> None:
         self.__match_analyzer = match_analyzer
         self.__config: dict[str, str] = {}
+        self._helper: AdapterHelper = AdapterHelper(self.__config)
 
         self.__init_config()
 
@@ -45,7 +85,10 @@ class JupyterAdapter:
         else:
             self.__config["left_color"] = 'green'
             self.__config["right_color"] = 'red'
+            self.__config["alt_color"] = 'yellow'
             self.__config["autopct"] = '%.1f%%'
+
+        print(self.__config)
 
 
     def ball_possession(self, width: int, height: int, title: str = "Ball Possession") -> None:
@@ -64,8 +107,11 @@ class JupyterAdapter:
 
         plt.show()
 
-    def fault_position(self, width: int, height: int, title: str = "Ball Possession"):
 
+    def fault_position(self, width: int, height: int, title: str = "Foul charges"):
+
+        self._helper.team_color_validate()
+    
         left_faults, right_faults = self.__match_analyzer.foul_charge.results(tuple=True)
 
         _, ax = plt.subplots(figsize=(width, height))
@@ -96,3 +142,5 @@ class JupyterAdapter:
         ax.imshow(img, zorder = -1, extent=[-56, 56, -34, 34])
 
         plt.show()
+
+        self._helper.team_color_restore()
