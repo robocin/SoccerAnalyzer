@@ -3,14 +3,13 @@ from socceranalyzer.common.enums.sim2d import SIM2D
 from socceranalyzer.common.enums.ssl import SSL
 from socceranalyzer.common.enums.vss import VSS
 from socceranalyzer.common.geometric.point import Point
-from socceranalyzer.common.geometric.circle import Circle 
 from socceranalyzer.common.operations.measures import distance
 from socceranalyzer.common.chore.mediator import Mediator
 
 
 class BallHolderEvaluator:
     """
-        Calculates which players could be in possession of the ball based on a given ball area range.
+        Calculates which players are within a given ball area range.
         
         BallHolderEvaluator(dataframe: pandas.DataFrame, category: enum)
 
@@ -21,17 +20,18 @@ class BallHolderEvaluator:
                     the pandas object that contains the game data
                 category: enum
                     match's category (2D, SSL or VSS)
-                possible_players_l: [player]
+                possible_players_l: [int]
                     a list of players objects from the left team inside the ball area radius
-                possible_player_r: [player]
+                possible_player_r: [int]
                     a list of players objects from the right team inside the ball area radius
 
         Methods
         -------
             private:
-                at(cycle: int) -> [players_l], [players_r]
+                at(cycle: int) -> [int], [int], str
                     returns two lists containing left side players and right side players inside the
-                    ball area range, respectively
+                    ball area range, respectively, along with a string "left" or "right", representing which team 
+                    has the ball possession
     """
     def __init__(self, dataframe: pandas.DataFrame, category: SIM2D | SSL | VSS):
         self.__df = dataframe
@@ -67,11 +67,11 @@ class BallHolderEvaluator:
     def at(self, cycle: int):
         """
             Iterates through each player's position, calculates their distance to the ball
-            and appends them to the possible players list if they are within range
+            and appends them to the possible players list if they are within range, also keeping track of which player is closest
 
-            :return: [players_l], [players_r]
-                returns two lists containing left side players and right side players inside the
-                ball area range, respectively
+            :return: [int], [int], str
+                returns two lists containing left side players and right side players inside the ball area range, 
+                respectively, along with a string "left" or "right", representing which team has the ball possession
         """
 
         ball_x = self.dataframe.loc[cycle, str(self.category.BALL_X)]

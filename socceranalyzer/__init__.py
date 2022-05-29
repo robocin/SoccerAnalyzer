@@ -27,7 +27,6 @@ from socceranalyzer.common.collections.collections import EntityCollection
 
 # Evaluators
 from socceranalyzer.common.evaluators.ball_holder import BallHolderEvaluator
-from socceranalyzer.common.evaluators.closer_to_ball import closer_to_ball
 from socceranalyzer.common.evaluators.shoot_evaluator import ShootEvaluator
 from socceranalyzer.common.evaluators.player_detector import PlayerDetector
 
