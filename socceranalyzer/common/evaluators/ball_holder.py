@@ -5,6 +5,7 @@ from socceranalyzer.common.enums.vss import VSS
 from socceranalyzer.common.geometric.point import Point
 from socceranalyzer.common.geometric.circle import Circle 
 from socceranalyzer.common.operations.measures import distance
+from socceranalyzer.common.chore.mediator import Mediator
 
 
 class BallHolderEvaluator:

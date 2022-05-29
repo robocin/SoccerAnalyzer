@@ -74,8 +74,10 @@ class BallPossession:
         ball_position_this_cycle = Point()
 
         for current_cycle, row in filtered_game.iterrows():
+            
+            ball_holder = BallHolderEvaluator(filtered_game, SIM2D)
 
-            closest_side = BallHolderEvaluator(filtered_game).at(current_cycle)[2]
+            closest_side = ball_holder.at(current_cycle)[2]
 
             if closest_side == 'left':
                 self.__left_team_possession += 1
