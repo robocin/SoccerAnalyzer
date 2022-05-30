@@ -17,6 +17,7 @@ from socceranalyzer.agent2D.analysis.tester_free_kick import TesterFK
 from socceranalyzer.common.analysis.time_after_events import TimeAfterEvents
 from socceranalyzer.common.analysis.stamina import Stamina
 from socceranalyzer.common.analysis.shooting import Shooting
+from socceranalyzer.common.analysis.heatmap import Heatmap
 
 
 class MatchAnalyzer(AbstractFactory):
@@ -239,6 +240,9 @@ class MatchAnalyzer(AbstractFactory):
 
             setattr(self, "__shooting", None)
             self.__shooting = Shooting(self.__match.dataframe, self.category)
+
+            setattr(self, "__heatmap", None)
+            self.__heatmap = Heatmap(self.__match.dataframe, self.category)
 
             #setattr(self, "__time_after_corner", None)
             #self.__time_after_corner = TimeAfterCorner(self.__match.dataframe, self.category)
