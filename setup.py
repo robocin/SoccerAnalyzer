@@ -4,6 +4,8 @@ setup(
     name='socceranalyzer',
     version='2.0.0',
     description='Robocup Soccer data analysis package for SIM2D, SSL and VSS categories',
+    long_description= open('README.md').read(),
+    long_description_content_type='text/markdown',
     url='https://github.com/robocin/SoccerAnalyzer',
     author='RoboCIn',
     author_email="robocin@cin.ufpe.br",
