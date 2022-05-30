@@ -21,26 +21,19 @@ class Mediator:
                 SIM2D.
     """
     @staticmethod
-    def players_left_position(category, gkeeper: bool=True, unum: list[int] = []):
+    def players_left_position(category, gkeeper=True):
 
         slp = StringListPositions()
 
         if category is SIM2D:
-            if unum is []:
-                if gkeeper:
-                    for i in range(1, 12):
-                        slp.items.append(StringListItem(f'player_l{i}_x', f'player_l{i}_y'))
-                else:
-                    for i in range(2, 12):
-                        slp.items.append(StringListItem(f'player_l{i}_x', f'player_l{i}_y'))
-
-                return slp
+            if gkeeper:
+                for i in range(1, 12):
+                    slp.items.append(StringListItem(f'player_l{i}_x', f'player_l{i}_y'))
             else:
-                for number in unum:
-                    slp.items.append(StringListItem(f'player_l{number}_x', f'player_l{number}_y'))
+                for i in range(2, 12):
+                    slp.items.append(StringListItem(f'player_l{i}_x', f'player_l{i}_y'))
 
-                    return slp
-                    
+            return slp
 
         elif category is VSS:
             raise NotImplementedError
@@ -49,27 +42,19 @@ class Mediator:
             raise NotImplementedError
 
     @staticmethod
-    def players_right_position(category, gkeeper: bool = True, unum: list[int] = []):
+    def players_right_position(category, gkeeper=True):
 
         slp = StringListPositions()
 
         if category is SIM2D:
-            if unum is []:
-                if gkeeper:
-                    for i in range(1, 12):
-                        slp.items.append(StringListItem(f'player_r{i}_x', f'player_r{i}_y'))
-                else:
-                    for i in range(2, 12):
-                        slp.items.append(StringListItem(f'player_r{i}_x', f'player_r{i}_y'))
-
-                return slp
+            if gkeeper:
+                for i in range(1, 12):
+                    slp.items.append(StringListItem(f'player_r{i}_x', f'player_r{i}_y'))
             else:
-                for number in unum:
-                    slp.items.append(StringListItem(f'player_r{number}_x', f'player_r{number}_y'))
+                for i in range(2, 12):
+                    slp.items.append(StringListItem(f'player_r{i}_x', f'player_r{i}_y'))
 
-                    return slp
-
-
+            return slp
         elif category is VSS:
             raise NotImplementedError
 
