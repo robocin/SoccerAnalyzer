@@ -144,6 +144,10 @@ class MatchAnalyzer(AbstractFactory):
         return self.__shooting
 
     @property
+    def heatmap(self):
+        return self.__heatmap
+
+    @property
     def analysis_dict(self):
         raise NotImplementedError
         # return self.__analysis_dict

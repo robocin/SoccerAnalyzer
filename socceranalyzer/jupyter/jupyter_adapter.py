@@ -1,4 +1,5 @@
 from cProfile import label
+from tkinter import E
 from matplotlib.axes import Axes
 from matplotlib.figure import Figure
 import matplotlib.pyplot as plt
@@ -207,3 +208,37 @@ class JupyterAdapter:
             ax.set_title(title)
             plt.legend()
             plt.show()
+
+
+    def heatmap(self, left_players_unum: list[int] = [], 
+                        right_players_unum: list[int] = [],  
+                        ball: int = bool,  
+                        width: int = 15, 
+                        height: int = 10, 
+                        title: str = "Heatmap"):
+        sns.set()
+        left_players, right_players, ball_positions_dict = self.__match_analyzer.heatmap.data
+
+        fig, ax = plt.subplots(figsize=(width, height))
+
+        if ball:
+            sns.kdeplot(ball_positions_dict['x'], ball_positions_dict['y'], shade="True", color="green", n_levels = 10)
+            plt.title(f'{title}')
+            plt.ylim(-35,35)
+            plt.xlim(-55,55)
+            plt.show()
+            
+        else:
+            for player in left_players:
+                sns.kdeplot(player[0], player[1], shade = "True", color = "green", n_levels = 10)
+                plt.title(f'{title}')
+                plt.ylim(-35,35)
+                plt.xlim(-55,55)
+                plt.show()
+
+            for player in right_players:
+                sns.kdeplot(player[0], player[1], shade = "True", color = "green", n_levels = 10)
+                plt.title(f'{title}')
+                plt.ylim(-35,35)
+                plt.xlim(-55,55)
+                plt.show()

@@ -51,6 +51,11 @@ class Heatmap(AbstractAnalysis):
     def category(self):
         return self.__category
 
+    @property
+    def data(self, left_players_unum: list[int] = [], right_players_unum: list[int] = []):
+        
+        return self.__left_players.values(), self.__right_players.values(), self.__ball_positions
+
     def _analyze(self):
         ball_x = np.array(self.dataframe[str(self.category.BALL_X)])
         ball_y = np.array(self.dataframe[str(self.category.BALL_Y)])
