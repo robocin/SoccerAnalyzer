@@ -29,6 +29,5 @@ setup(
         'Tracker': 'https://github.com/robocin/SoccerAnalyzer/issues'
     },
     packages=[package for package in find_packages() if package.startswith("socceranalyzer")],
-    install_requires=['pandas', 'numpy', 'matplotlib', 'seaborn'],
-    python_requires='>3.10.*'
+    install_requires=['pandas', 'numpy', 'seaborn', 'matplotlib']
 )
