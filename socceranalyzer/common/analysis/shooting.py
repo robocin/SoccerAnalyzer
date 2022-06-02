@@ -375,7 +375,7 @@ class Shooting(AbstractAnalysis):
         """
         return self.__shooting_stats
 
-    def draw_pitch(self, fig_size: Tuple[int, int]=(15, 4), amount=2, stack_horizontally=True) -> Tuple[Figure, Axes]:
+    def __draw_pitch(self, fig_size: Tuple[int, int]=(15, 4), amount=2, stack_horizontally=True) -> Tuple[Figure, Axes]:
         fig, axs=plt.subplots(1, amount, figsize=fig_size) if stack_horizontally else plt.subplots(amount, 1, figsize=fig_size)
         linecolor='black'
 
@@ -412,8 +412,8 @@ class Shooting(AbstractAnalysis):
         return fig, axs
 
     def plot_shot_frequency(self) -> Tuple[Figure, Axes]:
-        (fig, axs) = self.draw_pitch()
-        chart_data = self.__shooting_stats_df[['team', 'x', 'y', 'xG']].copy()
+        (fig, axs) = self.__draw_pitch(fig_size=(10, 4))
+        chart_data = self.__shooting_stats_df[['team', 'x', 'y']].copy()
         for i,shot in chart_data.iterrows():
             chart_data.at[i,'x']=52.5-shot['x']
             chart_data.at[i,'y']=34+shot['y']
@@ -422,6 +422,28 @@ class Shooting(AbstractAnalysis):
             pos=ax.hexbin(data=team_data, x='y', y='x',zorder=1,cmap='OrRd',gridsize=(25,10),alpha=.7,extent=(0,68,0,52.5))
             ax.set_xlim(-1, 69)
             ax.set_ylim(-3,52.5)
-            plt.colorbar(pos, ax=ax)
             ax.set_title(f'Frequency of shots team {team}')
+            plt.colorbar(pos, ax=ax)
+            plt.tight_layout()
+            plt.gca().set_aspect('equal', adjustable='box')
+        return fig, axs
+
+    def plot_shot_log(self) -> Tuple[Figure, Axes]:
+        (fig, axs) = self.__draw_pitch(fig_size=(10, 4))
+        chart_data = self.__shooting_stats_df[['team', 'x', 'y', 'xG', 'goal']].copy()
+        for i,shot in chart_data.iterrows():
+            chart_data.at[i,'x']=52.5-shot['x']
+            chart_data.at[i,'y']=34+shot['y']
+        for ax, team in zip(axs, ['l', 'r']):
+            team_data = chart_data[chart_data['team'] == team]
+            goals = team_data[team_data['goal']==True]
+            shots = team_data[team_data['goal']==False]
+            ax.plot(shots['y'], shots['x'], 'rx', label='misses', alpha=0.5)
+            ax.plot(goals['y'], goals['x'], 'go', label='goals', alpha=0.5)
+            ax.set_title(f'Shots team {team}')
+            ax.legend()
+            plt.xlim(-1, 69)
+            plt.ylim(-3, 52.5)
+            plt.tight_layout()
+            plt.gca().set_aspect('equal', adjustable='box')
         return fig, axs
