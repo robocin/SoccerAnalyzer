@@ -495,8 +495,8 @@ class Shooting(AbstractAnalysis):
             team_data = chart_data[chart_data['team'] == team]
             goals = team_data[team_data['goal']==True]
             shots = team_data[team_data['goal']==False]
-            ax.scatter(shots['y'], shots['x'], s=150*shots['xG'], c='#7e7272', label='misses')
-            ax.scatter(goals['y'], goals['x'], s=150*goals['xG'], c='#981717', label='goals')
+            ax.scatter(shots['y'], shots['x'], s=150*shots['xG'], c='#7e7272', label='misses', alpha=0.5)
+            ax.scatter(goals['y'], goals['x'], s=150*goals['xG'], c='#981717', label='goals', alpha=0.5)
             ax.set_title(f'Shot quality team {team}')
             ax.legend()
             plt.xlim(-1, 69)
