@@ -1,4 +1,5 @@
 from socceranalyzer.common.chore.abstract_factory import AbstractFactory
+from socceranalyzer.common.chore.builder import Builder
 
 from socceranalyzer.common.basic.match import Match
 from socceranalyzer.common.collections.collections import EvaluatorCollection
@@ -90,7 +91,17 @@ class MatchAnalyzer(AbstractFactory):
             print(err)
             raise
         else:
-            self._generate_evaluators()
+            builder = Builder(match)
+
+            self.__field = builder.fieldBuilder()
+            self.__ball = builder.ballBuilder()
+            self.__left_team = builder.teamBuilder('left')
+            self.__right_team = builder.teamBuilder('right')
+
+            self.__left_players = builder.playerBuilder(self.__left_team)
+            self.__right_players = builder.playerBuilder(self.__right_team)
+
+            #self._generate_evaluators()
             self._run_analysis()
 
     @property
@@ -100,6 +111,30 @@ class MatchAnalyzer(AbstractFactory):
     @property
     def category(self):
         return self.__cat
+
+    @property
+    def field(self):
+        return self.__field
+    
+    @property
+    def ball(self):
+        return self.__ball
+    
+    @property
+    def left_team(self):
+        return self.__left_team
+
+    @property
+    def right_team(self):
+        return self.__right_team
+
+    @property
+    def left_players(self):
+        return self.__left_players
+    
+    @property
+    def right_players(self):
+        return self.__right_players
 
     @property
     def evaluators(self):

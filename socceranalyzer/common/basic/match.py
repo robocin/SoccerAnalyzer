@@ -150,8 +150,7 @@ class Match:
 
     def __build(self):
         """
-            Runs when a Match objected is created to populate its attributes with
-            the given dataframe.
+            Runs when a Match objected is created to populate its attributes with the given dataframe.
 
             :return: None
         """

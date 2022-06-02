@@ -3,8 +3,9 @@ from socceranalyzer import Match, SSL, MatchAnalyzer
 
 from socceranalyzer import Match, SIM2D, SSL, MatchAnalyzer
 
-logpath = "../../logs/ssl/robocin-er-force-robocup2021.csv"
+logpath = "../output_log/RoboCIn_2-vs-Razi2018_3.rcg.csv"
 
 df = pd.read_csv(logpath)
-m = Match(df, SSL)
+m = Match(df, SIM2D)
 ma = MatchAnalyzer(m)
+ma.intercept_counter.describe()
