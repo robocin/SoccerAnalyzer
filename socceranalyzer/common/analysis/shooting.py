@@ -1,4 +1,4 @@
-from typing import Tuple
+from typing import Literal, Tuple
 from pandas import DataFrame
 from socceranalyzer.common.analysis.abstract_analysis import AbstractAnalysis
 from socceranalyzer.common.geometric.point import Point
@@ -49,6 +49,8 @@ class Shooting(AbstractAnalysis):
                     checks for a shot at cycle
                 check_goal(cycle: int) -> None
                     checks for a goal at cycle
+                draw_pitch(fig_size: Tuple[int, int], amount: int, stack_horizontally: bool) -> Tuple[Figure, Axes]
+                    returns figure and axes with drawn pitches
             public:
                 _analyze() -> None
                     performs match analysis
@@ -64,6 +66,12 @@ class Shooting(AbstractAnalysis):
                     returns match detailed shooting stats as a Python dict
                 results_as_dataframe() -> pandas.DataFrame:
                     returns match detailed shooting stats as a pandas.DataFrame
+                plot_shot_frequency() -> Tuple[Figure, Axes]
+                    returns match shot frequency graph
+                plot_shot_log() -> Tuple[Figure, Axes]
+                    returns match shot log scatter plot
+                plot_shot_quality() -> Tuple[Figure, Axes]
+                    returns match shot quality scatter plot
     """
     def __init__(self, dataframe: DataFrame, category):
         self.__category = category
@@ -268,7 +276,7 @@ class Shooting(AbstractAnalysis):
             self.__check_goal(i)
         self.__shooting_stats_df = DataFrame(self.__shooting_stats)
 
-    def get_total_team_shots(self, team: str) -> int:
+    def get_total_team_shots(self, team: Literal['l', 'r']) -> int:
         """
         Returns total team shots during the match.
 
@@ -282,7 +290,7 @@ class Shooting(AbstractAnalysis):
             raise Exception('Team must be l or r')
         return self.__shooting_stats_df[self.__shooting_stats_df.team == team].shape[0]
 
-    def get_team_on_target_shots(self, team: str) -> int:
+    def get_team_on_target_shots(self, team: Literal['l', 'r']) -> int:
         """
         Returns total team on target shots during the match.
 
@@ -296,7 +304,7 @@ class Shooting(AbstractAnalysis):
             raise Exception('Team must be l or r')
         return self.__shooting_stats_df[(self.__shooting_stats_df.team == team) & self.__shooting_stats_df.on_target == True].shape[0]
     
-    def get_total_team_xG(self, team: str) -> float:
+    def get_total_team_xG(self, team: Literal['l', 'r']) -> float:
         """
         Returns total team xG during the match.
 
@@ -376,6 +384,16 @@ class Shooting(AbstractAnalysis):
         return self.__shooting_stats
 
     def __draw_pitch(self, fig_size: Tuple[int, int]=(15, 4), amount=2, stack_horizontally=True) -> Tuple[Figure, Axes]:
+        """
+        Draws specified amount of pithces and returns a figure and axes with the drawn pitches.
+
+            Parameters:
+                    fig_size (Tuple[int, int]): Tuple indicating total figure size
+                    amount (int): Amount of pitches to draw
+                    stack_horizontally (bool): Stack pitches horizontally or vertically
+            Returns:
+                    fig, axs (Tuple[Figure, Axes]): Figure and Axes drawn
+        """
         fig, axs=plt.subplots(1, amount, figsize=fig_size) if stack_horizontally else plt.subplots(amount, 1, figsize=fig_size)
         linecolor='black'
 
@@ -412,6 +430,12 @@ class Shooting(AbstractAnalysis):
         return fig, axs
 
     def plot_shot_frequency(self) -> Tuple[Figure, Axes]:
+        """
+        Plots shot frequency hexbin graph in the pitch and returns figure and axes where it was drawn.
+
+            Returns:
+                    fig, axs (Tuple[Figure, Axes]): Figure and Axes drawn
+        """
         (fig, axs) = self.__draw_pitch(fig_size=(10, 4))
         chart_data = self.__shooting_stats_df[['team', 'x', 'y']].copy()
         for i,shot in chart_data.iterrows():
@@ -429,6 +453,12 @@ class Shooting(AbstractAnalysis):
         return fig, axs
 
     def plot_shot_log(self) -> Tuple[Figure, Axes]:
+        """
+        Plots all shots registered in a scatter graph of the pitch and returns figure and axes where it was drawn.
+
+            Returns:
+                    fig, axs (Tuple[Figure, Axes]): Figure and Axes drawn
+        """
         (fig, axs) = self.__draw_pitch(fig_size=(10, 4))
         chart_data = self.__shooting_stats_df[['team', 'x', 'y', 'goal']].copy()
         for i,shot in chart_data.iterrows():
@@ -448,7 +478,14 @@ class Shooting(AbstractAnalysis):
             plt.gca().set_aspect('equal', adjustable='box')
         return fig, axs
 
-    def plot_shot_quality(self) -> Tuple[Figure, Axes]:
+    def plot_shot_quality(self) -> Tuple[Figure, Axes]:        
+        """
+        Plots all shots registered in a scatter graph where the size of the of the pitch means the 
+        shot quality and returns figure and axes where it was drawn.
+
+            Returns:
+                    fig, axs (Tuple[Figure, Axes]): Figure and Axes drawn
+        """
         (fig, axs) = self.__draw_pitch(fig_size=(10, 4))
         chart_data = self.__shooting_stats_df[['team', 'x', 'y', 'xG','goal']].copy()
         for i,shot in chart_data.iterrows():
