@@ -7,7 +7,7 @@ from socceranalyzer.common.operations.measures import *
 from socceranalyzer.common.utility.slicers import PlaymodeSlicer
 from socceranalyzer.common.enums.sim2d import Landmarks
 from math import sqrt, acos
-from numpy import exp
+from numpy import char, exp
 from matplotlib.patches import Arc
 import matplotlib.pyplot as plt
 from matplotlib.axes import Axes
@@ -430,7 +430,7 @@ class Shooting(AbstractAnalysis):
 
     def plot_shot_log(self) -> Tuple[Figure, Axes]:
         (fig, axs) = self.__draw_pitch(fig_size=(10, 4))
-        chart_data = self.__shooting_stats_df[['team', 'x', 'y', 'xG', 'goal']].copy()
+        chart_data = self.__shooting_stats_df[['team', 'x', 'y', 'goal']].copy()
         for i,shot in chart_data.iterrows():
             chart_data.at[i,'x']=52.5-shot['x']
             chart_data.at[i,'y']=34+shot['y']
@@ -441,6 +441,26 @@ class Shooting(AbstractAnalysis):
             ax.plot(shots['y'], shots['x'], 'rx', label='misses', alpha=0.5)
             ax.plot(goals['y'], goals['x'], 'go', label='goals', alpha=0.5)
             ax.set_title(f'Shots team {team}')
+            ax.legend()
+            plt.xlim(-1, 69)
+            plt.ylim(-3, 52.5)
+            plt.tight_layout()
+            plt.gca().set_aspect('equal', adjustable='box')
+        return fig, axs
+
+    def plot_shot_quality(self) -> Tuple[Figure, Axes]:
+        (fig, axs) = self.__draw_pitch(fig_size=(10, 4))
+        chart_data = self.__shooting_stats_df[['team', 'x', 'y', 'xG','goal']].copy()
+        for i,shot in chart_data.iterrows():
+            chart_data.at[i,'x']=52.5-shot['x']
+            chart_data.at[i,'y']=34+shot['y']
+        for ax, team in zip(axs, ['l', 'r']):
+            team_data = chart_data[chart_data['team'] == team]
+            goals = team_data[team_data['goal']==True]
+            shots = team_data[team_data['goal']==False]
+            ax.scatter(shots['y'], shots['x'], s=150*shots['xG'], c='#7e7272', label='misses')
+            ax.scatter(goals['y'], goals['x'], s=150*goals['xG'], c='#981717', label='goals')
+            ax.set_title(f'Shot quality team {team}')
             ax.legend()
             plt.xlim(-1, 69)
             plt.ylim(-3, 52.5)
