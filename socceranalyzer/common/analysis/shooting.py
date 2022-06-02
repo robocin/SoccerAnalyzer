@@ -1,3 +1,4 @@
+from typing import Tuple
 from pandas import DataFrame
 from socceranalyzer.common.analysis.abstract_analysis import AbstractAnalysis
 from socceranalyzer.common.geometric.point import Point
@@ -7,11 +8,13 @@ from socceranalyzer.common.utility.slicers import PlaymodeSlicer
 from socceranalyzer.common.enums.sim2d import Landmarks
 from math import sqrt, acos
 from numpy import exp
-
+from matplotlib.patches import Arc
+import matplotlib.pyplot as plt
+from matplotlib.axes import Axes
+from matplotlib.figure import Figure
 
 XG_MODEL_VARIABLES = ['angle','distance', 'players_in_between']
 XG_MODEL_PARAMS = [2.678591, 1.788279, -0.164496, -0.671407]
-
 
 class Shooting(AbstractAnalysis):
     """
@@ -371,3 +374,54 @@ class Shooting(AbstractAnalysis):
         Returns the shooting stats as json serializable object.
         """
         return self.__shooting_stats
+
+    def draw_pitch(self, fig_size: Tuple[int, int]=(15, 4), amount=2, stack_horizontally=True) -> Tuple[Figure, Axes]:
+        fig, axs=plt.subplots(1, amount, figsize=fig_size) if stack_horizontally else plt.subplots(amount, 1, figsize=fig_size)
+        linecolor='black'
+
+        for ax in axs:
+            ax.plot([0,68],[0,0], color=linecolor)
+            ax.plot([68,68],[52.5,0], color=linecolor)
+            ax.plot([0,0],[52.5,0], color=linecolor)
+            
+            #Left Penalty Area
+            ax.plot([13.84,13.84],[0,16.5],color=linecolor)
+            ax.plot([13.84,54.16],[16.5,16.5],color=linecolor)
+            ax.plot([54.16,54.16],[0,16.5],color=linecolor)    
+            
+            #Goal
+            ax.plot([41.01,41.01],[-2,0],color=linecolor)
+            ax.plot([26.99,41.01],[-2,-2],color=linecolor)
+            ax.plot([26.99,26.99],[0,-2],color=linecolor)
+        
+            #Prepare Circles
+            leftPenSpot = plt.Circle((68/2,11),0.4,color=linecolor)
+            
+            #Draw Circles
+            ax.add_patch(leftPenSpot)
+
+            #Prepare Arcs
+            leftArc = Arc((34,11),height=18,width=18,angle=0,theta1=38,theta2=142,color=linecolor)
+            
+            #Draw Arcs
+            ax.add_patch(leftArc)
+            
+            #Tidy Axes
+            ax.axis('off')
+        
+        return fig, axs
+
+    def plot_shot_frequency(self) -> Tuple[Figure, Axes]:
+        (fig, axs) = self.draw_pitch()
+        chart_data = self.__shooting_stats_df[['team', 'x', 'y', 'xG']].copy()
+        for i,shot in chart_data.iterrows():
+            chart_data.at[i,'x']=52.5-shot['x']
+            chart_data.at[i,'y']=34+shot['y']
+        for ax, team in zip(axs,['l', 'r']):
+            team_data=chart_data[chart_data['team'] == team]
+            pos=ax.hexbin(data=team_data, x='y', y='x',zorder=1,cmap='OrRd',gridsize=(25,10),alpha=.7,extent=(0,68,0,52.5))
+            ax.set_xlim(-1, 69)
+            ax.set_ylim(-3,52.5)
+            plt.colorbar(pos, ax=ax)
+            ax.set_title(f'Frequency of shots team {team}')
+        return fig, axs
