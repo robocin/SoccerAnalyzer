@@ -91,15 +91,6 @@ class MatchAnalyzer(AbstractFactory):
             print(err)
             raise
         else:
-            builder = Builder(match)
-
-            self.__field = builder.fieldBuilder()
-            self.__ball = builder.ballBuilder()
-            self.__left_team = builder.teamBuilder('left')
-            self.__right_team = builder.teamBuilder('right')
-
-            self.__left_players = builder.playerBuilder(self.__left_team)
-            self.__right_players = builder.playerBuilder(self.__right_team)
 
             #self._generate_evaluators()
             self._run_analysis()
@@ -247,7 +238,7 @@ class MatchAnalyzer(AbstractFactory):
             self.__ball_possession = BallPossession(self.__match.dataframe, self.category)
 
             setattr(self, "__intercept_counter", None)
-            self.__intercept_counter = InterceptCounter(self.__match.dataframe, self.category)
+            self.__intercept_counter = InterceptCounter(self.__match)
 
             setattr(self, "__tester_free_kick", None)
             self.__tester_free_kick = TesterFK(self.__match.dataframe, self.category)
