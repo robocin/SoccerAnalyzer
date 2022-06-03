@@ -8,18 +8,11 @@ class Ball(AbstractEntity):
 
     Attributes
     ----------
-    x: float
-        x coordinates of the ball in the field
-    y: float
-        y coordinates of the ball in the field
-
-    Methods
-    -------
-    x:
-        Returns the attribute x.
-    y: 
-        Returns the attribute y.
-            
+        public through @properties
+            x: float
+                x coordinates of the ball in the field
+            y: float
+                y coordinates of the ball in the field
     """
     def __init__(self,x,y):
         """

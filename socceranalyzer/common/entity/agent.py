@@ -1,5 +1,25 @@
 class Agent:
-    def __init__(self, team_name=None, team_side=None, number_id=None):
+    def __init__(self, team_name : str = None, team_side: str = None, number_id: int = None):
+        """
+            A class to represent a agent that is playing the match
+
+            agent(team_name: str, team_side: str, number_id: int)
+
+            Attributes
+            ----------
+                public through @properties: 
+                    team_name: str
+                        Name of the team that the player is playing for
+                    team_side: str
+                        Which side the player is playing for
+                    number_id int
+                        An identifier that differenciates the agents
+                    position: list[tuple(float, float)]
+                        A list containing the player's position in each cycle. List has the lenght of the number of cycles
+                    stamina: list[int)]
+                        A list containing the player's stamina in each cycle. List has the lenght of the number of cycles
+                    
+        """
         self.__team_name = team_name
         self.__team_side = team_side
         self.__number_id = number_id

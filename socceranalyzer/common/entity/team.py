@@ -1,11 +1,27 @@
 from .agent import Agent
 
 class Team:
-    def __init__(self, name: str = None, side: str = None):
+    """
+    A class that represents a team that playing the match and informations about it
+
+    team(name: str, identifier: str)
+
+    Attributes
+    ----------
+        public through @properties:
+            name: str
+                The team name 
+            identifier: str
+                A string representing an identifier that distinguish between the teams playing. SIM2D uses 'left' and 'right' while VSS and SSL use colors
+            
+    """
+
+
+    def __init__(self, name: str = None, identifier: str = None):
 
         self.__name = name
-        self.__color = None
-        self.__side = side
+        self.__color = None # não sei se ainda é necessário
+        self.__identifier = identifier
         self.__players = []
 
 
@@ -26,12 +42,12 @@ class Team:
         self.__color = color
 
     @property
-    def side(self):
-        return self.__side
+    def identifier(self):
+        return self.__identifier
 
-    @side.setter
-    def side(self, side):
-        self.__side = side
+    @identifier.setter
+    def identifier(self, identifier):
+        self.__identifier = identifier
 
     @property
     def players(self):
