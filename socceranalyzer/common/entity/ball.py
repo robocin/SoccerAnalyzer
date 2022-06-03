@@ -1,6 +1,7 @@
-from socceranalyzer import AbstractEntity
+from socceranalyzer.common.geometric.point import Point
 
-class Ball(AbstractEntity):
+
+class Ball:
     """ 
     A class to define the position of the ball in the field.
 
@@ -29,9 +30,11 @@ class Ball(AbstractEntity):
         self.__x = x
         self.__y = y
     
-    def positionAt(self, cycle):
-        # TODO implementar essa função aqui e no AbstractEntity
-        pass
+    def positionAt(self, dataframe, category, cycle):
+        ball_x = dataframe.loc[cycle, str(category.BALL_X)]
+        ball_y = dataframe.loc[cycle, str(category.BALL_Y)]
+
+        return Point(ball_x, ball_y)
     
     @property
     def x(self):
