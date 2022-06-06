@@ -38,6 +38,8 @@ class Agent2D(AbstractPlayer):
                                                                                                     pos_status,
                                                                                                     sta_status)
 
+    #TODO: Remove setters
+
     @property
     def team_name(self):
         return self.__team_name
