@@ -1,6 +1,6 @@
 from socceranalyzer.common.entity.abstract_player import AbstractPlayer
 
-class Agent2D(AbstractPlayer):
+class Agent2D:
     def __init__(self, team_name : str = None, team_side: str = None, number_id: int = None):
         """
             A class to represent a agent that is playing the match
