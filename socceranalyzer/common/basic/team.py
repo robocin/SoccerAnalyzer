@@ -1,5 +1,3 @@
-from ..entity.agent import Agent
-
 class Team:
     """
     A class that represents a team that playing the match and informations about it
