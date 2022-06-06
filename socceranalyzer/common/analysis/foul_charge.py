@@ -107,7 +107,7 @@ class FoulCharge(AbstractAnalysis):
                   and self.__dataframe.loc[i - 1, str(self.category.PLAYMODE)] != str(self.category.FAULT_COMMITED_R)):
 
                 self.right_charges = Point(int(self.__dataframe.loc[i, str(self.category.BALL_X)]),
-                                           int(self.__dataframe.loc[i, str(self.category.BALL_X)]))
+                                           int(self.__dataframe.loc[i, str(self.category.BALL_Y)]))
 
     def results(self, side=None, tuple=False):
         """
