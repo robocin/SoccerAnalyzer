@@ -1,11 +1,13 @@
 import pandas
+
 from socceranalyzer.common.enums.sim2d import SIM2D
 from socceranalyzer.common.enums.ssl import SSL
 from socceranalyzer.common.enums.vss import VSS
 from socceranalyzer.common.geometric.point import Point
-from socceranalyzer.common.operations.measures import distance
-from socceranalyzer.common.chore.mediator import Mediator
 
+from socceranalyzer.common.geometric.circle import Circle
+from socceranalyzer.common.chore.mediator import Mediator
+from socceranalyzer.common.operations.measures import distance
 
 class BallHolderEvaluator:
     """

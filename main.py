@@ -1,5 +1,4 @@
 import pandas as pd
-import matplotlib.pyplot as plt
 from socceranalyzer import Match, SSL, MatchAnalyzer
 from socceranalyzer import MatchAnalyzer, Match, SIM2D
 
@@ -8,4 +7,3 @@ dataframe = pd.read_csv(SIM2D_LOGFILE_PATH)
 
 match_object = Match(dataframe, SIM2D)
 match_analyzer = MatchAnalyzer(match_object)
-print(match_analyzer.ball_possession.results())
