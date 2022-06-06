@@ -1,6 +1,6 @@
 from socceranalyzer.common.analysis.abstract_analysis import AbstractAnalysis
 from socceranalyzer.common.collections.collections import ThresholdCollection
-from socceranalyzer.common.evaluators.closer_to_ball import closer_to_ball
+from socceranalyzer.common.evaluators.ball_holder import BallHolderEvaluator
 
 
 class TimeAfterEvents(AbstractAnalysis):
@@ -83,7 +83,7 @@ class TimeAfterEvents(AbstractAnalysis):
         for c in self.__corners_cycles[0]:
             for i in range(c, c + event_duration):
                 if self._is_play_on(i):
-                    if closer_to_ball(self.dataframe, i) == "left":
+                    if BallHolderEvaluator(self.dataframe, self.category).at(i)[2] == "left":
                         self.__time_after_corner += 1
                     else:
                         self.corner_thr -= 1
@@ -96,7 +96,7 @@ class TimeAfterEvents(AbstractAnalysis):
         for c in self.__corners_cycles[1]:
             for i in range(c, c + event_duration):
                 if self._is_play_on(i):
-                    if closer_to_ball(self.dataframe, i) == "right":
+                    if BallHolderEvaluator(self.dataframe, self.category).at(i)[2] == "right":
                         self.__time_after_corner += 1
                     else:
                         self.corner_thr -= 1

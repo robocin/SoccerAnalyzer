@@ -1,18 +1,11 @@
 import pandas as pd
 import matplotlib.pyplot as plt
 from socceranalyzer import Match, SSL, MatchAnalyzer
+from socceranalyzer import MatchAnalyzer, Match, SIM2D
 
-from socceranalyzer import Match, SIM2D, SSL, MatchAnalyzer
-from socceranalyzer.jupyter.jupyter_adapter import JupyterAdapter
+SIM2D_LOGFILE_PATH = "../../logs/simulation2d/20220525201055-RoboCIn_2-vs-RandomTeam_2.rcg.csv"
+dataframe = pd.read_csv(SIM2D_LOGFILE_PATH)
 
-logpath = "../../logs/simulation2d/20220525201055-RoboCIn_2-vs-RandomTeam_2.rcg.csv"
-
-df = pd.read_csv(logpath)
-m = Match(df, SIM2D)
-ma = MatchAnalyzer(m)
-
-
-ja = JupyterAdapter(ma)
-
-ja.fault_position(10,10)
-ja.ball_possession(10,10)
+match_object = Match(dataframe, SIM2D)
+match_analyzer = MatchAnalyzer(match_object)
+print(match_analyzer.ball_possession.results())
