@@ -1,6 +1,7 @@
 from time import time
 
 from socceranalyzer.common.chore.abstract_factory import AbstractFactory
+from socceranalyzer.common.chore.builder import Builder
 
 from socceranalyzer.common.basic.match import Match
 from socceranalyzer.common.collections.collections import EvaluatorCollection
@@ -94,7 +95,7 @@ class MatchAnalyzer(AbstractFactory):
             raise
         else:
             begin: float = time()
-            self._generate_evaluators()
+            #self._generate_evaluators()
             self._run_analysis()
             end: float = time()
 
@@ -107,6 +108,30 @@ class MatchAnalyzer(AbstractFactory):
     @property
     def category(self):
         return self.__cat
+
+    @property
+    def field(self):
+        return self.__field
+    
+    @property
+    def ball(self):
+        return self.__ball
+    
+    @property
+    def left_team(self):
+        return self.__left_team
+
+    @property
+    def right_team(self):
+        return self.__right_team
+
+    @property
+    def left_players(self):
+        return self.__left_players
+    
+    @property
+    def right_players(self):
+        return self.__right_players
 
     @property
     def evaluators(self):
@@ -222,7 +247,7 @@ class MatchAnalyzer(AbstractFactory):
             self.__ball_possession = BallPossession(self.__match.dataframe, self.category)
 
             setattr(self, "__intercept_counter", None)
-            self.__intercept_counter = InterceptCounter(self.__match.dataframe, self.category)
+            self.__intercept_counter = InterceptCounter(self.__match)
 
             setattr(self, "__tester_free_kick", None)
             self.__tester_free_kick = TesterFK(self.__match.dataframe, self.category)

@@ -1,3 +1,5 @@
+import pandas as pd
+
 from socceranalyzer.common.operations.measures import distance
 from socceranalyzer.common.geometric.point import Point
 from socceranalyzer.common.geometric.circle import Circle
@@ -7,12 +9,16 @@ from socceranalyzer.common.collections.collections import StringListPositions
 from socceranalyzer.common.enums.sim2d import SIM2D
 from socceranalyzer.common.evaluators.kick import kick
 
+from socceranalyzer.common.basic.match import Match
+
 class InterceptCounter:
-    def __init__(self, data_frame, category):
+    def __init__(self, match: Match):
+        self.__match: Match = match
+        self.__category = match.category
+        self.__current_game_log: pd.DataFrame = match.dataframe
+
         self.__left_team_interceptions = 0
         self.__right_team_interceptions = 0
-        self.__category = category
-        self.__current_game_log = data_frame
 
         self.__calculate()
 
@@ -96,7 +102,7 @@ class InterceptCounter:
         players_left = Mediator.players_left_position(self.category, False)
         players_right = Mediator.players_right_position(self.category, False)
         
-        ball_position = Point(self.__current_game_log.loc[cycle, str(self.category.BALL_X)], self.__current_game_log.loc[cycle, str(self.category.BALL_Y)])
+        ball_position = self.__match.ball.positionAt(self.__current_game_log, self.__category, cycle)
 
         ball_zone = Circle(player_influence_radius, ball_position)
 
@@ -122,8 +128,9 @@ class InterceptCounter:
         return (self.__left_team_interceptions, self.__right_team_interceptions)
 
     def describe(self):
-        name_l = self.__current_game_log.loc[1, str(self.category.TEAM_LEFT)]
-        name_r = self.__current_game_log.loc[1, str(self.category.TEAM_RIGHT)]
+        name_l = self.__match.team_left.name
+        name_r = self.__match.team_right.name
+
         print(f'{name_l}: {self.__left_team_interceptions}\n' 
                 f'{name_r}: {self.__right_team_interceptions}')
 
