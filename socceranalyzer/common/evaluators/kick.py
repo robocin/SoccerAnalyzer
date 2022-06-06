@@ -10,3 +10,4 @@ def kick(cycle, team, df, player_who_kicked=False):
         return False, -1
     else:
         return False
+
