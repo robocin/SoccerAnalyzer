@@ -3,9 +3,9 @@ import pandas as pd
 from socceranalyzer.common.geometric.point import Point
 from socceranalyzer.common.geometric.rectangle import Rectangle
 from socceranalyzer.common.basic.field import Field
-from socceranalyzer.common.entity.team import Team 
+from socceranalyzer.common.basic.team import Team 
 from socceranalyzer.common.entity.agent import Agent 
-from socceranalyzer.common.entity.ball import Ball 
+from socceranalyzer.common.basic.ball import Ball
 
 from socceranalyzer.common.enums.vss import VSS
 from socceranalyzer.common.enums.sim2d import SIM2D

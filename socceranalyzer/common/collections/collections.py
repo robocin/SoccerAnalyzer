@@ -1,5 +1,5 @@
 from socceranalyzer.common.basic.match import Match
-from socceranalyzer.common.entity.ball import Ball
+from socceranalyzer.common.basic.ball import Ball
 from socceranalyzer.common.enums.sim2d import SIM2D
 from socceranalyzer.common.enums.ssl import SSL
 from socceranalyzer.common.enums.vss import VSS

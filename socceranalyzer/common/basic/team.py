@@ -1,4 +1,4 @@
-from .agent import Agent
+from ..entity.agent import Agent
 
 class Team:
     """

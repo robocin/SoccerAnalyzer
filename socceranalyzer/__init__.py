@@ -4,14 +4,14 @@ from socceranalyzer.common.basic.field import Field, Field2D
 
 # Abstract
 from socceranalyzer.common.analysis.abstract_analysis import AbstractAnalysis
-from socceranalyzer.common.entity.abstract_entity import AbstractEntity
+from socceranalyzer.common.entity.abstract_player import AbstractEntity
 from socceranalyzer.common.chore.abstract_factory import AbstractFactory
 
 # Entities
-from socceranalyzer.common.entity.team import Team
+from socceranalyzer.common.basic.team import Team
 from socceranalyzer.common.entity.agent import Agent
-from socceranalyzer.common.entity.ball import Ball
-from socceranalyzer.common.entity.abstract_robot import AbstractRobot
+from socceranalyzer.common.basic.ball import Ball
+from socceranalyzer.RobotSSL.robot_ssl import AbstractRobot
 
 # Enums
 from socceranalyzer.common.enums.sim2d import SIM2D, Landmarks

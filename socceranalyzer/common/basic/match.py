@@ -1,13 +1,13 @@
 import pandas
 
-from socceranalyzer.common.entity.team import Team
+from socceranalyzer.common.basic.team import Team
 from socceranalyzer.common.enums.vss import VSS
 from socceranalyzer.common.enums.sim2d import SIM2D
 from socceranalyzer.common.enums.ssl import SSL
 
 from socceranalyzer.common.basic.field import Field
-from socceranalyzer.common.entity.ball import Ball
-from socceranalyzer.common.entity.team import Team
+from socceranalyzer.common.basic.ball import Ball
+from socceranalyzer.common.basic.team import Team
 from socceranalyzer.common.entity.agent import Agent
 
 
