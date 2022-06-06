@@ -66,7 +66,7 @@ class Mediator:
         string_list = []
         if category is SIM2D:
             for i in range(1, 12):
-                string_list.append(f'player_l{i}_stamina')
+                string_list.append(f'player_l{i}_attribute_stamina')
         elif category is VSS:
             raise NotImplementedError
 
@@ -80,7 +80,7 @@ class Mediator:
         string_list = []
         if category is SIM2D:
             for i in range(1, 12):
-                string_list.append(f'player_r{i}_stamina')
+                string_list.append(f'player_r{i}_attribute_stamina')
         elif category is VSS:
             raise NotImplementedError
 

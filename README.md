@@ -42,13 +42,11 @@ created or to be a platform that enables you to create your own analysis.
 
 ### Using as analyzer
 ##### How it works?
-Each analysis is a class, they are instantiated by a [factory](https://refactoring.guru/design-patterns/factory-method)
-which is the **common.chore.match_analyzer** module. He is responsible for
-creating each object of the analysis.
+Each analysis is a class, they are instantiated and interfaced by a [Facade](https://refactoring.guru/design-patterns/facade)
+which is the **common.chore.match_analyzer** module. It is responsible for
+creating each analysis object.
 
-When an analysis is instantiated, it builds itself and gathers everything that is
-needed to provide the analysis information. This information is stored in the factory and can be
-accessed through the **MatchAnalyzer.collect_results()** method. 
+When an analysis is instantiated, it builds itself and gathers everything needed to provide the analysis. All information is stored and can be accessed through the Facade with **MatchAnalyzer.collect_results()** method or targeting specific analysis with **MatchAnalyzer.example_analysis.results()**. 
 
 The **MatchAnalyzer** receives a **Match** object as parameter.
 
