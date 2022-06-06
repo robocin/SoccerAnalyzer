@@ -1,17 +1,21 @@
+# Jupyter
+from socceranalyzer.jupyter.jupyter_adapter import JupyterAdapter
+
 # Basic
 from socceranalyzer.common.basic.match import Match
 from socceranalyzer.common.basic.field import Field, Field2D
 
 # Abstract
 from socceranalyzer.common.analysis.abstract_analysis import AbstractAnalysis
-from socceranalyzer.common.entity.abstract_entity import AbstractEntity
+from socceranalyzer.common.entity.abstract_player import AbstractPlayer
 from socceranalyzer.common.chore.abstract_factory import AbstractFactory
 
 # Entities
-from socceranalyzer.common.entity.team import Team
+from socceranalyzer.common.basic.team import Team
 from socceranalyzer.common.entity.agent import Agent
-from socceranalyzer.common.entity.ball import Ball
-from socceranalyzer.common.entity.abstract_robot import AbstractRobot
+from socceranalyzer.common.basic.ball import Ball
+from socceranalyzer.RobotSSL.robot_ssl import RobotSSL
+from socceranalyzer.RobotVSS.robot_vss import RobotVSS
 
 # Enums
 from socceranalyzer.common.enums.sim2d import SIM2D, Landmarks
@@ -23,7 +27,7 @@ from socceranalyzer.common.chore.match_analyzer import MatchAnalyzer
 from socceranalyzer.common.chore.mediator import Mediator
 
 # Collections
-from socceranalyzer.common.collections.collections import EntityCollection
+from socceranalyzer.common.collections.collections import PlayersCollection
 
 # Evaluators
 from socceranalyzer.common.evaluators.ball_holder import BallHolderEvaluator

@@ -7,5 +7,5 @@ setup(
     author='Felipe Nunes, Mateus Soares, Bruna Alves',
     version='1.2.0',
     packages=[package for package in find_packages() if package.startswith("socceranalyzer")],
-    install_requires=['pandas', 'numpy']
+    install_requires=['pandas', 'numpy', 'seaborn']
 )
