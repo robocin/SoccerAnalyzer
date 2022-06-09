@@ -1,4 +1,4 @@
-from typing import Literal, Tuple
+from typing import Literal
 from pandas import DataFrame
 from socceranalyzer.common.analysis.abstract_analysis import AbstractAnalysis
 from socceranalyzer.common.geometric.point import Point
@@ -7,7 +7,7 @@ from socceranalyzer.common.operations.measures import *
 from socceranalyzer.common.utility.slicers import PlaymodeSlicer
 from socceranalyzer.common.enums.sim2d import Landmarks
 from math import sqrt, acos
-from numpy import char, exp
+from numpy import exp
 from matplotlib.patches import Arc
 import matplotlib.pyplot as plt
 from matplotlib.axes import Axes
@@ -375,7 +375,7 @@ class Shooting(AbstractAnalysis):
                         xG (float): Goal probability between 0 and 1,
                         goal (int): Indicates if the shot was a goal. 
         """
-        return self.__shooting_stats_df
+        return self.__shooting_stats_df.copy()
 
     def serialize(self) -> list[dict]:
         """
@@ -383,16 +383,16 @@ class Shooting(AbstractAnalysis):
         """
         return self.__shooting_stats
 
-    def __draw_pitch(self, fig_size: Tuple[int, int]=(15, 4), amount=2, stack_horizontally=True) -> Tuple[Figure, Axes]:
+    def __draw_pitch(self, fig_size: tuple[int, int]=(15, 4), amount=2, stack_horizontally=True) -> tuple[Figure, Axes]:
         """
         Draws specified amount of pithces and returns a figure and axes with the drawn pitches.
 
             Parameters:
-                    fig_size (Tuple[int, int]): Tuple indicating total figure size
+                    fig_size (tuple[int, int]): Tuple indicating total figure size
                     amount (int): Amount of pitches to draw
                     stack_horizontally (bool): Stack pitches horizontally or vertically
             Returns:
-                    fig, axs (Tuple[Figure, Axes]): Figure and Axes drawn
+                    fig, axs (tuple[Figure, Axes]): Figure and Axes drawn
         """
         fig, axs=plt.subplots(1, amount, figsize=fig_size) if stack_horizontally else plt.subplots(amount, 1, figsize=fig_size)
         linecolor='black'
@@ -429,12 +429,12 @@ class Shooting(AbstractAnalysis):
         
         return fig, axs
 
-    def plot_shot_frequency(self) -> Tuple[Figure, Axes]:
+    def plot_shot_frequency(self) -> tuple[Figure, Axes]:
         """
         Plots shot frequency hexbin graph in the pitch and returns figure and axes where it was drawn.
 
             Returns:
-                    fig, axs (Tuple[Figure, Axes]): Figure and Axes drawn
+                    fig, axs (tuple[Figure, Axes]): Figure and Axes drawn
         """
         (fig, axs) = self.__draw_pitch(fig_size=(10, 4))
         chart_data = self.__shooting_stats_df[['team', 'x', 'y']].copy()
@@ -452,12 +452,12 @@ class Shooting(AbstractAnalysis):
             plt.gca().set_aspect('equal', adjustable='box')
         return fig, axs
 
-    def plot_shot_log(self) -> Tuple[Figure, Axes]:
+    def plot_shot_log(self) -> tuple[Figure, Axes]:
         """
         Plots all shots registered in a scatter graph of the pitch and returns figure and axes where it was drawn.
 
             Returns:
-                    fig, axs (Tuple[Figure, Axes]): Figure and Axes drawn
+                    fig, axs (tuple[Figure, Axes]): Figure and Axes drawn
         """
         (fig, axs) = self.__draw_pitch(fig_size=(10, 4))
         chart_data = self.__shooting_stats_df[['team', 'x', 'y', 'goal']].copy()
@@ -478,13 +478,13 @@ class Shooting(AbstractAnalysis):
             plt.gca().set_aspect('equal', adjustable='box')
         return fig, axs
 
-    def plot_shot_quality(self) -> Tuple[Figure, Axes]:        
+    def plot_shot_quality(self) -> tuple[Figure, Axes]:        
         """
         Plots all shots registered in a scatter graph where the size of the of the pitch means the 
         shot quality and returns figure and axes where it was drawn.
 
             Returns:
-                    fig, axs (Tuple[Figure, Axes]): Figure and Axes drawn
+                    fig, axs (tuple[Figure, Axes]): Figure and Axes drawn
         """
         (fig, axs) = self.__draw_pitch(fig_size=(10, 4))
         chart_data = self.__shooting_stats_df[['team', 'x', 'y', 'xG','goal']].copy()
