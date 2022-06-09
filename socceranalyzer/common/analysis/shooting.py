@@ -184,7 +184,7 @@ class Shooting(AbstractAnalysis):
         if not self.__df.loc[cycle, str(self.__category.GAME_TIME)] in self.__play_on_cycles:
             return
 
-        if((self.__df.loc[cycle, 'ball_vx']**2 + self.__df.loc[cycle, 'ball_vy']**2)** 0.5  > 2.0):
+        if((self.__df.loc[cycle, 'ball_vx']**2 + self.__df.loc[cycle, 'ball_vy']**2)** 0.5  > 1.65):
             kicker = self.__get_kicker(cycle)
             
             # Right team registered shot
