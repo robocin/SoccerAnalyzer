@@ -8,10 +8,9 @@ from socceranalyzer.common.enums.ssl import SSL
 from socceranalyzer.common.basic.field import Field
 from socceranalyzer.common.basic.ball import Ball
 from socceranalyzer.common.basic.team import Team
-from socceranalyzer.common.entity.agent import Agent
-
-
 from socceranalyzer.common.chore.builder import Builder
+
+from socceranalyzer.agent2D.agent import Agent2D
 
 
 class Match:
@@ -36,9 +35,9 @@ class Match:
                     a string with the name of the team that won the game
                 losing_team: string
                     a string with the name of the team that lost the game
-                players_left: list[Agent]
+                players_left: list[Agent2D]
                     a list of players objects from the left team
-                player_right: list[Agent]
+                player_right: list[Agent2D]
                     a list of players objects from the right team
                 ball: Ball
                     the game's ball object
@@ -81,8 +80,8 @@ class Match:
             self.__team_left: Team = builder.teamBuilder('left')
             self.__team_right: Team = builder.teamBuilder('right')
 
-            self.__players_left: list[Agent] = builder.playerBuilder(self.__team_left)
-            self.__players_right: list[Agent] = builder.playerBuilder(self.__team_right)
+            self.__players_left: list[Agent2D] = builder.playerBuilder(self.__team_left)
+            self.__players_right: list[Agent2D] = builder.playerBuilder(self.__team_right)
 
             self.__teams = (self.__team_left, self.__team_right)
 

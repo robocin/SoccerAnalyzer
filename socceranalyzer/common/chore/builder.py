@@ -4,8 +4,8 @@ from socceranalyzer.common.geometric.point import Point
 from socceranalyzer.common.geometric.rectangle import Rectangle
 from socceranalyzer.common.basic.field import Field
 from socceranalyzer.common.basic.team import Team 
-from socceranalyzer.common.entity.agent import Agent 
 from socceranalyzer.common.basic.ball import Ball
+from socceranalyzer.agent2D.agent import Agent2D
 
 from socceranalyzer.common.enums.vss import VSS
 from socceranalyzer.common.enums.sim2d import SIM2D
@@ -16,20 +16,20 @@ class Builder:
         self.__df = dataframe
         self.__category = category
 
-    def playerBuilder(self, team: Team) -> list[Agent]:
+    def playerBuilder(self, team: Team) -> list[Agent2D]:
         """
-        Returns a list of Agent intances representing the players/Robots in the match.
+        Returns a list of Agent2D intances representing the players/Robots in the match.
 
             Parametes:
                 team (Team): Team of the players
             Returns:
-                players_array (list[Agent]): list of Agent instances with informations about their team
+                players_array (list[Agent2D]): list of Agent2D instances with informations about their team
         
         """
         if self.__category == SIM2D:
             players_array = []
             for i in range(1, 12):
-                players_array.append(Agent(team.name, team.identifier, i))
+                players_array.append(Agent2D(team.name, team.identifier, i))
             return players_array
         elif self.__category == VSS:
             raise NotImplementedError

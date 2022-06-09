@@ -12,8 +12,8 @@ from socceranalyzer.common.chore.abstract_factory import AbstractFactory
 
 # Entities
 from socceranalyzer.common.basic.team import Team
-from socceranalyzer.common.entity.agent import Agent
 from socceranalyzer.common.basic.ball import Ball
+from socceranalyzer.agent2D.agent import Agent2D
 from socceranalyzer.RobotSSL.robot_ssl import RobotSSL
 from socceranalyzer.RobotVSS.robot_vss import RobotVSS
 
