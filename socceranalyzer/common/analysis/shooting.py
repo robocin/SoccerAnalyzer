@@ -8,10 +8,6 @@ from socceranalyzer.common.utility.slicers import PlaymodeSlicer
 from socceranalyzer.common.enums.sim2d import Landmarks
 from math import sqrt, acos
 from numpy import exp
-from matplotlib.patches import Arc
-import matplotlib.pyplot as plt
-from matplotlib.axes import Axes
-from matplotlib.figure import Figure
 
 XG_MODEL_VARIABLES = ['angle','distance', 'players_in_between']
 XG_MODEL_PARAMS = [2.678591, 1.788279, -0.164496, -0.671407]
@@ -49,8 +45,6 @@ class Shooting(AbstractAnalysis):
                     checks for a shot at cycle
                 check_goal(cycle: int) -> None
                     checks for a goal at cycle
-                draw_pitch(fig_size: Tuple[int, int], amount: int, stack_horizontally: bool) -> Tuple[Figure, Axes]
-                    returns figure and axes with drawn pitches
             public:
                 _analyze() -> None
                     performs match analysis
@@ -65,13 +59,7 @@ class Shooting(AbstractAnalysis):
                 results() -> dict
                     returns match detailed shooting stats as a Python dict
                 results_as_dataframe() -> pandas.DataFrame:
-                    returns match detailed shooting stats as a pandas.DataFrame
-                plot_shot_frequency() -> Tuple[Figure, Axes]
-                    returns match shot frequency graph
-                plot_shot_log() -> Tuple[Figure, Axes]
-                    returns match shot log scatter plot
-                plot_shot_quality() -> Tuple[Figure, Axes]
-                    returns match shot quality scatter plot
+                    returns a copy of the match detailed shooting stats DataFrame
     """
     def __init__(self, dataframe: DataFrame, category):
         self.__category = category
@@ -382,125 +370,3 @@ class Shooting(AbstractAnalysis):
         Returns the shooting stats as json serializable object.
         """
         return self.__shooting_stats
-
-    def __draw_pitch(self, fig_size: tuple[int, int]=(15, 4), amount=2, stack_horizontally=True) -> tuple[Figure, Axes]:
-        """
-        Draws specified amount of pithces and returns a figure and axes with the drawn pitches.
-
-            Parameters:
-                    fig_size (tuple[int, int]): Tuple indicating total figure size
-                    amount (int): Amount of pitches to draw
-                    stack_horizontally (bool): Stack pitches horizontally or vertically
-            Returns:
-                    fig, axs (tuple[Figure, Axes]): Figure and Axes drawn
-        """
-        fig, axs=plt.subplots(1, amount, figsize=fig_size) if stack_horizontally else plt.subplots(amount, 1, figsize=fig_size)
-        linecolor='black'
-
-        for ax in axs:
-            ax.plot([0,68],[0,0], color=linecolor)
-            ax.plot([68,68],[52.5,0], color=linecolor)
-            ax.plot([0,0],[52.5,0], color=linecolor)
-            
-            #Left Penalty Area
-            ax.plot([13.84,13.84],[0,16.5],color=linecolor)
-            ax.plot([13.84,54.16],[16.5,16.5],color=linecolor)
-            ax.plot([54.16,54.16],[0,16.5],color=linecolor)    
-            
-            #Goal
-            ax.plot([41.01,41.01],[-2,0],color=linecolor)
-            ax.plot([26.99,41.01],[-2,-2],color=linecolor)
-            ax.plot([26.99,26.99],[0,-2],color=linecolor)
-        
-            #Prepare Circles
-            leftPenSpot = plt.Circle((68/2,11),0.4,color=linecolor)
-            
-            #Draw Circles
-            ax.add_patch(leftPenSpot)
-
-            #Prepare Arcs
-            leftArc = Arc((34,11),height=18,width=18,angle=0,theta1=38,theta2=142,color=linecolor)
-            
-            #Draw Arcs
-            ax.add_patch(leftArc)
-            
-            #Tidy Axes
-            ax.axis('off')
-        
-        return fig, axs
-
-    def plot_shot_frequency(self) -> tuple[Figure, Axes]:
-        """
-        Plots shot frequency hexbin graph in the pitch and returns figure and axes where it was drawn.
-
-            Returns:
-                    fig, axs (tuple[Figure, Axes]): Figure and Axes drawn
-        """
-        (fig, axs) = self.__draw_pitch(fig_size=(10, 4))
-        chart_data = self.__shooting_stats_df[['team', 'x', 'y']].copy()
-        for i,shot in chart_data.iterrows():
-            chart_data.at[i,'x']=52.5-shot['x']
-            chart_data.at[i,'y']=34+shot['y']
-        for ax, team in zip(axs,['l', 'r']):
-            team_data=chart_data[chart_data['team'] == team]
-            pos=ax.hexbin(data=team_data, x='y', y='x',zorder=1,cmap='OrRd',gridsize=(25,10),alpha=.7,extent=(0,68,0,52.5))
-            ax.set_xlim(-1, 69)
-            ax.set_ylim(-3,52.5)
-            ax.set_title(f'Frequency of shots team {team}')
-            plt.colorbar(pos, ax=ax)
-            plt.tight_layout()
-            plt.gca().set_aspect('equal', adjustable='box')
-        return fig, axs
-
-    def plot_shot_log(self) -> tuple[Figure, Axes]:
-        """
-        Plots all shots registered in a scatter graph of the pitch and returns figure and axes where it was drawn.
-
-            Returns:
-                    fig, axs (tuple[Figure, Axes]): Figure and Axes drawn
-        """
-        (fig, axs) = self.__draw_pitch(fig_size=(10, 4))
-        chart_data = self.__shooting_stats_df[['team', 'x', 'y', 'goal']].copy()
-        for i,shot in chart_data.iterrows():
-            chart_data.at[i,'x']=52.5-shot['x']
-            chart_data.at[i,'y']=34+shot['y']
-        for ax, team in zip(axs, ['l', 'r']):
-            team_data = chart_data[chart_data['team'] == team]
-            goals = team_data[team_data['goal']==True]
-            shots = team_data[team_data['goal']==False]
-            ax.plot(shots['y'], shots['x'], 'rx', label='misses', alpha=0.5)
-            ax.plot(goals['y'], goals['x'], 'go', label='goals', alpha=0.5)
-            ax.set_title(f'Shots team {team}')
-            ax.legend()
-            plt.xlim(-1, 69)
-            plt.ylim(-3, 52.5)
-            plt.tight_layout()
-            plt.gca().set_aspect('equal', adjustable='box')
-        return fig, axs
-
-    def plot_shot_quality(self) -> tuple[Figure, Axes]:        
-        """
-        Plots all shots registered in a scatter graph where the size of the of the pitch means the 
-        shot quality and returns figure and axes where it was drawn.
-
-            Returns:
-                    fig, axs (tuple[Figure, Axes]): Figure and Axes drawn
-        """
-        (fig, axs) = self.__draw_pitch(fig_size=(10, 4))
-        chart_data = self.__shooting_stats_df[['team', 'x', 'y', 'xG','goal']].copy()
-        for i,shot in chart_data.iterrows():
-            chart_data.at[i,'x']=52.5-shot['x']
-            chart_data.at[i,'y']=34+shot['y']
-        for ax, team in zip(axs, ['l', 'r']):
-            team_data = chart_data[chart_data['team'] == team]
-            goals = team_data[team_data['goal']==True]
-            shots = team_data[team_data['goal']==False]
-            ax.scatter(shots['y'], shots['x'], s=150*shots['xG'], c='#7e7272', label='misses', alpha=0.5)
-            ax.scatter(goals['y'], goals['x'], s=150*goals['xG'], c='#981717', label='goals', alpha=0.5)
-            ax.set_title(f'Shot quality team {team}')
-            ax.legend()
-            plt.xlim(-1, 69)
-            plt.ylim(-3, 52.5)
-            plt.tight_layout()
-            plt.gca().set_aspect('equal', adjustable='box')
-        return fig, axs
