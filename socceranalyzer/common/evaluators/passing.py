@@ -1,3 +1,4 @@
+from typing import Any
 from pandas import DataFrame
 from socceranalyzer.common.chore.mediator import Mediator
 from socceranalyzer.common.enums.sim2d import SIM2D
@@ -9,6 +10,52 @@ from socceranalyzer.common.geometric.point import Point
 
 
 class Passing:
+    """
+        Used to calculate the overall passing stats of the given match.
+
+        Passing(data_frame: pandas.DataFrame, category: SIM2D | SSL | VSS)
+
+        Attributes
+        ----------
+            private: 
+                left_team_passing_accuracy: float
+                    The accuracy percentage of the left team
+                right_team_passing_accuracy: float
+                    The accuracy percentage of the right team   
+                left_team_total_passes: int
+                    The total number of passes of the left team 
+                right_team_total_passes: int
+                    The total number of passes of the right team 
+                left_team_completed_passes: int
+                    Number of completed passes of left team
+                right_team_completed_passes: int
+                    Number of completed passes of right team
+                left_team_interceptions: int
+                    Number of interceptions for the left team
+                right_team_interceptions: int
+                    Number of interceptions for the right team
+                ran_all_analysis: bool
+                    Indicates if analysis is over
+            public through @properties:
+                category: SIM2D | SSL | VSS
+                    Analyzed match category
+                dataframe: pandas.DataFrame
+                    Match dataframe
+                left_team_passing_stats: dict[str, Any]
+                    Contains overall passing stats for left team
+                right_team_passing_stats: dict[str, Any]
+                    Contains overall passing stats for right team
+
+        Methods
+        -------
+            private:                
+                define_player_possession(cycle: int, player_left_position: Point, player_right_position: Point, player_who_possesses: Bool) -> str, int
+                    Defines the team that is in the radius of the ball in a particular cycle, if player_who_possesses = True, also returns the index of 
+                    the player who is in that area
+            public:
+                run_passing_evaluation() -> None:
+                    Computes all wrong and correct passes occurrences
+    """
     def __init__(self, data_frame: DataFrame, category: SIM2D | SSL | VSS):
         self.__left_team_passing_accuracy = 0
         self.__right_team_passing_accuracy = 0
@@ -25,13 +72,23 @@ class Passing:
             raise NotImplementedError
 
     @property
-    def category(self): return self.__category
+    def category(self) -> SIM2D | VSS | SSL: return self.__category
     
     @property
-    def dataframe(self): return self.dataframe
+    def dataframe(self) -> DataFrame: return self.dataframe
 
     @property
-    def left_team_passing_stats(self):
+    def left_team_passing_stats(self) -> dict[str, Any]:
+        """
+        Returns left team passing stats as a dict.
+
+            Returns:
+                    dict:
+                        completed_passes (int): Number of completed passes,
+                        total_passes (int): Number of total team registered passes,
+                        accuracy (float): Percentage of passing accuracy,
+                        interceptions (int): Number of passes intercepted.
+        """
         return {
             'completed_passes': self.__left_team_completed_passes,
             'total_passes': self.__left_team_total_passes,
@@ -40,7 +97,17 @@ class Passing:
         }
     
     @property
-    def right_team_passing_stats(self):
+    def right_team_passing_stats(self) -> dict[str, Any]:
+        """
+        Returns right team passing stats as a dict.
+
+            Returns:
+                    dict:
+                        completed_passes (int): Number of completed passes,
+                        total_passes (int): Number of total team registered passes,
+                        accuracy (float): Percentage of passing accuracy,
+                        interceptions (int): Number of passes intercepted.
+        """
         return {
             'completed_passes': self.__right_team_completed_passes,
             'total_passes': self.__right_team_total_passes,
@@ -80,6 +147,9 @@ class Passing:
         return None
 
     def run_passing_evaluation(self):
+        """
+        Perfoms computation of all pass occurrences and outcomes.
+        """
         if (self.__ran_all_analysis): return
 
         game_log = self.__current_game_log
