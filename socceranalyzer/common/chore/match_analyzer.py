@@ -21,6 +21,7 @@ from socceranalyzer.common.analysis.time_after_events import TimeAfterEvents
 from socceranalyzer.common.analysis.stamina import Stamina
 from socceranalyzer.common.analysis.shooting import Shooting
 from socceranalyzer.common.analysis.heatmap import Heatmap
+from socceranalyzer.common.evaluators.passing import Passing
 
 
 class MatchAnalyzer(AbstractFactory):
@@ -251,9 +252,6 @@ class MatchAnalyzer(AbstractFactory):
             setattr(self, "__ball_possession", None)
             self.__ball_possession = BallPossession(self.__match.dataframe, self.category)
 
-            setattr(self, "__intercept_counter", None)
-            self.__intercept_counter = InterceptCounter(self.__match)
-
             setattr(self, "__tester_free_kick", None)
             self.__tester_free_kick = TesterFK(self.__match.dataframe, self.category)
 
@@ -269,8 +267,13 @@ class MatchAnalyzer(AbstractFactory):
             setattr(self, "__corners", None)
             self.__corners_occurrencies = CornersOcurrencies(self.__match.dataframe, self.category)
 
+            passing = Passing(self.__match.dataframe, self.category)
+
+            setattr(self, "__intercept_counter", None)
+            self.__intercept_counter = InterceptCounter(self.__match, passing)
+
             setattr(self, "__passing_accuracy", None)
-            self.__passing_accuracy = PassingAccuracy(self.__match.dataframe, self.category)
+            self.__passing_accuracy = PassingAccuracy(self.__match.dataframe, self.category, passing)
 
             setattr(self, "__time_after_events", None)
             self.__time_after_events = TimeAfterEvents(self.__match.dataframe, self.category,
