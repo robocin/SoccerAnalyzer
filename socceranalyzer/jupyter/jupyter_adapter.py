@@ -1,13 +1,16 @@
 from cProfile import label
-from tkinter import E
+from tkinter import CENTER, E
+from typing import Literal
 from matplotlib.axes import Axes
 from matplotlib.figure import Figure
 import matplotlib.pyplot as plt
+from matplotlib.patches import Rectangle, Circle, Arc
 import seaborn as sns
 import os
 
 import socceranalyzer
 from socceranalyzer.common.chore.match_analyzer import MatchAnalyzer
+from socceranalyzer.common.enums.sim2d import Landmarks
 
 
 class AdapterHelper:
@@ -242,3 +245,91 @@ class JupyterAdapter:
                 plt.ylim(-35,35)
                 plt.xlim(-55,55)
                 plt.show()
+
+    
+    def draw_pitch(self, figsize: (tuple[float, float])=(10, 6), color: Literal['green', 'white']='white') -> tuple[Figure, Axes]:
+        """
+        Creates a plot of the offical Robocup 2D soccer pitch with size 105x68 meters.
+
+            Parameters:
+                figsize(tuple[float, float]): Width, height in inches
+                color('green' | 'white'): Color of the pitch
+            Returns:
+                fig: `matplotlib.figure.Figure`
+                ax: `matplotlib.axes.Axes` or array of Axes
+        """
+        fig, ax = plt.subplots(1, figsize=figsize)
+        linecolor = ''
+        pitch_color = ''
+        if color == 'green':
+            linecolor = 'white'
+            pitch_color='darkgreen'
+            rect = Rectangle((Landmarks.LEFT_BOTTOM.value[0]-4., Landmarks.LEFT_BOTTOM.value[1]-4.), 
+                                Landmarks.PITCH_SIZE.value[0]+8., Landmarks.PITCH_SIZE.value[1]+8.,
+                                linewidth=0.1, edgecolor='r', facecolor=pitch_color, zorder=0)
+            ax.add_patch(rect)            
+        elif color == 'white':
+            linecolor = 'black'
+            pitch_color = 'white'
+        else:
+            raise ValueError(f'color argument must be either \'green\' or \'white\', but \'{color}\' was given.')
+
+        # Pitch outline
+        ax.plot([Landmarks.LEFT_BOTTOM.value[0], Landmarks.RIGHT_BOTTOM.value[0]], 
+                [Landmarks.LEFT_BOTTOM.value[1], Landmarks.RIGHT_BOTTOM.value[1]], color=linecolor)
+        ax.plot([Landmarks.LEFT_TOP.value[0], Landmarks.RIGHT_TOP.value[0]], 
+                [Landmarks.LEFT_TOP.value[1], Landmarks.RIGHT_TOP.value[1]], color=linecolor)
+        ax.plot([Landmarks.LEFT_BOTTOM.value[0], Landmarks.LEFT_TOP.value[0]], 
+                [Landmarks.LEFT_BOTTOM.value[1], Landmarks.LEFT_TOP.value[1]], color=linecolor)
+        ax.plot([Landmarks.RIGHT_BOTTOM.value[0], Landmarks.RIGHT_TOP.value[0]], 
+                [Landmarks.RIGHT_BOTTOM.value[1], Landmarks.RIGHT_TOP.value[1]], color=linecolor)
+        ax.plot([Landmarks.CENTER_BOTTOM.value[0], Landmarks.CENTER_TOP.value[0]], 
+                [Landmarks.CENTER_BOTTOM.value[1], Landmarks.CENTER_TOP.value[1]], color=linecolor)        
+        center_circle = Circle(Landmarks.CENTER.value, 9.15, edgecolor=linecolor, facecolor=pitch_color)
+        center_spot = Circle(Landmarks.CENTER.value, .3, color=linecolor)
+        ax.add_patch(center_circle)
+        ax.add_patch(center_spot)
+
+        # Goal boxes
+        ax.plot([Landmarks.L_PEN_BOTTOM.value[0], Landmarks.L_PEN_TOP.value[0]], 
+                [Landmarks.L_PEN_BOTTOM.value[1], Landmarks.L_PEN_TOP.value[1]], color=linecolor)
+        ax.plot([Landmarks.L_PEN_BOTTOM.value[0], Landmarks.LEFT_BOTTOM.value[0]], 
+                [Landmarks.L_PEN_BOTTOM.value[1], Landmarks.L_PEN_BOTTOM.value[1]], color=linecolor)
+        ax.plot([Landmarks.L_PEN_TOP.value[0], Landmarks.LEFT_TOP.value[0]], 
+                [Landmarks.L_PEN_TOP.value[1], Landmarks.L_PEN_TOP.value[1]], color=linecolor)
+        left_arc = Arc(Landmarks.L_PEN_C.value, 9.15, 16, theta1=270.0, theta2=90.0, color=linecolor)
+        left_pen_spot = Circle(Landmarks.L_PEN_SPOT.value, 0.3, color=linecolor)
+        ax.add_patch(left_arc)
+        ax.add_patch(left_pen_spot)
+
+        ax.plot([Landmarks.R_PEN_BOTTOM.value[0], Landmarks.R_PEN_TOP.value[0]], 
+                [Landmarks.R_PEN_BOTTOM.value[1], Landmarks.R_PEN_TOP.value[1]], color=linecolor)
+        ax.plot([Landmarks.R_PEN_BOTTOM.value[0], Landmarks.RIGHT_BOTTOM.value[0]], 
+                [Landmarks.R_PEN_BOTTOM.value[1], Landmarks.R_PEN_BOTTOM.value[1]], color=linecolor)
+        ax.plot([Landmarks.R_PEN_TOP.value[0], Landmarks.RIGHT_TOP.value[0]], 
+                [Landmarks.R_PEN_TOP.value[1], Landmarks.R_PEN_TOP.value[1]], color=linecolor)
+        right_arc = Arc(Landmarks.R_PEN_C.value, 9.15, 16, theta1=90.0, theta2=270.0, color=linecolor)
+        right_pen_spot = Circle(Landmarks.R_PEN_SPOT.value, 0.3, color=linecolor)
+        ax.add_patch(right_arc)
+        ax.add_patch(right_pen_spot)
+
+        # Goals
+        ax.plot([Landmarks.L_GOAL_BOTTOM_BAR.value[0], Landmarks.L_GOAL_BOTTOM_BAR.value[0]-2.], 
+                [Landmarks.L_GOAL_BOTTOM_BAR.value[1], Landmarks.L_GOAL_BOTTOM_BAR.value[1]], color=linecolor)
+        ax.plot([Landmarks.L_GOAL_TOP_BAR.value[0], Landmarks.L_GOAL_TOP_BAR.value[0]-2.], 
+                [Landmarks.L_GOAL_TOP_BAR.value[1], Landmarks.L_GOAL_TOP_BAR.value[1]], color=linecolor)
+        ax.plot([Landmarks.L_GOAL_BOTTOM_BAR.value[0]-2., Landmarks.L_GOAL_TOP_BAR.value[0]-2.], 
+                [Landmarks.L_GOAL_BOTTOM_BAR.value[1], Landmarks.L_GOAL_TOP_BAR.value[1]], color=linecolor)
+        ax.plot([Landmarks.R_GOAL_BOTTOM_BAR.value[0], Landmarks.R_GOAL_BOTTOM_BAR.value[0]+2.], 
+                [Landmarks.R_GOAL_BOTTOM_BAR.value[1], Landmarks.R_GOAL_BOTTOM_BAR.value[1]], color=linecolor)
+        ax.plot([Landmarks.R_GOAL_TOP_BAR.value[0], Landmarks.R_GOAL_TOP_BAR.value[0]+2.], 
+                [Landmarks.R_GOAL_TOP_BAR.value[1], Landmarks.R_GOAL_TOP_BAR.value[1]], color=linecolor)
+        ax.plot([Landmarks.R_GOAL_BOTTOM_BAR.value[0]+2., Landmarks.R_GOAL_TOP_BAR.value[0]+2.], 
+                [Landmarks.R_GOAL_BOTTOM_BAR.value[1], Landmarks.R_GOAL_TOP_BAR.value[1]], color=linecolor)
+        
+        
+        plt.axis('off')
+        plt.tight_layout()
+        plt.gca().set_aspect('equal', adjustable='box')
+
+        return fig, ax
