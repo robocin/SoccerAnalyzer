@@ -16,14 +16,38 @@ class GoalReplay:
         Attributes
         ----------
             private:
-                shooting_stats : dict
-                    shooting stats in Python dict format for the game
-                shooting_stats_df : pands.DataFrame
-                    shooting stats in DataFrame format for the game
-                play_on_cycles : list[int]
-                    list with game's play on cycles
-                last_shooter : str
-                    name of last player to register a shot
+                dataframe: pandas.DataFrame
+                    match's log
+                category: SSL | SIM2D | VSS
+                    match's category
+                cycles: int
+                    number of cycles to be analyzed before the occurrence of each goal
+                ball_positions: [[Point]]
+                    a list containing a number of elements equivalent to the numbers of goals, with
+                    each element being itself a list containing the ball's positions for every cycle
+                    analyzed
+                left_team_positions: [[[Point]]]
+                    a list containing a number of elements equivalent to the numbers of goals, with
+                    each element being itself a list containing, for every cycle analyzed, another list
+                    corresponding to the left team players positions
+                right_team_positions: [[[Point]]]
+                    a list containing a number of elements equivalent to the numbers of goals, with
+                    each element being itself a list containing, for every cycle analyzed, another list
+                    corresponding to the right team players positions
+
+        Methods
+        -------
+            private:
+                find_goals() -> None
+                    Finds out at which cycles a goal happened and calls calculate().
+                calculate(starting_point: int) -> None
+                    Iterates backwards through cycles from the moment a goal happened and populates ball_positions, left_team_positions and
+                    right_team_positions using information from the dataframe.
+                    
+            public:
+                results() -> (ball_positions, left_team_positions, right_team_positions)
+                plot_ball(goal_number: int) -> None
+                    Plots ball positions obtained from calculate() onto a SIM2D field.
     """
 
     def __init__(self, dataframe: pandas.DataFrame, category: SSL | SIM2D | VSS, cycles: int) -> None:
@@ -36,21 +60,27 @@ class GoalReplay:
 
         self.__find_goals()
     
-    @property
-    def goals_moments(self):
-        return self.__goals_moments
-
     def __find_goals(self) -> None:
+        """
+            Finds out at which cycles a goal happened and calls calculate().
+        """
         for i in range(len(self.__dataframe)):
             current_playmode = self.__dataframe.iloc[i][str(self.__category.PLAYMODE)]
             previous_playmode = self.__dataframe.iloc[i - 1][str(self.__category.PLAYMODE)]
 
-            if ((current_playmode == str(self.__category.GOAL_SCORED_L) or current_playmode == "goal_r") 
+            if ((current_playmode == str(self.__category.GOAL_SCORED_L) or current_playmode == str(self.__category.GOAL_SCORED_R)) 
                 and previous_playmode != current_playmode):
                 # Goal happened
-                self.calculate(i)
+                self.__calculate(i)
 
-    def calculate(self, starting_point: int) -> None:
+    def __calculate(self, starting_point: int) -> None:
+        """
+            Iterates backwards through cycles from the moment a goal happened and populates ball_positions, left_team_positions and
+            right_team_positions using information from the dataframe.
+
+            Parameters:
+                    starting_point (int): Cycle in which a goal happened.
+        """
         ball_pos = []
         left_pos = []
         right_pos = []
@@ -67,6 +97,9 @@ class GoalReplay:
 
             ball_pos.append(Point(ball_x, ball_y))
 
+            left_pos_this_cycle = []
+            right_pos_this_cycle = []
+
             for j in range(11):
                 player_left_x = self.__dataframe.iloc[i][players_left.items[j].x]
                 player_left_y = self.__dataframe.iloc[i][players_left.items[j].y]
@@ -74,18 +107,31 @@ class GoalReplay:
                 player_right_x = self.__dataframe.iloc[i][players_right.items[j].x]
                 player_right_y = self.__dataframe.iloc[i][players_right.items[j].y]
 
-                left_pos.append(Point(player_left_x, player_left_y))
+                left_pos_this_cycle.append(Point(player_left_x, player_left_y))
 
-                right_pos.append(Point(player_right_x, player_right_y))
+                right_pos_this_cycle.append(Point(player_right_x, player_right_y))
+
+            left_pos.append(left_pos_this_cycle)
+            right_pos.append(right_pos_this_cycle)
         
         self.__ball_positions.append(ball_pos)
         self.__left_team_positions.append(left_pos)
         self.__right_team_positions.append(right_pos)
 
     def results(self) -> tuple:
+        """
+            Returns:
+                    tuple: (ball_positions, left_team_positions, right_team_positions)
+        """
         return (self.__ball_positions, self.__left_team_positions, self.__right_team_positions)
 
     def plot_ball(self, goal_number: int) -> None:
+        """
+            Plots ball positions obtained from calculate() onto a SIM2D field.
+
+            Parameters:
+                    goal_number (int): Goal to be plotted number, counting from 0 in the order they happened.
+        """
         x_axis = []
         y_axis = []
 
@@ -102,4 +148,3 @@ class GoalReplay:
         ax.plot(x_axis, y_axis)
 
         plt.show()
-
