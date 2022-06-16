@@ -141,7 +141,7 @@ class GoalReplay:
 
         fig, ax = plt.subplots()
 
-        bg = plt.imread("sim2d_field.png")
+        bg = plt.imread("socceranalyzer/images/sim2d_field.png")
 
         ax.imshow(bg, extent=[-57.5, 57.5, -39, 39])
 
