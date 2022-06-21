@@ -1,9 +1,16 @@
 import pandas
 
-from socceranalyzer.common.entity.team import Team
+from socceranalyzer.common.basic.team import Team
 from socceranalyzer.common.enums.vss import VSS
 from socceranalyzer.common.enums.sim2d import SIM2D
 from socceranalyzer.common.enums.ssl import SSL
+
+from socceranalyzer.common.basic.field import Field
+from socceranalyzer.common.basic.ball import Ball
+from socceranalyzer.common.basic.team import Team
+from socceranalyzer.common.chore.builder import Builder
+
+from socceranalyzer.agent2D.agent import Agent2D
 
 
 class Match:
@@ -20,10 +27,6 @@ class Match:
                     the pandas object that contains the game data
                 teams: tuple
                     a immutable object with the name of both teams
-                team_left_name: str
-                    a string containing he left team name in the df
-                team_right_name: str
-                    a string containing he right team name in the df
                 score_left: int
                     a integer value with the final score of the left team
                 score_right: int
@@ -32,11 +35,11 @@ class Match:
                     a string with the name of the team that won the game
                 losing_team: string
                     a string with the name of the team that lost the game
-                players_left: [player]
+                players_left: list[Agent2D]
                     a list of players objects from the left team
-                player_right: [player]
+                player_right: list[Agent2D]
                     a list of players objects from the right team
-                ball: ball
+                ball: Ball
                     the game's ball object
                 fouls: [int]
                     a list with integers referencing the cycle of foul occurrences
@@ -45,12 +48,6 @@ class Match:
                 corners: [int]
                     a list with integers referencing the cycle of corners occurrences
 
-        Methods
-        -------
-            private:
-                build() -> None:
-                    populates all fields with the contents from the dataframe given at instantiation
-
 
 
     """
@@ -58,22 +55,37 @@ class Match:
         self.__category = category
 
         self.__df = dataframe
-        self.__teams = ()
-        self.__team_left_name: str = ""
-        self.__team_right_name: str = ""
         self.__score_left: int = None
         self.__score_right: int = None
         self.__winning_team: str = ""
         self.__losing_team: str = ""
-        self.__players_left = []
-        self.__players_right = []
-        self.__ball = None
 
         self.__fouls = []
         self.__goals = []
         self.__corners = []
 
-        self.__build()
+        try:
+            if self.category is None:
+                raise ValueError('A Match requires a Category as argument and none was given')
+            elif self.category is VSS: 
+                raise RuntimeError(f'This version of SoccerAnalyzer does not support {self.category} matches.\n'
+                f'Please visit https://github.com/robocin/SoccerAnalyzer for more information.')
+        except RuntimeError:
+            raise
+        else:
+            builder = Builder(self.__df, self.__category)
+
+            self.__field: Field = builder.fieldBuilder() 
+            self.__ball: Ball = builder.ballBuilder()
+            self.__team_left: Team = builder.teamBuilder('left')
+            self.__team_right: Team = builder.teamBuilder('right')
+
+            self.__players_left: list[Agent2D] = builder.playerBuilder(self.__team_left)
+            self.__players_right: list[Agent2D] = builder.playerBuilder(self.__team_right)
+
+            self.__teams = (self.__team_left, self.__team_right)
+
+        
 
 
     @property
@@ -83,6 +95,10 @@ class Match:
     @property
     def category(self):
         return self.__category
+    
+    @property
+    def field(self):
+        return self.__field
 
     @property
     def teams(self):
@@ -94,7 +110,7 @@ class Match:
 
     @property
     def team_left(self):
-        return self.__teams[0]
+        return self.__team_left
 
     @property
     def team_left_name(self):
@@ -102,7 +118,7 @@ class Match:
 
     @property
     def team_right(self):
-        return self.__teams[1]
+        return self.__team_right
 
     @property
     def team_right_name(self):
@@ -150,8 +166,7 @@ class Match:
 
     def __build(self):
         """
-            Runs when a Match objected is created to populate its attributes with
-            the given dataframe.
+            Runs when a Match objected is created to populate its attributes with the given dataframe.
 
             :return: None
         """
@@ -170,7 +185,7 @@ class Match:
             self.__teams = (Team(team_l_name, "left"), Team(team_r_name, "right"))
             self.__team_left_name = team_l_name
             self.__team_right_name = team_r_name
-
+ 
             last_line = self.__df.shape[0] - 1
             score_l = self.__df.loc[last_line, str(self.category.TEAM_LEFT_SCORE)]
             score_r = self.__df.loc[last_line, str(self.category.TEAM_RIGHT_SCORE)]

@@ -1,4 +1,7 @@
+from time import time
+
 from socceranalyzer.common.chore.abstract_factory import AbstractFactory
+from socceranalyzer.common.chore.builder import Builder
 
 from socceranalyzer.common.basic.match import Match
 from socceranalyzer.common.collections.collections import EvaluatorCollection
@@ -11,11 +14,13 @@ from socceranalyzer.common.analysis.playmodes import Playmodes
 from socceranalyzer.common.analysis.penalty import Penalty
 from socceranalyzer.common.analysis.ball_history import BallHistory
 from socceranalyzer.common.analysis.corners_occurrencies import CornersOcurrencies
+from socceranalyzer.common.analysis.passing_accuracy import PassingAccuracy
 from socceranalyzer.common.analysis.intercept_counter import InterceptCounter
 from socceranalyzer.agent2D.analysis.tester_free_kick import TesterFK
 from socceranalyzer.common.analysis.time_after_events import TimeAfterEvents
 from socceranalyzer.common.analysis.stamina import Stamina
 from socceranalyzer.common.analysis.shooting import Shooting
+from socceranalyzer.common.analysis.heatmap import Heatmap
 
 
 class MatchAnalyzer(AbstractFactory):
@@ -90,8 +95,12 @@ class MatchAnalyzer(AbstractFactory):
             print(err)
             raise
         else:
-            self._generate_evaluators()
+            begin: float = time()
+            #self._generate_evaluators()
             self._run_analysis()
+            end: float = time()
+
+            print(f'socceranalyzer: Ran all analysis in {end - begin} seconds.')
 
     @property
     def match(self):
@@ -100,6 +109,30 @@ class MatchAnalyzer(AbstractFactory):
     @property
     def category(self):
         return self.__cat
+
+    @property
+    def field(self):
+        return self.__field
+    
+    @property
+    def ball(self):
+        return self.__ball
+    
+    @property
+    def left_team(self):
+        return self.__left_team
+
+    @property
+    def right_team(self):
+        return self.__right_team
+
+    @property
+    def left_players(self):
+        return self.__left_players
+    
+    @property
+    def right_players(self):
+        return self.__right_players
 
     @property
     def evaluators(self):
@@ -134,12 +167,20 @@ class MatchAnalyzer(AbstractFactory):
         return self.__corners_occurrencies
 
     @property
+    def passing_accuracy(self):
+        return self.__passing_accuracy
+
+    @property
     def playmodes(self):
         return self.__playmodes
 
     @property
     def shooting(self):
         return self.__shooting
+
+    @property
+    def heatmap(self):
+        return self.__heatmap
 
     @property
     def analysis_dict(self):
@@ -199,12 +240,11 @@ class MatchAnalyzer(AbstractFactory):
 
     def _generate_evaluators(self):
         if self.__cat is SIM2D:
-            raise NotImplementedError
+            pass
         elif self.__cat is SSL:
             self.__evaluators = EvaluatorCollection(self.match)
         elif self.__cat is VSS:
             raise NotImplementedError
-
 
     def _run_analysis(self):
         if self.__cat is SIM2D:
@@ -212,7 +252,7 @@ class MatchAnalyzer(AbstractFactory):
             self.__ball_possession = BallPossession(self.__match.dataframe, self.category)
 
             setattr(self, "__intercept_counter", None)
-            self.__intercept_counter = InterceptCounter(self.__match.dataframe, self.category)
+            self.__intercept_counter = InterceptCounter(self.__match)
 
             setattr(self, "__tester_free_kick", None)
             self.__tester_free_kick = TesterFK(self.__match.dataframe, self.category)
@@ -229,6 +269,9 @@ class MatchAnalyzer(AbstractFactory):
             setattr(self, "__corners", None)
             self.__corners_occurrencies = CornersOcurrencies(self.__match.dataframe, self.category)
 
+            setattr(self, "__passing_accuracy", None)
+            self.__passing_accuracy = PassingAccuracy(self.__match.dataframe, self.category)
+
             setattr(self, "__time_after_events", None)
             self.__time_after_events = TimeAfterEvents(self.__match.dataframe, self.category,
                                                        self.__corners_occurrencies.results(),
@@ -242,6 +285,9 @@ class MatchAnalyzer(AbstractFactory):
 
             setattr(self, "__shooting", None)
             self.__shooting = Shooting(self.__match.dataframe, self.category)
+
+            setattr(self, "__heatmap", None)
+            self.__heatmap = Heatmap(self.__match.dataframe, self.category)
 
             #setattr(self, "__time_after_corner", None)
             #self.__time_after_corner = TimeAfterCorner(self.__match.dataframe, self.category)

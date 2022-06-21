@@ -1,10 +1,9 @@
 import pandas as pd
 from socceranalyzer import Match, SSL, MatchAnalyzer
+from socceranalyzer import MatchAnalyzer, Match, SIM2D
 
-from socceranalyzer import Match, SIM2D, SSL, MatchAnalyzer
+SIM2D_LOGFILE_PATH = "../../logs/simulation2d/20220525201055-RoboCIn_2-vs-RandomTeam_2.rcg.csv"
+dataframe = pd.read_csv(SIM2D_LOGFILE_PATH)
 
-logpath = "../../logs/ssl/robocin-er-force-robocup2021.csv"
-
-df = pd.read_csv(logpath)
-m = Match(df, SSL)
-ma = MatchAnalyzer(m)
+match_object = Match(dataframe, SIM2D)
+match_analyzer = MatchAnalyzer(match_object)
