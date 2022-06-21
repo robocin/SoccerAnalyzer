@@ -7,7 +7,7 @@ from socceranalyzer.common.collections.collections import StringListPositions
 from socceranalyzer.common.enums.sim2d import SIM2D
 from socceranalyzer.common.evaluators.kick import kick
 from socceranalyzer.common.analysis.abstract_analysis import AbstractAnalysis
-from socceranalyzer.common.entity.team import Team
+from socceranalyzer.common.basic.team import Team
 
 
 class PassingAccuracy(AbstractAnalysis):
