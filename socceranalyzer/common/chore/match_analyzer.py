@@ -14,6 +14,7 @@ from socceranalyzer.agent2D.analysis.tester_free_kick import TesterFK
 from socceranalyzer.common.analysis.time_after_events import TimeAfterEvents
 from socceranalyzer.common.analysis.stamina import Stamina
 from socceranalyzer.common.analysis.shooting import Shooting
+from socceranalyzer.common.analysis.goal_replay import GoalReplay
 
 
 class MatchAnalyzer(AbstractFactory):
@@ -133,6 +134,10 @@ class MatchAnalyzer(AbstractFactory):
     @property
     def category(self):
         return self.__cat
+    
+    @property
+    def goal_replay(self):
+        return self.__goal_replay
 
     @property
     def analysis_dict(self):
@@ -183,9 +188,10 @@ class MatchAnalyzer(AbstractFactory):
         TimeAfterEvents = ("TimeAfterEvents", False)
         Stamina = ("Stamina", True)
         Shooting = ("Shooting", True)
+        GoalReplay = ("GoalReplay", True)
 
         analysis = [BallPossession, FoulCharge, Penalty, Stamina, BallHistory,
-                    Playmodes, Corners, TesterFK, TimeAfterEvents, Shooting]
+                    Playmodes, Corners, TesterFK, TimeAfterEvents, Shooting, GoalReplay]
 
         for a in analysis:
             if a[1]:
@@ -227,6 +233,9 @@ class MatchAnalyzer(AbstractFactory):
 
             setattr(self, "__shooting", None)
             self.__shooting = Shooting(self.__match.dataframe, self.category)
+
+            setattr(self, "__goal_replay", None)
+            self.__goal_replay = GoalReplay(self.__match.dataframe, self.category)
 
             #setattr(self, "__time_after_corner", None)
             #self.__time_after_corner = TimeAfterCorner(self.__match.dataframe, self.category)
