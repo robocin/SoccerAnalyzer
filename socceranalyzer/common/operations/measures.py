@@ -1,4 +1,5 @@
 import math
+from socceranalyzer.common.geometric.point import Point
 
 
 def distance(point, position) -> float:
@@ -16,18 +17,19 @@ def distance(point, position) -> float:
 
     return dist
 
-def distance_sqrd(p1: list[float], p2: list[float]) -> float:
+def distance_sqrd(p1: Point, p2: Point) -> float:
     """
     Returns the distance squared between two points.
 
             Parameters:
-                    p1 (list[float]): First point
-                    p2 (list[float]): Second point
+                    p1 (Point): First point
+                    p2 (Point): Second point
 
             Returns:
                     dist^2 (float): integer value of the distance squared
     """
-    return (p1[0] - p2[0])**2 + (p1[1] - p2[1])**2
+
+    return (p1.x - p2.x)**2 + (p1.y - p2.y)**2
 
 def line_intersection(line1: tuple[tuple[float, float]], line2: tuple[tuple[float, float]]) -> tuple[float, float]:
     """
