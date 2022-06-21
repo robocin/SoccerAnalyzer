@@ -7,7 +7,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [1.2.0] - 2021-09-13
 ## Refactored
-- New repository skeleton (definitive)
+- New repository skeleton 
 
 ## [1.1.0] - 2021-05-25 
 ## Refactored

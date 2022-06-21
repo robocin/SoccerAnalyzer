@@ -1,6 +1,10 @@
+from time import time
+
 from socceranalyzer.common.chore.abstract_factory import AbstractFactory
+from socceranalyzer.common.chore.builder import Builder
 
 from socceranalyzer.common.basic.match import Match
+from socceranalyzer.common.collections.collections import EvaluatorCollection
 from socceranalyzer.common.enums.sim2d import SIM2D
 from socceranalyzer.common.enums.ssl import SSL
 from socceranalyzer.common.enums.vss import VSS
@@ -10,11 +14,15 @@ from socceranalyzer.common.analysis.playmodes import Playmodes
 from socceranalyzer.common.analysis.penalty import Penalty
 from socceranalyzer.common.analysis.ball_history import BallHistory
 from socceranalyzer.common.analysis.corners_occurrencies import CornersOcurrencies
+from socceranalyzer.common.analysis.passing_accuracy import PassingAccuracy
+from socceranalyzer.common.analysis.intercept_counter import InterceptCounter
 from socceranalyzer.agent2D.analysis.tester_free_kick import TesterFK
 from socceranalyzer.common.analysis.time_after_events import TimeAfterEvents
 from socceranalyzer.common.analysis.stamina import Stamina
 from socceranalyzer.common.analysis.shooting import Shooting
 from socceranalyzer.common.analysis.goal_replay import GoalReplay
+from socceranalyzer.common.analysis.heatmap import Heatmap
+
 
 
 class MatchAnalyzer(AbstractFactory):
@@ -79,11 +87,8 @@ class MatchAnalyzer(AbstractFactory):
     def __init__(self, match: Match = None):
         self.__match = match
         self.__cat = match.category
-        self.__analysis_dict = {}
-
-        # evaluators
-        self.__ball_holder_evaluator = None
-        self.__shoot_evaluator = None
+        self.__analysis_dict: dict[str, None] = {}
+        self.__evaluators: EvaluatorCollection = None
 
         try:
             if self.__cat is None:
@@ -92,16 +97,56 @@ class MatchAnalyzer(AbstractFactory):
             print(err)
             raise
         else:
-            self._generate_evaluators()
+            begin: float = time()
+            #self._generate_evaluators()
             self._run_analysis()
+            end: float = time()
+
+            print(f'socceranalyzer: Ran all analysis in {end - begin} seconds.')
 
     @property
     def match(self):
         return self.__match
 
     @property
+    def category(self):
+        return self.__cat
+
+    @property
+    def field(self):
+        return self.__field
+    
+    @property
+    def ball(self):
+        return self.__ball
+    
+    @property
+    def left_team(self):
+        return self.__left_team
+
+    @property
+    def right_team(self):
+        return self.__right_team
+
+    @property
+    def left_players(self):
+        return self.__left_players
+    
+    @property
+    def right_players(self):
+        return self.__right_players
+
+    @property
+    def evaluators(self):
+        return self.__evaluators.evaluators
+
+    @property
     def ball_possession(self):
         return self.__ball_possession
+    
+    @property
+    def intercept_counter(self):
+        return self.__intercept_counter
 
     @property
     def tester_free_kick(self):
@@ -124,6 +169,10 @@ class MatchAnalyzer(AbstractFactory):
         return self.__corners_occurrencies
 
     @property
+    def passing_accuracy(self):
+        return self.__passing_accuracy
+
+    @property
     def playmodes(self):
         return self.__playmodes
 
@@ -132,12 +181,11 @@ class MatchAnalyzer(AbstractFactory):
         return self.__shooting
 
     @property
-    def category(self):
-        return self.__cat
-    
-    @property
     def goal_replay(self):
         return self.__goal_replay
+
+    def heatmap(self):
+        return self.__heatmap
 
     @property
     def analysis_dict(self):
@@ -173,7 +221,6 @@ class MatchAnalyzer(AbstractFactory):
         """
         print(f'{self.__match.team_left_name} {self.__match.score_left} x {self.__match.score_right} {self.__match.team_right_name}')
 
-
     def available(self):
         """
         Shows currently available analysis.
@@ -198,12 +245,20 @@ class MatchAnalyzer(AbstractFactory):
                 print(a[0])
 
     def _generate_evaluators(self):
-        pass
+        if self.__cat is SIM2D:
+            pass
+        elif self.__cat is SSL:
+            self.__evaluators = EvaluatorCollection(self.match)
+        elif self.__cat is VSS:
+            raise NotImplementedError
 
     def _run_analysis(self):
         if self.__cat is SIM2D:
             setattr(self, "__ball_possession", None)
             self.__ball_possession = BallPossession(self.__match.dataframe, self.category)
+
+            setattr(self, "__intercept_counter", None)
+            self.__intercept_counter = InterceptCounter(self.__match)
 
             setattr(self, "__tester_free_kick", None)
             self.__tester_free_kick = TesterFK(self.__match.dataframe, self.category)
@@ -219,6 +274,9 @@ class MatchAnalyzer(AbstractFactory):
 
             setattr(self, "__corners", None)
             self.__corners_occurrencies = CornersOcurrencies(self.__match.dataframe, self.category)
+
+            setattr(self, "__passing_accuracy", None)
+            self.__passing_accuracy = PassingAccuracy(self.__match.dataframe, self.category)
 
             setattr(self, "__time_after_events", None)
             self.__time_after_events = TimeAfterEvents(self.__match.dataframe, self.category,
@@ -237,16 +295,20 @@ class MatchAnalyzer(AbstractFactory):
             setattr(self, "__goal_replay", None)
             self.__goal_replay = GoalReplay(self.__match.dataframe, self.category)
 
+            setattr(self, "__heatmap", None)
+            self.__heatmap = Heatmap(self.__match.dataframe, self.category)
+
             #setattr(self, "__time_after_corner", None)
             #self.__time_after_corner = TimeAfterCorner(self.__match.dataframe, self.category)
 
         elif self.__cat is SSL:
-            setattr(self, "__heatmap", None)
-            self.__heatmap = Heatmap(self.__match.dataframe, self.category)
+            pass
+            # setattr(self, "__heatmap", None)
+            # self.__heatmap = Heatmap(self.__match.dataframe, self.category)
 
         elif self.__cat is VSS:
             raise NotImplementedError
-            # add SSL analysis
+            # add VSS analysis
 
     def collect_results(self):
         raise NotImplementedError

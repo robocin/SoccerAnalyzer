@@ -1,6 +1,9 @@
+import pandas
 from socceranalyzer.common.analysis.abstract_analysis import AbstractAnalysis
 from socceranalyzer.common.enums.sim2d import SIM2D
 from socceranalyzer.common.chore.mediator import Mediator
+from socceranalyzer.common.enums.ssl import SSL
+from socceranalyzer.common.enums.vss import VSS
 
 class Stamina(AbstractAnalysis):
     """
@@ -29,13 +32,15 @@ class Stamina(AbstractAnalysis):
                     
             
     """
-    def __init__(self, dataframe, category):
-        self.__dataframe = dataframe
-        self.__category = category
-        self.__l_players_stamina = []
+    def __init__(self, dataframe: pandas.DataFrame, category: SIM2D | SSL | VSS):
+        self.__dataframe: pandas.DataFrame = dataframe
+        self.__category: SIM2D | VSS | SSL = category
+        self.__l_players_stamina: list  = []
         self.__l_players_stamina_mean = 0
-        self.__r_players_stamina = []
+        self.__r_players_stamina: list = []
         self.__r_players_stamina_mean = 0
+
+        self._analyze()
 
     @property
     def category(self):
@@ -53,7 +58,7 @@ class Stamina(AbstractAnalysis):
         for stamina_attr in Mediator.players_left_stamina_attr(SIM2D):
             self.__l_players_stamina.append(self.dataframe[stamina_attr].tolist())
 
-        for stamina_attr in Mediator.players_right_stamina_attr(self.dataframe):
+        for stamina_attr in Mediator.players_right_stamina_attr(SIM2D):
             self.__r_players_stamina.append(self.dataframe[stamina_attr].tolist())
 
     @property
