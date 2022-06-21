@@ -1,41 +1,41 @@
-
+from socceranalyzer.common.geometric.point import Point
 
 class Rectangle:
-        def __init__(self, start_point, width, height):
-            self.__start_point = start_point
-            self.__width = width
-            self.__height = height
+        def __init__(self, top_left:Point, bottom_right:Point):
+            self.__top_left = top_left
+            self.__bottom_right = bottom_right
+            self.__width = self.__bottom_right.x - self.__top_left.x
+            self.__height = self.__top_left.y - self.__bottom_right.y
 
         @property
-        def start_point(self):
-            return self.__start_point
+        def top_left(self):
+            return self.top_left
 
-        @start_point.setter
-        def start_point(self, point):
-            self.__start_point = point
+        @top_left.setter
+        def top_left(self, point):
+            self.__top_left = point
+
+        @property
+        def bottom_right(self):
+            return self.bottom_right
+
+        @bottom_right.setter
+        def bottom_right(self, point):
+            self.__bottom_right = point
         
         @property
         def width(self):
             return self.__width
 
-        @width.setter
-        def width(self, width):
-            self.__width = width
-
         @property
         def height(self):
             return self.__height
 
-        @height.setter
-        def height(self, height):
-            self.__height = height
-
-        def is_inside(self, point):
-            if  self.__start_point[0] <= point[0]  <= (self.__width + self.start_point[0]) and self.__start_point[1] <= point[1]  <= (self.__height + self.start_point[1]):
+        def is_inside(self, point: Point):
+            if  self.__top_left.x <= point.x  <= self.__bottom_right.x and self.__bottom_right.y <= point.y  <= self.__top_left.y:
                 return True
             else:
                 return False
 
-        
 
-        
+

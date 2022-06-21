@@ -8,7 +8,7 @@ from socceranalyzer.common.basic.ball import Ball
 from socceranalyzer.agent2D.agent import Agent2D
 
 from socceranalyzer.common.enums.vss import VSS
-from socceranalyzer.common.enums.sim2d import SIM2D
+from socceranalyzer.common.enums.sim2d import SIM2D, Landmarks
 from socceranalyzer.common.enums.ssl import SSL
 
 class Builder:
@@ -77,21 +77,19 @@ class Builder:
                 field (Field): Field instance with the field measures
         """
         if self.__category == SIM2D:
+            l_top_left_pen_area = Point(Landmarks.LEFT_TOP.x, Landmarks.L_PEN_TOP.y)
+            r_bottom_right_pen_area = Point(Landmarks.RIGHT_BOTTOM.x, Landmarks.R_PEN_BOTTOM.y)
             field = Field(68, 105, 
-                        Point(0,0), 
-                        Rectangle(Point(-52, -20), 16, 72), 
-                        Rectangle(Point(36,-20), 16, 72), 
-                        Rectangle(Point(-52,-9), 5 ,18), 
-                        Rectangle(Point(47,-9), 5, 18),
-                        Rectangle(Point(-53, -7), 1, 14),
-                        Rectangle(Point(53, -7), 1, 14))
+                        Landmarks.CENTER, 
+                        Rectangle(l_top_left_pen_area, Landmarks.L_PEN_BOTTOM), 
+                        Rectangle(Landmarks.R_PEN_TOP, r_bottom_right_pen_area),
+                        Rectangle(Point(-52,-9), Point(-47 , 9)), 
+                        Rectangle(Point(47,-9), Point(52, 9)),
+                        Rectangle(Landmarks.L_GOAL_TOP_BAR, Landmarks.L_GOAL_BOTTOM_BAR),
+                        Rectangle(Landmarks.R_GOAL_TOP_BAR, Landmarks.R_GOAL_BOTTOM_BAR))
             return field
 
         elif self.__category == VSS:
             raise NotImplementedError
         elif self.__category == SSL:
             raise NotImplementedError
-
-        
-
-        # -7 até +7 -> trave (x=52)
