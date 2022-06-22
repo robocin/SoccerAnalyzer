@@ -6,6 +6,7 @@ from socceranalyzer.common.enums.ssl import SSL
 from socceranalyzer.common.enums.vss import VSS
 from socceranalyzer.common.geometric.point import Point
 from socceranalyzer.common.chore.mediator import Mediator
+from socceranalyzer.common.analysis.find_goals import FindGoals
 
 class GoalReplay:
     """
@@ -38,8 +39,6 @@ class GoalReplay:
         Methods
         -------
             private:
-                find_goals() -> None
-                    Finds out at which cycles a goal happened and calls calculate().
                 calculate(starting_point: int) -> None
                     Iterates backwards through cycles from the moment a goal happened and populates ball_positions, left_team_positions and
                     right_team_positions using information from the dataframe.
@@ -50,7 +49,7 @@ class GoalReplay:
                     Plots ball positions obtained from calculate() onto a SIM2D field.
     """
 
-    def __init__(self, dataframe: pandas.DataFrame, category: SSL | SIM2D | VSS, cycles: int) -> None:
+    def __init__(self, dataframe: pandas.DataFrame, category: SSL | SIM2D | VSS, cycles: int = 100) -> None:
         self.__dataframe = dataframe
         self.__category = category
         self.__cycles = cycles
@@ -58,22 +57,9 @@ class GoalReplay:
         self.__left_team_positions = []
         self.__right_team_positions = []
 
-        self.__find_goals()
+        self.__calculate()
     
-    def __find_goals(self) -> None:
-        """
-            Finds out at which cycles a goal happened and calls calculate().
-        """
-        for i in range(len(self.__dataframe)):
-            current_playmode = self.__dataframe.iloc[i][str(self.__category.PLAYMODE)]
-            previous_playmode = self.__dataframe.iloc[i - 1][str(self.__category.PLAYMODE)]
-
-            if ((current_playmode == str(self.__category.GOAL_SCORED_L) or current_playmode == str(self.__category.GOAL_SCORED_R)) 
-                and previous_playmode != current_playmode):
-                # Goal happened
-                self.__calculate(i)
-
-    def __calculate(self, starting_point: int) -> None:
+    def __calculate(self) -> None:
         """
             Iterates backwards through cycles from the moment a goal happened and populates ball_positions, left_team_positions and
             right_team_positions using information from the dataframe.
@@ -81,42 +67,45 @@ class GoalReplay:
             Parameters:
                     starting_point (int): Cycle in which a goal happened.
         """
-        ball_pos = []
-        left_pos = []
-        right_pos = []
+        goal_moments = FindGoals(self.__dataframe, self.__category).results()
 
-        players_left = Mediator.players_left_position(self.__category)
-        players_right = Mediator.players_right_position(self.__category)
+        for starting_point in goal_moments:
+            ball_pos = []
+            left_pos = []
+            right_pos = []
 
-        for i in range(starting_point, starting_point - self.__cycles, -1):
-            if (i < 0):
-                break
+            players_left = Mediator.players_left_position(self.__category)
+            players_right = Mediator.players_right_position(self.__category)
 
-            ball_x = self.__dataframe.iloc[i][str(self.__category.BALL_X)]
-            ball_y = self.__dataframe.iloc[i][str(self.__category.BALL_Y)]
+            for i in range(starting_point, starting_point - self.__cycles, -1):
+                if (i < 0):
+                    break
 
-            ball_pos.append(Point(ball_x, ball_y))
+                ball_x = self.__dataframe.iloc[i][str(self.__category.BALL_X)]
+                ball_y = self.__dataframe.iloc[i][str(self.__category.BALL_Y)]
 
-            left_pos_this_cycle = []
-            right_pos_this_cycle = []
+                ball_pos.append(Point(ball_x, ball_y))
 
-            for j in range(11):
-                player_left_x = self.__dataframe.iloc[i][players_left.items[j].x]
-                player_left_y = self.__dataframe.iloc[i][players_left.items[j].y]
+                left_pos_this_cycle = []
+                right_pos_this_cycle = []
 
-                player_right_x = self.__dataframe.iloc[i][players_right.items[j].x]
-                player_right_y = self.__dataframe.iloc[i][players_right.items[j].y]
+                for j in range(11):
+                    player_left_x = self.__dataframe.iloc[i][players_left.items[j].x]
+                    player_left_y = self.__dataframe.iloc[i][players_left.items[j].y]
 
-                left_pos_this_cycle.append(Point(player_left_x, player_left_y))
+                    player_right_x = self.__dataframe.iloc[i][players_right.items[j].x]
+                    player_right_y = self.__dataframe.iloc[i][players_right.items[j].y]
 
-                right_pos_this_cycle.append(Point(player_right_x, player_right_y))
+                    left_pos_this_cycle.append(Point(player_left_x, player_left_y))
 
-            left_pos.append(left_pos_this_cycle)
-            right_pos.append(right_pos_this_cycle)
-        
-        self.__ball_positions.append(ball_pos)
-        self.__left_team_positions.append(left_pos)
-        self.__right_team_positions.append(right_pos)
+                    right_pos_this_cycle.append(Point(player_right_x, player_right_y))
+
+                left_pos.append(left_pos_this_cycle)
+                right_pos.append(right_pos_this_cycle)
+            
+            self.__ball_positions.append(ball_pos)
+            self.__left_team_positions.append(left_pos)
+            self.__right_team_positions.append(right_pos)
 
     def results(self) -> tuple:
         """
