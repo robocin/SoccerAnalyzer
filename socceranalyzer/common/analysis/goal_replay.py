@@ -1,4 +1,3 @@
-from unicodedata import category
 import pandas
 import matplotlib.pyplot as plt
 from socceranalyzer.common.enums.sim2d import SIM2D
@@ -21,71 +20,59 @@ class GoalReplay:
                     match's log
                 category: SSL | SIM2D | VSS
                     match's category
-                cycles: int
-                    number of cycles to be analyzed before the occurrence of each goal
-                ball_positions: [[Point]]
-                    a list containing a number of elements equivalent to the numbers of goals, with
-                    each element being itself a list containing the ball's positions for every cycle
-                    analyzed
-                left_team_positions: [[[Point]]]
-                    a list containing a number of elements equivalent to the numbers of goals, with
-                    each element being itself a list containing, for every cycle analyzed, another list
-                    corresponding to the left team players positions
-                right_team_positions: [[[Point]]]
-                    a list containing a number of elements equivalent to the numbers of goals, with
-                    each element being itself a list containing, for every cycle analyzed, another list
-                    corresponding to the right team players positions
-
+                
         Methods
         -------
             private:
-                calculate(starting_point: int) -> None
+                analyze(goal_number: int, cycles: int (optional), players: bool (optional)) -> tuple
                     Iterates backwards through cycles from the moment a goal happened and populates ball_positions, left_team_positions and
                     right_team_positions using information from the dataframe.
                     
             public:
-                results() -> (ball_positions, left_team_positions, right_team_positions)
+                results(goal_number: int, cycles: int (optional), players: bool (optional)) -> tuple
                 plot_ball(goal_number: int) -> None
                     Plots ball positions obtained from calculate() onto a SIM2D field.
     """
 
-    def __init__(self, dataframe: pandas.DataFrame, category: SSL | SIM2D | VSS, cycles: int = 100) -> None:
+    def __init__(self, dataframe: pandas.DataFrame, category: SSL | SIM2D | VSS) -> None:
         self.__dataframe = dataframe
         self.__category = category
-        self.__cycles = cycles
-        self.__ball_positions = []
-        self.__left_team_positions = []
-        self.__right_team_positions = []
-
-        self.__calculate()
-    
-    def __calculate(self) -> None:
+        
+    def _analyze(self, goal_number: int, cycles: int = 40, players: bool = True) -> None:
         """
             Iterates backwards through cycles from the moment a goal happened and populates ball_positions, left_team_positions and
             right_team_positions using information from the dataframe.
 
             Parameters:
-                    starting_point (int): Cycle in which a goal happened.
+                    goal_number (int): Goal to be analyzed, counting from 0 in the order they happened.
+                    cycles (int): Number of cycles to be analyzed before the occurrence of the goal (default is 40).
+                    players (bool): If it's set to False, players' positions won't be calculated (default is True).
+
+            Returns:
+                    ([Point], [[Point]], [[Point]]): (ball_positions, left_team_positions, right_team_positions), if players is True.
+                    [Point]: ball_positions, if players is False
         """
         goal_moments = FindGoals(self.__dataframe, self.__category).results()
 
-        for starting_point in goal_moments:
-            ball_pos = []
-            left_pos = []
-            right_pos = []
+        starting_point = goal_moments[goal_number]
 
-            players_left = Mediator.players_left_position(self.__category)
-            players_right = Mediator.players_right_position(self.__category)
+        ball_positions = []
+        left_team_positions = []
+        right_team_positions = []
 
-            for i in range(starting_point, starting_point - self.__cycles, -1):
-                if (i < 0):
-                    break
+        players_left = Mediator.players_left_position(self.__category)
+        players_right = Mediator.players_right_position(self.__category)
 
-                ball_x = self.__dataframe.iloc[i][str(self.__category.BALL_X)]
-                ball_y = self.__dataframe.iloc[i][str(self.__category.BALL_Y)]
+        for i in range(starting_point, starting_point - cycles, -1):
+            if (i < 0):
+                break
 
-                ball_pos.append(Point(ball_x, ball_y))
+            ball_x = self.__dataframe.iloc[i][str(self.__category.BALL_X)]
+            ball_y = self.__dataframe.iloc[i][str(self.__category.BALL_Y)]
 
+            ball_positions.append(Point(ball_x, ball_y))
+
+            if (players == True):
                 left_pos_this_cycle = []
                 right_pos_this_cycle = []
 
@@ -100,31 +87,41 @@ class GoalReplay:
 
                     right_pos_this_cycle.append(Point(player_right_x, player_right_y))
 
-                left_pos.append(left_pos_this_cycle)
-                right_pos.append(right_pos_this_cycle)
-            
-            self.__ball_positions.append(ball_pos)
-            self.__left_team_positions.append(left_pos)
-            self.__right_team_positions.append(right_pos)
+                left_team_positions.append(left_pos_this_cycle)
+                right_team_positions.append(right_pos_this_cycle)
 
-    def results(self) -> tuple:
+        if (players == True):
+            return (ball_positions, left_team_positions, right_team_positions)
+
+        else:
+            return ball_positions
+
+    def results(self, goal_number: int, cycles: int = 40, players: bool = True) -> tuple:
         """
+            Parameters:
+                    goal_number (int): Goal to be analyzed, counting from 0 in the order they happened.
+                    cycles (int): Number of cycles to be analyzed before the occurrence of the goal (default is 40).
+                    players (bool): If it's set to False, players' positions won't be calculated (default is True).
+
             Returns:
-                    tuple: (ball_positions, left_team_positions, right_team_positions)
+                    ([Point], [[Point]], [[Point]]): (ball_positions, left_team_positions, right_team_positions), if players is True.
+                    [Point]: ball_positions, if players is False
         """
-        return (self.__ball_positions, self.__left_team_positions, self.__right_team_positions)
+        return self._analyze(cycles, goal_number)
 
-    def plot_ball(self, goal_number: int) -> None:
+    def plot_ball(self, cycles: int, goal_number: int) -> None:
         """
             Plots ball positions obtained from calculate() onto a SIM2D field.
 
             Parameters:
                     goal_number (int): Goal to be plotted number, counting from 0 in the order they happened.
         """
+        ball_positions = self._analyze(goal_number, cycles, False)
+
         x_axis = []
         y_axis = []
 
-        for position in self.__ball_positions[goal_number]:
+        for position in ball_positions:
             x_axis.append(position.x)
             y_axis.append(position.y)
 
