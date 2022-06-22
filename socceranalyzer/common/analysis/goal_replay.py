@@ -38,7 +38,7 @@ class GoalReplay:
         self.__dataframe = dataframe
         self.__category = category
         
-    def _analyze(self, goal_number: int, cycles: int = 40, players: bool = True) -> None:
+    def _analyze(self, goal_number: int, cycles: int = 40, players: bool = True) -> tuple:
         """
             Iterates backwards through cycles from the moment a goal happened and populates ball_positions, left_team_positions and
             right_team_positions using information from the dataframe.
@@ -107,7 +107,7 @@ class GoalReplay:
                     ([Point], [[Point]], [[Point]]): (ball_positions, left_team_positions, right_team_positions), if players is True.
                     [Point]: ball_positions, if players is False
         """
-        return self._analyze(cycles, goal_number)
+        return self._analyze(goal_number, cycles, players)
 
     def plot_ball(self, cycles: int, goal_number: int) -> None:
         """
