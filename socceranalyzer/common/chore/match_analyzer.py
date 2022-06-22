@@ -22,6 +22,7 @@ from socceranalyzer.common.analysis.stamina import Stamina
 from socceranalyzer.common.analysis.shooting import Shooting
 from socceranalyzer.common.analysis.goal_replay import GoalReplay
 from socceranalyzer.common.analysis.heatmap import Heatmap
+from socceranalyzer.common.analysis.find_goals import FindGoals
 
 
 
@@ -184,6 +185,10 @@ class MatchAnalyzer(AbstractFactory):
     def goal_replay(self):
         return self.__goal_replay
 
+    @property
+    def find_goals(self):
+        return self.__find_goals
+
     def heatmap(self):
         return self.__heatmap
 
@@ -236,6 +241,7 @@ class MatchAnalyzer(AbstractFactory):
         Stamina = ("Stamina", True)
         Shooting = ("Shooting", True)
         GoalReplay = ("GoalReplay", True)
+        FindGoals = ("FindGoals", True)
 
         analysis = [BallPossession, FoulCharge, Penalty, Stamina, BallHistory,
                     Playmodes, Corners, TesterFK, TimeAfterEvents, Shooting, GoalReplay]
@@ -297,6 +303,9 @@ class MatchAnalyzer(AbstractFactory):
 
             setattr(self, "__heatmap", None)
             self.__heatmap = Heatmap(self.__match.dataframe, self.category)
+
+            setattr(self, "__find_goals", None)
+            self.__find_goals = FindGoals(self.__match.dataframe, self.category)
 
             #setattr(self, "__time_after_corner", None)
             #self.__time_after_corner = TimeAfterCorner(self.__match.dataframe, self.category)
