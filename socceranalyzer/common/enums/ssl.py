@@ -24,6 +24,7 @@ class SSL(Enum):
     TEAM_RIGHT = "team_r_name"
     TEAM_LEFT_SCORE = "team_l_score"
     TEAM_RIGHT_SCORE = "team_r_score"
+    MAX_PLAYERS = "10"
     # PENALTY_TO_LEFT = "penalty_ready_l"
     # PENALTY_TO_RIGHT = "penalty_ready_r"
     # FK_LEFT = "free_kick_l"
