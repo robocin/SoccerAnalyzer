@@ -1,6 +1,4 @@
-from unicodedata import category
 import pandas
-import matplotlib.pyplot as plt
 from socceranalyzer.common.enums.sim2d import SIM2D
 from socceranalyzer.common.enums.ssl import SSL
 from socceranalyzer.common.enums.vss import VSS
