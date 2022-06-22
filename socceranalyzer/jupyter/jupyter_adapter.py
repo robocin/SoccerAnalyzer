@@ -242,3 +242,30 @@ class JupyterAdapter:
                 plt.ylim(-35,35)
                 plt.xlim(-55,55)
                 plt.show()
+        
+    def goal_replay_ball(self, goal_number: int, cycles: int = 40) -> None:
+        """
+            Plots ball positions obtained from GoalReplay analysis onto a SIM2D field.
+
+            Parameters:
+                    goal_number (int): Goal to be plotted, counting from 0 in the order they happened.
+                    cycles (int): Number of cycles to be analyzed before the occurrence of the goal (default is 40).
+        """
+        ball_positions = self.__match_analyzer.goal_replay.results(goal_number, cycles, False)
+
+        x_axis = []
+        y_axis = []
+
+        for position in ball_positions:
+            x_axis.append(position.x)
+            y_axis.append(position.y)
+
+        fig, ax = plt.subplots()
+
+        bg = plt.imread(self.__config["sim2d_field_img"])
+
+        ax.imshow(bg, extent=[-57.5, 57.5, -39, 39])
+
+        ax.plot(x_axis, y_axis)
+
+        plt.show()
