@@ -1,5 +1,3 @@
-from cProfile import label
-from tkinter import CENTER, E
 from typing import Literal
 from matplotlib.axes import Axes
 from matplotlib.figure import Figure
