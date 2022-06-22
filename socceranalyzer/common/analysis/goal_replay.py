@@ -1,5 +1,4 @@
 import pandas
-import matplotlib.pyplot as plt
 from socceranalyzer.common.enums.sim2d import SIM2D
 from socceranalyzer.common.enums.ssl import SSL
 from socceranalyzer.common.enums.vss import VSS
@@ -30,8 +29,6 @@ class GoalReplay:
                     
             public:
                 results(goal_number: int, cycles: int (optional), players: bool (optional)) -> tuple
-                plot_ball(goal_number: int) -> None
-                    Plots ball positions obtained from calculate() onto a SIM2D field.
     """
 
     def __init__(self, dataframe: pandas.DataFrame, category: SSL | SIM2D | VSS) -> None:
@@ -109,28 +106,4 @@ class GoalReplay:
         """
         return self._analyze(goal_number, cycles, players)
 
-    def plot_ball(self, cycles: int, goal_number: int) -> None:
-        """
-            Plots ball positions obtained from calculate() onto a SIM2D field.
-
-            Parameters:
-                    goal_number (int): Goal to be plotted number, counting from 0 in the order they happened.
-        """
-        ball_positions = self._analyze(goal_number, cycles, False)
-
-        x_axis = []
-        y_axis = []
-
-        for position in ball_positions:
-            x_axis.append(position.x)
-            y_axis.append(position.y)
-
-        fig, ax = plt.subplots()
-
-        bg = plt.imread("socceranalyzer/images/sim2d_field.png")
-
-        ax.imshow(bg, extent=[-57.5, 57.5, -39, 39])
-
-        ax.plot(x_axis, y_axis)
-
-        plt.show()
+    
