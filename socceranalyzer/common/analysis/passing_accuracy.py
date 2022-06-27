@@ -1,5 +1,7 @@
 from socceranalyzer.common.evaluators.passing import Passing
 from socceranalyzer.common.analysis.abstract_analysis import AbstractAnalysis
+from socceranalyzer.common.basic.team import Team
+
 
 class PassingAccuracy(AbstractAnalysis):
     """

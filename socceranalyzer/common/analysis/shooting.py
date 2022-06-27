@@ -1,3 +1,4 @@
+from typing import Literal
 from pandas import DataFrame
 from socceranalyzer.common.analysis.abstract_analysis import AbstractAnalysis
 from socceranalyzer.common.geometric.point import Point
@@ -8,10 +9,8 @@ from socceranalyzer.common.enums.sim2d import Landmarks
 from math import sqrt, acos
 from numpy import exp
 
-
 XG_MODEL_VARIABLES = ['angle','distance', 'players_in_between']
 XG_MODEL_PARAMS = [2.678591, 1.788279, -0.164496, -0.671407]
-
 
 class Shooting(AbstractAnalysis):
     """
@@ -60,7 +59,7 @@ class Shooting(AbstractAnalysis):
                 results() -> dict
                     returns match detailed shooting stats as a Python dict
                 results_as_dataframe() -> pandas.DataFrame:
-                    returns match detailed shooting stats as a pandas.DataFrame
+                    returns a copy of the match detailed shooting stats DataFrame
     """
     def __init__(self, dataframe: DataFrame, category):
         self.__category = category
@@ -103,21 +102,19 @@ class Shooting(AbstractAnalysis):
                         return player
         return ''
 
-    def __get_players_inside_area(self, cycle: int, a: list[float], b: list[float], c: list[float]) -> int:
+    def __get_players_inside_area(self, cycle: int, a: Point, b: Point, c: Point) -> int:
         """
         Returns the amount of players inside triangular area.
 
             Parameters:
                     cycle (int): Current index being evaluated
-                    a, b, c (list[float]): The vertices of the triangle
+                    a, b, c (Point): The vertices of the triangle
             
             Returns:
                     players_inside (int): Players inside the triangle at specified cycle.
         """
         players_inside = 0
-        a = Point(a[0], a[1])
-        b = Point(b[0], b[1])
-        c = Point(c[0], c[1])
+
         for i in range(1, 12):
             for side in ['l', 'r']:
                 player = 'player_{}{}'.format(side, i)                
@@ -154,10 +151,10 @@ class Shooting(AbstractAnalysis):
                     players_inside (int): Indicates the amount of players between the shooter and the goal
                     on_target (int): Indicates if the registered shot was on target
         """
-        dist = distance(Point(x,y), Point(Landmarks.R_GOAL_POS.value[0], Landmarks.R_GOAL_POS.value[1]))
-        p1 = distance_sqrd([x,y], Landmarks.R_GOAL_TOP_BAR.value)
-        p2 = distance_sqrd([x,y], Landmarks.R_GOAL_BOTTOM_BAR.value)
-        p3 = distance_sqrd(Landmarks.R_GOAL_TOP_BAR.value, Landmarks.R_GOAL_BOTTOM_BAR.value)
+        dist = distance(Point(x,y), Landmarks.R_GOAL_POS)
+        p1 = distance_sqrd(Point(x,y), Landmarks.R_GOAL_TOP_BAR)
+        p2 = distance_sqrd(Point(x,y), Landmarks.R_GOAL_BOTTOM_BAR)
+        p3 = distance_sqrd(Landmarks.R_GOAL_TOP_BAR, Landmarks.R_GOAL_BOTTOM_BAR)
         p12 = sqrt(p1)
         p13 = sqrt(p2)
         angle = acos((p1+p2-p3)/(2*p12*p13))
@@ -187,7 +184,7 @@ class Shooting(AbstractAnalysis):
         if not self.__df.loc[cycle, str(self.__category.GAME_TIME)] in self.__play_on_cycles:
             return
 
-        if((self.__df.loc[cycle, 'ball_vx']**2 + self.__df.loc[cycle, 'ball_vy']**2)** 0.5  > 2.0):
+        if((self.__df.loc[cycle, 'ball_vx']**2 + self.__df.loc[cycle, 'ball_vy']**2)** 0.5  > 1.65):
             kicker = self.__get_kicker(cycle)
             
             # Right team registered shot
@@ -205,7 +202,7 @@ class Shooting(AbstractAnalysis):
                     pos_y = self.__df.loc[cycle, f'{kicker}_y']
                     x = abs(pos_x)
                     y = (-1)*pos_y
-                    players_inside = self.__get_players_inside_area(cycle,[pos_x,pos_y],Landmarks.L_GOAL_TOP_BAR.value,Landmarks.L_GOAL_BOTTOM_BAR.value)
+                    players_inside = self.__get_players_inside_area(cycle,Point(pos_x,pos_y),Landmarks.L_GOAL_TOP_BAR,Landmarks.L_GOAL_BOTTOM_BAR)
                     self.__update_shot_data(cycle,self.__last_shooter,x,y,players_inside,0)  
                 elif abs(y_right) <= 7.5:
                     self.__last_shooter = kicker
@@ -213,7 +210,7 @@ class Shooting(AbstractAnalysis):
                     pos_y = self.__df.loc[cycle, f'{kicker}_y']
                     x = abs(pos_x)
                     y = (-1)*pos_y
-                    players_inside = self.__get_players_inside_area(cycle,[pos_x,pos_y],Landmarks.L_GOAL_TOP_BAR.value,Landmarks.L_GOAL_BOTTOM_BAR.value)
+                    players_inside = self.__get_players_inside_area(cycle,Point(pos_x,pos_y),Landmarks.L_GOAL_TOP_BAR,Landmarks.L_GOAL_BOTTOM_BAR)
                     self.__update_shot_data(cycle,self.__last_shooter,x,y,players_inside,1)
             # Left team registered shot
             elif(kicker != '' and 'l' in kicker.split('_')[-1] and self.__df.loc[cycle, f'{kicker}_x'] > 0 and self.__df.loc[cycle, 'ball_vx'] != 0):
@@ -228,13 +225,13 @@ class Shooting(AbstractAnalysis):
                     self.__last_shooter = kicker
                     x = self.__df.loc[cycle, f'{kicker}_x']
                     y = self.__df.loc[cycle, f'{kicker}_y']
-                    players_inside = self.__get_players_inside_area(cycle,[x,y],Landmarks.R_GOAL_TOP_BAR.value,Landmarks.R_GOAL_BOTTOM_BAR.value)
+                    players_inside = self.__get_players_inside_area(cycle,Point(x,y),Landmarks.R_GOAL_TOP_BAR,Landmarks.R_GOAL_BOTTOM_BAR)
                     self.__update_shot_data(cycle,self.__last_shooter,x,y,players_inside,0)
                 elif abs(y_left) <= 7.5:
                     self.__last_shooter = kicker
                     x = self.__df.loc[cycle, f'{kicker}_x']
                     y = self.__df.loc[cycle, f'{kicker}_y']
-                    players_inside = self.__get_players_inside_area(cycle,[x,y],Landmarks.R_GOAL_TOP_BAR.value,Landmarks.R_GOAL_BOTTOM_BAR.value)
+                    players_inside = self.__get_players_inside_area(cycle,Point(x,y),Landmarks.R_GOAL_TOP_BAR,Landmarks.R_GOAL_BOTTOM_BAR)
                     self.__update_shot_data(cycle,self.__last_shooter,x,y,players_inside,1)
 
     def __check_goal(self, cycle: int):
@@ -267,7 +264,7 @@ class Shooting(AbstractAnalysis):
             self.__check_goal(i)
         self.__shooting_stats_df = DataFrame(self.__shooting_stats)
 
-    def get_total_team_shots(self, team: str) -> int:
+    def get_total_team_shots(self, team: Literal['l', 'r']) -> int:
         """
         Returns total team shots during the match.
 
@@ -281,7 +278,7 @@ class Shooting(AbstractAnalysis):
             raise Exception('Team must be l or r')
         return self.__shooting_stats_df[self.__shooting_stats_df.team == team].shape[0]
 
-    def get_team_on_target_shots(self, team: str) -> int:
+    def get_team_on_target_shots(self, team: Literal['l', 'r']) -> int:
         """
         Returns total team on target shots during the match.
 
@@ -295,7 +292,7 @@ class Shooting(AbstractAnalysis):
             raise Exception('Team must be l or r')
         return self.__shooting_stats_df[(self.__shooting_stats_df.team == team) & self.__shooting_stats_df.on_target == True].shape[0]
     
-    def get_total_team_xG(self, team: str) -> float:
+    def get_total_team_xG(self, team: Literal['l', 'r']) -> float:
         """
         Returns total team xG during the match.
 
@@ -366,7 +363,7 @@ class Shooting(AbstractAnalysis):
                         xG (float): Goal probability between 0 and 1,
                         goal (int): Indicates if the shot was a goal. 
         """
-        return self.__shooting_stats_df
+        return self.__shooting_stats_df.copy()
 
     def serialize(self) -> list[dict]:
         """

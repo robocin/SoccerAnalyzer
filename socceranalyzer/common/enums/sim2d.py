@@ -1,4 +1,5 @@
 from enum import Enum
+from socceranalyzer.common.geometric.point import Point
 
 class SIM2D(Enum):
     """
@@ -33,59 +34,59 @@ class SIM2D(Enum):
     def __str__(self):
         return self.value
 
-class Landmarks(Enum):
-    R_GOAL_POS = [52.5, 0]
-    R_GOAL_TOP_BAR = [52.5, 7.01]
-    R_GOAL_BOTTOM_BAR = [52.5, -7.01]
-    L_GOAL_POS = [-52.5, 0]
-    L_GOAL_TOP_BAR = [-52.5, 7.01]
-    L_GOAL_BOTTOM_BAR = [-52.5, -7.01]
-    R_PEN_C = [35.75, 0.]
-    R_PEN_TOP = [35.75, 20.16]
-    R_PEN_BOTTOM = [35.75, -20.16]
-    L_PEN_C = [-35.75, 0.]
-    L_PEN_TOP = [-35.75, 20.16]
-    L_PEN_BOTTOM = [-35.75, -20.16]
-    CENTER = [0., 0.]
-    CENTER_BOTTOM = [0., -34.]
-    CENTER_TOP = [0., 34.]
-    BOTTOM_0 = [0., -39.]
-    BOTTOM_L_10 = [-10., -39.]
-    BOTTOM_L_20 = [-20., -39.]    
-    BOTTOM_L_30 = [-30., -39.]
-    BOTTOM_L_40 = [-40., -39.]
-    BOTTOM_L_50 = [-50., -39.]    
-    BOTTOM_R_10 = [10., -39.]
-    BOTTOM_R_20 = [20., -39.]    
-    BOTTOM_R_30 = [30., -39.]
-    BOTTOM_R_40 = [40., -39.]
-    BOTTOM_R_50 = [50., -39.]
-    TOP_0 = [0., 39.]
-    TOP_L_10 = [-10., 39.]
-    TOP_L_20 = [-20., 39.]    
-    TOP_L_30 = [-30., 39.]
-    TOP_L_40 = [-40., 39.]
-    TOP_L_50 = [-50., 39.]    
-    TOP_R_10 = [10., 39.]
-    TOP_R_20 = [20., 39.]    
-    TOP_R_30 = [30., 39.]
-    TOP_R_40 = [40., 39.]
-    TOP_R_50 = [50., 39.]
-    LEFT_0 = [-57.5, 0]
-    LEFT_BOTTOM = [-52.5, -34.]
-    LEFT_B_10 = [-57.5, -10.]
-    LEFT_B_20 = [-57.5, -20.]
-    LEFT_B_30 = [-57.5, -30.]
-    LEFT_TOP = [-52.5, 34.]
-    LEFT_T_10 = [-57.5, 10.]
-    LEFT_T_20 = [-57.5, 20.]
-    LEFT_T_30 = [-57.5, 30.]
-    RIGHT_0 = [57.5, 0]
-    RIGHT_BOTTOM = [52.5, -34.]
-    RIGHT_B_10 = [57.5, -10.]
-    RIGHT_B_20 = [57.5, -20.]
-    RIGHT_B_30 = [57.5, -30.]
-    RIGHT_TOP = [52.5, 34.]
-    RIGHT_T_10 = [57.5, 10.]
-    RIGHT_T_20 = [57.5, 20.]
-    RIGHT_T_30 = [57.5, 30.]
+class Landmarks:
+    R_GOAL_POS = Point(52.5, 0)
+    R_GOAL_TOP_BAR = Point(52.5, 7.01)
+    R_GOAL_BOTTOM_BAR = Point(52.5, -7.01)
+    L_GOAL_POS = Point(-52.5, 0)
+    L_GOAL_TOP_BAR = Point(-52.5, 7.01)
+    L_GOAL_BOTTOM_BAR = Point(-52.5, -7.01)
+    R_PEN_C = Point(35.75, 0.)
+    R_PEN_TOP = Point(35.75, 20.16)
+    R_PEN_BOTTOM = Point(35.75, -20.16)
+    L_PEN_C = Point(-35.75, 0.)
+    L_PEN_TOP = Point(-35.75, 20.16)
+    L_PEN_BOTTOM = Point(-35.75, -20.16)
+    CENTER = Point(0., 0.)
+    CENTER_BOTTOM = Point(0., -34.)
+    CENTER_TOP = Point(0., 34.)
+    BOTTOM_0 = Point(0., -39.)
+    BOTTOM_L_10 = Point(-10., -39.)
+    BOTTOM_L_20 = Point(-20., -39.)    
+    BOTTOM_L_30 = Point(-30., -39.)
+    BOTTOM_L_40 = Point(-40., -39.)
+    BOTTOM_L_50 = Point(-50., -39.)    
+    BOTTOM_R_10 = Point(10., -39.)
+    BOTTOM_R_20 = Point(20., -39.)    
+    BOTTOM_R_30 = Point(30., -39.)
+    BOTTOM_R_40 = Point(40., -39.)
+    BOTTOM_R_50 = Point(50., -39.)
+    TOP_0 = Point(0., 39.)
+    TOP_L_10 = Point(-10., 39.)
+    TOP_L_20 = Point(-20., 39.)    
+    TOP_L_30 = Point(-30., 39.)
+    TOP_L_40 = Point(-40., 39.)
+    TOP_L_50 = Point(-50., 39.)    
+    TOP_R_10 = Point(10., 39.)
+    TOP_R_20 = Point(20., 39.)    
+    TOP_R_30 = Point(30., 39.)
+    TOP_R_40 = Point(40., 39.)
+    TOP_R_50 = Point(50., 39.)
+    LEFT_0 = Point(-57.5, 0)
+    LEFT_BOTTOM = Point(-52.5, -34.)
+    LEFT_B_10 = Point(-57.5, -10.)
+    LEFT_B_20 = Point(-57.5, -20.)
+    LEFT_B_30 = Point(-57.5, -30.)
+    LEFT_TOP = Point(-52.5, 34.)
+    LEFT_T_10 = Point(-57.5, 10.)
+    LEFT_T_20 = Point(-57.5, 20.)
+    LEFT_T_30 = Point(-57.5, 30.)
+    RIGHT_0 = Point(57.5, 0)
+    RIGHT_BOTTOM = Point(52.5, -34.)
+    RIGHT_B_10 = Point(57.5, -10.)
+    RIGHT_B_20 = Point(57.5, -20.)
+    RIGHT_B_30 = Point(57.5, -30.)
+    RIGHT_TOP = Point(52.5, 34.)
+    RIGHT_T_10 = Point(57.5, 10.)
+    RIGHT_T_20 = Point(57.5, 20.)
+    RIGHT_T_30 = Point(57.5, 30.)
