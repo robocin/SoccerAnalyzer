@@ -33,7 +33,7 @@ class SIM2D(Enum):
 
     def __str__(self):
         return self.value
-
+      
 class Landmarks:
     R_GOAL_POS = Point(52.5, 0)
     R_GOAL_TOP_BAR = Point(52.5, 7.01)
@@ -90,3 +90,4 @@ class Landmarks:
     RIGHT_T_10 = Point(57.5, 10.)
     RIGHT_T_20 = Point(57.5, 20.)
     RIGHT_T_30 = Point(57.5, 30.)
+
