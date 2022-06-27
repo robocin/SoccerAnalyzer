@@ -3,6 +3,7 @@ from tkinter import E
 from matplotlib.axes import Axes
 from matplotlib.figure import Figure
 import matplotlib.pyplot as plt
+from matplotlib.patches import Arc
 import seaborn as sns
 import os
 
@@ -242,3 +243,130 @@ class JupyterAdapter:
                 plt.ylim(-35,35)
                 plt.xlim(-55,55)
                 plt.show()
+
+    
+    def __draw_pitch(self, fig_size: tuple[int, int]=(15, 4), amount=2, stack_horizontally=True) -> tuple[Figure, Axes]:
+        """
+        Draws specified amount of pitches and returns a figure and axes with the drawn pitches.
+
+            Parameters:
+                    fig_size (tuple[int, int]): Tuple indicating total figure size
+                    amount (int): Amount of pitches to draw
+                    stack_horizontally (bool): Stack pitches horizontally or vertically
+            Returns:
+                    fig, axs (tuple[Figure, Axes]): Figure and Axes drawn
+        """
+        fig, axs=plt.subplots(1, amount, figsize=fig_size) if stack_horizontally else plt.subplots(amount, 1, figsize=fig_size)
+        linecolor='black'
+
+        for ax in axs:
+            ax.plot([0,68],[0,0], color=linecolor)
+            ax.plot([68,68],[52.5,0], color=linecolor)
+            ax.plot([0,0],[52.5,0], color=linecolor)
+            
+            #Left Penalty Area
+            ax.plot([13.84,13.84],[0,16.5],color=linecolor)
+            ax.plot([13.84,54.16],[16.5,16.5],color=linecolor)
+            ax.plot([54.16,54.16],[0,16.5],color=linecolor)    
+            
+            #Goal
+            ax.plot([41.01,41.01],[-2,0],color=linecolor)
+            ax.plot([26.99,41.01],[-2,-2],color=linecolor)
+            ax.plot([26.99,26.99],[0,-2],color=linecolor)
+        
+            #Prepare Circles
+            leftPenSpot = plt.Circle((68/2,11),0.4,color=linecolor)
+            
+            #Draw Circles
+            ax.add_patch(leftPenSpot)
+
+            #Prepare Arcs
+            leftArc = Arc((34,11),height=18,width=18,angle=0,theta1=38,theta2=142,color=linecolor)
+            
+            #Draw Arcs
+            ax.add_patch(leftArc)
+            
+            #Tidy Axes
+            ax.axis('off')
+        
+        return fig, axs
+
+    
+    def plot_shot_frequency(self) -> tuple[Figure, Axes]:
+        """
+        Plots shot frequency hexbin graph in the pitch and returns figure and axes where it was drawn.
+
+            Returns:
+                    fig, axs (tuple[Figure, Axes]): Figure and Axes drawn
+        """
+        (fig, axs) = self.__draw_pitch(fig_size=(10, 4))
+        chart_data = self.__match_analyzer.shooting.results_as_dataframe()[['team', 'x', 'y']]
+        for i,shot in chart_data.iterrows():
+            chart_data.at[i,'x']=52.5-shot['x']
+            chart_data.at[i,'y']=34+shot['y']
+        for ax, team, team_name in zip(axs,['l', 'r'],[self.__config["name_left"], self.__config["name_right"]]):
+            team_data=chart_data[chart_data['team'] == team]
+            pos=ax.hexbin(data=team_data, x='y', y='x',zorder=1,cmap='OrRd',gridsize=(25,10),alpha=.7,extent=(0,68,0,52.5))
+            ax.set_xlim(-1, 69)
+            ax.set_ylim(-3,52.5)
+            ax.set_title(f'Frequency of shots: {team_name}')
+            plt.colorbar(pos, ax=ax)
+            plt.tight_layout()
+            plt.gca().set_aspect('equal', adjustable='box')
+        return fig, axs
+
+    
+    def plot_shot_log(self) -> tuple[Figure, Axes]:
+        """
+        Plots all shots registered in a scatter graph of the pitch and returns figure and axes where
+        it was drawn.
+
+            Returns:
+                    fig, axs (tuple[Figure, Axes]): Figure and Axes drawn
+        """
+        (fig, axs) = self.__draw_pitch(fig_size=(10, 4))
+        chart_data = self.__match_analyzer.shooting.results_as_dataframe()[['team', 'x', 'y', 'goal']]
+        for i,shot in chart_data.iterrows():
+            chart_data.at[i,'x']=52.5-shot['x']
+            chart_data.at[i,'y']=34+shot['y']
+        for ax, team, team_name in zip(axs, ['l', 'r'], [self.__config['name_left'], self.__config['name_right']]):
+            team_data = chart_data[chart_data['team'] == team]
+            goals = team_data[team_data['goal']==True]
+            shots = team_data[team_data['goal']==False]
+            ax.plot(shots['y'], shots['x'], 'rx', label='misses', alpha=0.5)
+            ax.plot(goals['y'], goals['x'], 'go', label='goals', alpha=0.5)
+            ax.set_title(f'Shots: {team_name}')
+            ax.legend()
+            plt.xlim(-1, 69)
+            plt.ylim(-3, 52.5)
+            plt.tight_layout()
+            plt.gca().set_aspect('equal', adjustable='box')
+        return fig, axs
+
+    
+    def plot_shot_quality(self) -> tuple[Figure, Axes]:        
+        """
+        Plots all shots registered in a scatter graph where the size of the of the pitch means the 
+        shot quality and returns figure and axes where it was drawn.
+
+            Returns:
+                    fig, axs (tuple[Figure, Axes]): Figure and Axes drawn
+        """
+        (fig, axs) = self.__draw_pitch(fig_size=(10, 4))
+        chart_data = self.__match_analyzer.shooting.results_as_dataframe()[['team', 'x', 'y', 'xG','goal']]
+        for i,shot in chart_data.iterrows():
+            chart_data.at[i,'x']=52.5-shot['x']
+            chart_data.at[i,'y']=34+shot['y']
+        for ax, team, team_name in zip(axs, ['l', 'r'], [self.__config['name_left'], self.__config['name_right']]):
+            team_data = chart_data[chart_data['team'] == team]
+            goals = team_data[team_data['goal']==True]
+            shots = team_data[team_data['goal']==False]
+            ax.scatter(shots['y'], shots['x'], s=150*shots['xG'], c='#7e7272', label='misses', alpha=0.5)
+            ax.scatter(goals['y'], goals['x'], s=150*goals['xG'], c='#981717', label='goals', alpha=0.5)
+            ax.set_title(f'Shot quality {team_name}')
+            ax.legend()
+            plt.xlim(-1, 69)
+            plt.ylim(-3, 52.5)
+            plt.tight_layout()
+            plt.gca().set_aspect('equal', adjustable='box')
+        return fig, axs
