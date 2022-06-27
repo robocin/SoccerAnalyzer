@@ -1,3 +1,4 @@
+from typing import Literal
 from pandas import DataFrame
 from socceranalyzer.common.analysis.abstract_analysis import AbstractAnalysis
 from socceranalyzer.common.geometric.point import Point
@@ -8,10 +9,8 @@ from socceranalyzer.common.enums.sim2d import Landmarks
 from math import sqrt, acos
 from numpy import exp
 
-
 XG_MODEL_VARIABLES = ['angle','distance', 'players_in_between']
 XG_MODEL_PARAMS = [2.678591, 1.788279, -0.164496, -0.671407]
-
 
 class Shooting(AbstractAnalysis):
     """
@@ -60,7 +59,7 @@ class Shooting(AbstractAnalysis):
                 results() -> dict
                     returns match detailed shooting stats as a Python dict
                 results_as_dataframe() -> pandas.DataFrame:
-                    returns match detailed shooting stats as a pandas.DataFrame
+                    returns a copy of the match detailed shooting stats DataFrame
     """
     def __init__(self, dataframe: DataFrame, category):
         self.__category = category
@@ -185,7 +184,7 @@ class Shooting(AbstractAnalysis):
         if not self.__df.loc[cycle, str(self.__category.GAME_TIME)] in self.__play_on_cycles:
             return
 
-        if((self.__df.loc[cycle, 'ball_vx']**2 + self.__df.loc[cycle, 'ball_vy']**2)** 0.5  > 2.0):
+        if((self.__df.loc[cycle, 'ball_vx']**2 + self.__df.loc[cycle, 'ball_vy']**2)** 0.5  > 1.65):
             kicker = self.__get_kicker(cycle)
             
             # Right team registered shot
@@ -265,7 +264,7 @@ class Shooting(AbstractAnalysis):
             self.__check_goal(i)
         self.__shooting_stats_df = DataFrame(self.__shooting_stats)
 
-    def get_total_team_shots(self, team: str) -> int:
+    def get_total_team_shots(self, team: Literal['l', 'r']) -> int:
         """
         Returns total team shots during the match.
 
@@ -279,7 +278,7 @@ class Shooting(AbstractAnalysis):
             raise Exception('Team must be l or r')
         return self.__shooting_stats_df[self.__shooting_stats_df.team == team].shape[0]
 
-    def get_team_on_target_shots(self, team: str) -> int:
+    def get_team_on_target_shots(self, team: Literal['l', 'r']) -> int:
         """
         Returns total team on target shots during the match.
 
@@ -293,7 +292,7 @@ class Shooting(AbstractAnalysis):
             raise Exception('Team must be l or r')
         return self.__shooting_stats_df[(self.__shooting_stats_df.team == team) & self.__shooting_stats_df.on_target == True].shape[0]
     
-    def get_total_team_xG(self, team: str) -> float:
+    def get_total_team_xG(self, team: Literal['l', 'r']) -> float:
         """
         Returns total team xG during the match.
 
@@ -364,7 +363,7 @@ class Shooting(AbstractAnalysis):
                         xG (float): Goal probability between 0 and 1,
                         goal (int): Indicates if the shot was a goal. 
         """
-        return self.__shooting_stats_df
+        return self.__shooting_stats_df.copy()
 
     def serialize(self) -> list[dict]:
         """
