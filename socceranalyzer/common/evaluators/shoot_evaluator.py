@@ -1,3 +1,3 @@
-class Robot:
+class ShootEvaluator:
     def __init__(self):
         raise NotImplementedError

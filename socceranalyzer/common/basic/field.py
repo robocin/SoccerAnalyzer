@@ -1,61 +1,92 @@
+from socceranalyzer.common.geometric.point import Point
+from socceranalyzer.common.geometric.rectangle import Rectangle
+
 class Field:
-    ''' 
-    A class to create a point somewhere in the field.
+    """"
+        A class to represent a soccer field.
 
-    ...
+        field(width: float, length: float, center: Point,penalty_area_left: Rectangle, penalty_area_right: Rectangle, small_penalty_area_left: Rectangle,  small_penalty_area_right: Rectangle,  goalpost_left: Rectangle, goalpost_right: Rectangle)
 
-    Attributes
-    ----------
-    width: float
-        total width of the field
-    length: float
-        total length of the field
-    center: float
-        center of the field
-    small_penalty_area: Rectangle object
-        defines the small penalty area in the field
-    penalty_area: Rectangle object
-        defines the penalty area in the field
-
-    '''
-    def __init__(self, width, length, center, small_penalty_area, penalty_area):
-        '''
-        Constructs all the necessary attributes for the field object.
-
-        Parameters
+        Attributes
         ----------
-        width: float
-            total width of the field
-        length: float
-            total length of the field
-        center: float
-            center of the field
-        small_penalty_area: Rectangle object
-            defines the small penalty area in the field
-        penalty_area: Rectangle object
-            defines the penalty area in the field
-
-        '''
+            public through @properties:
+                width: float
+                    total width of the field
+                length: float
+                    total length of the field
+                center: Point
+                    center of the field
+                penalty_area_left: Rectangle
+                    defines the left penalty area in the field
+                penalty_area_right: Rectangle
+                    defines the right penalty area in the field
+                small_penalty_area_left: Rectangle
+                    defines the left small penalty area in the field
+                small_penalty_area_right: Rectangle
+                    defines the right small penalty area in the field
+                goalpost_left: Rectangle 
+                    defines the left goalpost in the field 
+                goalpost_right: Rectangle 
+                    defines the right goalpost in the field 
+                
+    """
+    def __init__(self, width: float, length: float, center: Point,
+                penalty_area_left: Rectangle,
+                penalty_area_right: Rectangle,
+                small_penalty_area_left: Rectangle, 
+                small_penalty_area_right: Rectangle, 
+                goalpost_left: Rectangle,
+                goalpost_right: Rectangle
+                ):
+                
         self.__width = width
         self.__length = length
         self.__center = center
-        self.__small_penalty_area = small_penalty_area
-        self.__penalty_area = penalty_area
+        self.__penalty_area_left = penalty_area_left
+        self.__penalty_area_right = penalty_area_right
+        self.__small_penalty_area_left = small_penalty_area_left
+        self.__small_penalty_area_right = small_penalty_area_right
+        self.__goalpost_left = goalpost_left
+        self.__goalpost_right = goalpost_right
+    
+    @property
+    def width(self):
+        return self.__width
+    
+    @property
+    def length(self):
+        return self.__length
+    
+    @property
+    def center(self):
+        return self.__center
+    
+    @property
+    def penalty_area_left(self):
+        return self.__penalty_area_left
+    
+    @property
+    def penalty_area_right(self):
+        return self.__penalty_area_right
+
+    @property
+    def small_penalty_area_left(self):
+        return self.__small_penalty_area_left
+    
+    @property
+    def small_penalty_area_right(self):
+        return self.__small_penalty_area_right
+    
+    @property
+    def goalpost_left(self):
+        return self.__goalpost_left
+    
+    @property
+    def goalpost_right(self):
+        return self.__goalpost_right
+
+
 
 class Field2D(Field):
-    # raise NotImplementedError
-    """
-        self.width = 105
-        self.height = 68
-        self.pa_front = 36
-        self.pa_upper = 20
-        self.pa_lower = -20
-        self.spa_front = 47
-        self.spa_upper = 9
-        self.spa_lower = -9 
-        self.max_x = 52.5
-        self.min_x = -52.5
-        self.max_y =  34
-        self.min_y = -34
-
-    """
+    def __init__(self):
+        raise NotImplementedError
