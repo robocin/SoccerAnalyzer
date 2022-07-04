@@ -460,3 +460,29 @@ class JupyterAdapter:
             plt.gca().set_aspect('equal', adjustable='box')
         return fig, axs
 
+    def passing_accuracy(self):
+        sns.set()
+        labels = [self.__config["left_label"], self.__config["right_label"]]
+        acc_left, acc_right, total_passes_left, total_passes_right = self.__match_analyzer.passing_accuracy.results()
+
+        correct_passes = [int(total_passes_left*acc_left), int(total_passes_right*acc_right)]
+        wrong_passes = [total_passes_left-correct_passes[0], total_passes_right-correct_passes[1]]
+
+        width = 0.5
+
+        fig, ax = plt.subplots(figsize=(6,6))
+
+        ax.bar(labels, correct_passes, width, label='certos', color='#36FF51', align='center')
+        rects2 = ax.bar(labels, wrong_passes, width, label='errados', bottom=correct_passes, color='#FF2222')
+
+        for i, rect in enumerate(rects2):
+            text = f"{100*correct_passes[i]/(wrong_passes[i]+correct_passes[i]):2.2f}%"
+            height = rect.get_height()
+            ax.text(s=text, x=rect.get_x()+rect.get_width()/2,y=correct_passes[i]+wrong_passes[i], ha="center", va="bottom", color="#3ED452", fontsize=13, fontweight='bold')
+
+        ax.set_ylabel('passes')
+        ax.set_title('Passing accuracy')
+
+        ax.legend()
+
+        plt.show()
