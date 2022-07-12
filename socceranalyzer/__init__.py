@@ -1,3 +1,6 @@
+# CLI
+from socceranalyzer.cli.cli import CLI
+
 # Jupyter
 from socceranalyzer.jupyter.jupyter_adapter import JupyterAdapter
 
