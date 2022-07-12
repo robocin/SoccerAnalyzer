@@ -25,17 +25,18 @@ This project was created with:
 - [Pandas](https://pandas.pydata.org/) 1.2.4 or above
     - Provides a simple structure to manipulate all the data gathered. 
 - [Numpy](https://numpy.org/) 1.20.3 or above
+- [Matplotlib](https://matplotlib.org/) 3.5 or above
+- [Seaborn](https://seaborn.pydata.org/) 0.11.2 or above
 
 ### Setup
-You must install this project as a local Python package. So to install it
-on your machine or virtual environment use pip inside the module as:
+You can install this project as Python package through pip. **We highly recommend you to install SoccerAnalyzer in miniconda environment using our requirements.txt file.**
 
 ```
-$ cd path/to/SoccerAnalyzer
-$ pip install .
+$ conda create --name analyzer python>=3.10
+$ conda activate analyzer
+$ pip install socceranalyzer
 ```
-This will trigger [setup.py](https://github.com/robocin/SoccerAnalyzer/blob/master/setup.py) and will install the needed
-dependencies if you don't already have those.
+
 ## Getting Started
 This package is capable of delivering built-in analysis that were already
 created or to be a platform that enables you to create your own analysis.
@@ -46,11 +47,11 @@ Each analysis is a class, they are instantiated and interfaced by a [Facade](htt
 which is the **common.chore.match_analyzer** module. It is responsible for
 creating each analysis object.
 
-When an analysis is instantiated, it builds itself and gathers everything needed to provide the analysis. All information is stored and can be accessed through the Facade with **MatchAnalyzer.collect_results()** method or targeting specific analysis with **MatchAnalyzer.example_analysis.results()**. 
+When an analysis is instantiated, it builds itself and gathers everything needed to provide the analysis. All information is stored and can be accessed through the Facade targeting specific analysis with **MatchAnalyzer.example_analysis.results()**. 
 
 The **MatchAnalyzer** receives a **Match** object as parameter.
 
-The **Match** receives a **pandas.DataFrame** and a **Enum** object as parameter.
+The **Match** receives a **pandas.DataFrame** and a **Category** object as parameter.
 
 These inputs are **mandatory**, otherwise there will be no data to be analyzed.
 
@@ -68,7 +69,7 @@ match_object = Match(dataframe, SIM2D)
 match_analyzer = MatchAnalyzer(match_object)
 match_analyzer.collect_results()
 ```
-#### SSL
+##### SSL
 ```python
 import pandas as pd
 
@@ -86,5 +87,5 @@ match_analyzer.collect_results()
 > Not available yet
 
 ---
-> 2021, Felipe Nunes; Mateus Soares, Bruna Alves
+> 2021, RobôCIn
 
