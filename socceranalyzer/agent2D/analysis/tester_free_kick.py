@@ -1,5 +1,5 @@
 from socceranalyzer.common.analysis.abstract_analysis import AbstractAnalysis
-from socceranalyzer.common.utility.finders import find_last_unique_event_ocurrences
+from socceranalyzer.common.utility import Utility
 
 
 class TesterFK(AbstractAnalysis):
@@ -20,8 +20,8 @@ class TesterFK(AbstractAnalysis):
         self._analyze()
 
     def _analyze(self):
-        free_kicks_to_left = find_last_unique_event_ocurrences(self.dataframe, str(self.category.FK_LEFT))
-        free_kicks_to_right = find_last_unique_event_ocurrences(self.dataframe, str(self.category.FK_RIGHT))
+        free_kicks_to_left = Utility.find_last_unique_event_ocurrences(self.dataframe, str(self.category.FK_LEFT))
+        free_kicks_to_right = Utility.find_last_unique_event_ocurrences(self.dataframe, str(self.category.FK_RIGHT))
 
         self.__free_kicks_l = len(free_kicks_to_left)
         self.__free_kicks_r = len(free_kicks_to_right)

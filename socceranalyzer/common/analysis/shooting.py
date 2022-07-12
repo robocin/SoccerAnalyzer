@@ -4,10 +4,10 @@ from socceranalyzer.common.analysis.abstract_analysis import AbstractAnalysis
 from socceranalyzer.common.geometric.point import Point
 from socceranalyzer.common.geometric.triangle import Triangle
 from socceranalyzer.common.operations.measures import *
-from socceranalyzer.common.utility.slicers import PlaymodeSlicer
 from socceranalyzer.common.enums.sim2d import Landmarks
 from math import sqrt, acos
 from numpy import exp
+from socceranalyzer.common.utility import Utility
 
 XG_MODEL_VARIABLES = ['angle','distance', 'players_in_between']
 XG_MODEL_PARAMS = [2.678591, 1.788279, -0.164496, -0.671407]
@@ -258,7 +258,7 @@ class Shooting(AbstractAnalysis):
         """
         Performs match shooting analysis.
         """
-        self.__play_on_cycles = list(PlaymodeSlicer.slice(self.dataframe, 'play_on')[str(self.category.GAME_TIME)])
+        self.__play_on_cycles = list(Utility.slice(self.dataframe, 'play_on')[str(self.category.GAME_TIME)])
         for i, _ in self.__df.iterrows():
             self.__check_shot(i)
             self.__check_goal(i)
