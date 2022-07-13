@@ -131,6 +131,7 @@ class JupyterAdapter:
 
     def fault_position(self, width: int = 10, height: int = 10, title: str = "Foul charges"):
         self._helper.team_color_validate()
+        sns.reset_defaults()
     
         left_faults, right_faults = self.__match_analyzer.foul_charge.results(tuple=True)
 
