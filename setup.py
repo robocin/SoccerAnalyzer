@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='socceranalyzer',
-    version='2.0.0',
+    version='2.0.1',
     description='Robocup Soccer data analysis package for SIM2D, SSL and VSS categories',
     long_description= open('README.md').read(),
     long_description_content_type='text/markdown',
@@ -28,6 +28,7 @@ setup(
         'Source': 'https://github.com/robocin/SoccerAnalyzer',
         'Tracker': 'https://github.com/robocin/SoccerAnalyzer/issues'
     },
+    include_package_data=True,
     packages=[package for package in find_packages() if package.startswith("socceranalyzer")],
     install_requires=['pandas', 'numpy', 'seaborn', 'matplotlib']
 )
