@@ -22,6 +22,8 @@ from socceranalyzer.common.analysis.stamina import Stamina
 from socceranalyzer.common.analysis.shooting import Shooting
 from socceranalyzer.common.analysis.heatmap import Heatmap
 from socceranalyzer.common.evaluators.passing import Passing
+from socceranalyzer.common.analysis.find_goals import FindGoals
+from socceranalyzer.common.analysis.goalkeeper import GoalkeeperAnalysis
 
 
 class MatchAnalyzer(AbstractFactory):
@@ -184,6 +186,14 @@ class MatchAnalyzer(AbstractFactory):
         return self.__heatmap
 
     @property
+    def find_goals(self):
+        return self.__find_goals
+
+    @property
+    def goalkeeper(self):
+        return self.__goalkeeper
+
+    @property
     def analysis_dict(self):
         raise NotImplementedError
         # return self.__analysis_dict
@@ -291,6 +301,12 @@ class MatchAnalyzer(AbstractFactory):
 
             setattr(self, "__heatmap", None)
             self.__heatmap = Heatmap(self.__match.dataframe, self.category)
+
+            setattr(self, "__find_goals", None)
+            self.__find_goals = FindGoals(self.__match.dataframe, self.category)
+
+            setattr(self, "__goalkeeper", None)
+            self.__goalkeeper = GoalkeeperAnalysis(self.__match.dataframe, self.category)
 
             #setattr(self, "__time_after_corner", None)
             #self.__time_after_corner = TimeAfterCorner(self.__match.dataframe, self.category)
