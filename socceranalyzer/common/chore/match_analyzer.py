@@ -1,4 +1,5 @@
 from time import time
+from socceranalyzer.common.analysis.speed import Speed
 
 from socceranalyzer.common.chore.abstract_factory import AbstractFactory
 from socceranalyzer.common.chore.builder import Builder
@@ -291,6 +292,9 @@ class MatchAnalyzer(AbstractFactory):
 
             setattr(self, "__heatmap", None)
             self.__heatmap = Heatmap(self.__match.dataframe, self.category)
+            
+            setattr(self, "__speed", None)
+            self__speed = Speed(self.__match.dataframe, self.category)
 
             #setattr(self, "__time_after_corner", None)
             #self.__time_after_corner = TimeAfterCorner(self.__match.dataframe, self.category)
