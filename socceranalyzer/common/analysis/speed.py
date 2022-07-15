@@ -7,14 +7,14 @@ from socceranalyzer.common.enums.sim2d import SIM2D
 from socceranalyzer.common.utility.slicers import PlaymodeSlicer
 
 class Speed(AbstractAnalysis):
-    def __init__(self, dataframe: DataFrame, category) -> None:
+    def __init__(self, dataframe: DataFrame, category, player: int, side: str) -> None:
         self.__dataframe = dataframe
         self.__category = category
         self.__l_players_speed: list = []
         self.__r_players_speed: list = []
-        self.__cans: list = []
+        self.__player_speed: list = []
 
-        self._analyze()
+        self._analyze(player, side)
 
     @property
     def category(self):
@@ -33,8 +33,7 @@ class Speed(AbstractAnalysis):
         return self.__r_players_speed
 
     def results(self):
-        plt.plot(self.__cans)
-        plt.show()
+        return self.__player_speed
 
     def describe(self):
         raise NotImplementedError
@@ -42,18 +41,31 @@ class Speed(AbstractAnalysis):
     def serialize(self):
         return NotImplementedError
 
-    def _analyze(self):
+    def _analyze(self, player_number: int, side: str):
+
+        player_number, side = self.__handle_values(player_number, side)
+
         clean_df = PlaymodeSlicer.slice(self.__dataframe,str(SIM2D.RUNNING_GAME))
-        clean_df.head()
-        vx = np.array(clean_df['player_l7_vx'].tolist())
-        vy = np.array(clean_df['player_l7_vy'].tolist())
+        vx = np.array(clean_df[f'player_{side}{player_number}_vx'].tolist())
+        vy = np.array(clean_df[f'player_{side}{player_number}_vy'].tolist())
 
         velocity_vector = [[x,y] for x, y in zip(vx,vy)]
 
-        self._calculate_speed(velocity_vector)
+        self.__player_speed = self._calculate_speed(velocity_vector)
 
     def _calculate_speed(self, velocity_over_time):
         velocity_over_time = np.array(velocity_over_time)
         velocity_scalar = [np.linalg.norm(coordinate) for coordinate in velocity_over_time]
 
-        self.__cans = velocity_scalar
+        return velocity_scalar
+
+    def __handle_values(self, player_number, side):
+        if side[0] is not 'l' or 'r':
+            raise ValueError(f'Value: {side} is not accepted to socceranalyzer.speed.side')
+        else:
+            side = side[0]
+
+        if not(0 <= player_number <= 11):
+            raise ValueError(f'Value: {player_number} is not accepted to socceranalyzer.speed.player_number')
+            
+        return player_number, side
