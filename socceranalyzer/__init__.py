@@ -51,6 +51,7 @@ from socceranalyzer.common.analysis.shooting import Shooting
 from socceranalyzer.common.analysis.stamina import Stamina
 from socceranalyzer.common.analysis.penalty import Penalty
 from socceranalyzer.common.analysis.time_after_events import TimeAfterEvents
+from socceranalyzer.common.analysis.speed import Speed
 
 # Utils
 from socceranalyzer.common.utils import Utils
