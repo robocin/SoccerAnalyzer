@@ -294,7 +294,7 @@ class MatchAnalyzer(AbstractFactory):
             self.__heatmap = Heatmap(self.__match.dataframe, self.category)
             
             setattr(self, "__speed", None)
-            self__speed = Speed(self.__match.dataframe, self.category)
+            self__speed = Speed(self.__match.dataframe, self.category, 9, "left")
 
             #setattr(self, "__time_after_corner", None)
             #self.__time_after_corner = TimeAfterCorner(self.__match.dataframe, self.category)
