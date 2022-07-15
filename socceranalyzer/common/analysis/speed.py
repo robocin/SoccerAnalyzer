@@ -44,10 +44,9 @@ class Speed(AbstractAnalysis):
     def _analyze(self, player_number: int, side: str):
 
         player_number, side = self.__handle_values(player_number, side)
-
-        clean_df = PlaymodeSlicer.slice(self.__dataframe,str(SIM2D.RUNNING_GAME))
-        vx = np.array(clean_df[f'player_{side}{player_number}_vx'].tolist())
-        vy = np.array(clean_df[f'player_{side}{player_number}_vy'].tolist())
+        
+        vx = np.array(self.__dataframe[f'player_{side}{player_number}_vx'].tolist())
+        vy = np.array(self.__dataframe[f'player_{side}{player_number}_vy'].tolist())
 
         velocity_vector = [[x,y] for x, y in zip(vx,vy)]
 
@@ -60,10 +59,11 @@ class Speed(AbstractAnalysis):
         return velocity_scalar
 
     def __handle_values(self, player_number, side):
-        if side[0] is not 'l' or 'r':
-            raise ValueError(f'Value: {side} is not accepted to socceranalyzer.speed.side')
-        else:
-            side = side[0]
+        if side[0] != 'l': 
+            if side[0] != 'r':
+                raise ValueError(f'Value: {side} is not accepted to socceranalyzer.speed.side')
+        
+        side = side[0]
 
         if not(0 <= player_number <= 11):
             raise ValueError(f'Value: {player_number} is not accepted to socceranalyzer.speed.player_number')

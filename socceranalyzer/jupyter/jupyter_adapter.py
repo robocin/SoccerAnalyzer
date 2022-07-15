@@ -8,7 +8,7 @@ import seaborn as sns
 import os
 
 import socceranalyzer
-from socceranalyzer.common.analysis.stamina import Stamina
+from socceranalyzer.common.analysis.speed import Speed
 from socceranalyzer.common.chore.match_analyzer import MatchAnalyzer
 from socceranalyzer.common.enums.sim2d import Landmarks
 
@@ -216,13 +216,13 @@ class JupyterAdapter:
             plt.show()
 
 
-    def speed(self, player_number: int, side: str, figsize:tuple[float, float] = (10,10)):
+    def speed(self, player_number: int, side: str, fig_dimensions:tuple[float, float] = (40,5)):
         sns.set()
 
-        _, ax = plt.subplots(figsize)
-        player_stamina = Stamina(self.__match_analyzer.match.dataframe, self.__match_analyzer.category, player_number, side)
+        _, ax = plt.subplots(figsize=fig_dimensions)
+        player_speed = Speed(self.__match_analyzer.match.dataframe, self.__match_analyzer.category, player_number, side).results()
 
-        plt.plot(player_stamina)
+        plt.plot(player_speed)
         plt.show()
 
 
