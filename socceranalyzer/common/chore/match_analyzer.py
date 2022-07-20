@@ -1,7 +1,9 @@
 from time import time
 
+from numpy import mat
+
 from socceranalyzer.common.chore.abstract_factory import AbstractFactory
-from socceranalyzer.common.chore.builder import Builder
+from socceranalyzer.common.chore.event_builder import EventBuilder
 
 from socceranalyzer.common.basic.match import Match
 from socceranalyzer.common.collections.collections import EvaluatorCollection
@@ -97,10 +99,27 @@ class MatchAnalyzer(AbstractFactory):
         else:
             begin: float = time()
             #self._generate_evaluators()
+            event_builder = EventBuilder(match)
+            goal_events = event_builder.get_goal_events()
+            penalty_events = event_builder.get_penalty_events()
+            corner_kick_events = event_builder.get_corner_kick_events()
+            foul_events = event_builder.get_foul_events()
+            free_kick_events = event_builder.get_free_kick_events()
+
+            match.goals = goal_events
+            match.penalties = penalty_events
+            match.corners = corner_kick_events
+            match.fouls = foul_events
+            match.free_kicks = free_kick_events
+
+            for i in match.corners:
+                print(i.cicles, i.team_actor.name)
+
             self._run_analysis()
             end: float = time()
 
             print(f'socceranalyzer: Ran all analysis in {end - begin} seconds.')
+
 
     @property
     def match(self):
