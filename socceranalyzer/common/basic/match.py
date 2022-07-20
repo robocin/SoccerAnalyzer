@@ -48,8 +48,6 @@ class Match:
                 corners: [int]
                     a list with integers referencing the cycle of corners occurrences
 
-
-
     """
     def __init__(self, dataframe: pandas.DataFrame, category: SIM2D | SSL | VSS):
         self.__category = category
@@ -63,6 +61,8 @@ class Match:
         self.__fouls = []
         self.__goals = []
         self.__corners = []
+        self.__penalties = []
+        self.__free_kicks = []
 
         try:
             if self.category is None:
@@ -155,14 +155,42 @@ class Match:
     @property
     def fouls(self):
         return self.__fouls
+    
+    @fouls.setter
+    def fouls(self, fouls):
+        self.__fouls = fouls
 
     @property
     def goals(self):
         return self.__goals
 
+    @goals.setter
+    def goals(self, goals):
+        self.__goals = goals
+
     @property
     def corners(self):
         return self.__corners
+
+    @corners.setter
+    def corners(self, corners):
+        self.__corners = corners
+
+    @property
+    def penalties(self):
+        return self.__penalties
+
+    @penalties.setter
+    def penalties(self, penalties):
+        self.__penalties = penalties
+
+    @property
+    def free_kicks(self):
+        return self.__free_kicks
+
+    @free_kicks.setter
+    def free_kicks(self, free_kicks):
+        self.__free_kicks = free_kicks
 
     def __build(self):
         """
