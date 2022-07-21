@@ -8,6 +8,7 @@ import seaborn as sns
 import os
 
 import socceranalyzer
+from socceranalyzer.common.analysis.speed import Speed
 from socceranalyzer.common.chore.match_analyzer import MatchAnalyzer
 from socceranalyzer.common.enums.sim2d import Landmarks
 
@@ -213,6 +214,17 @@ class JupyterAdapter:
             ax.set_title(title)
             plt.legend()
             plt.show()
+
+
+    def speed(self, player_number: int, side: str, fig_dimensions:tuple[float, float] = (40,5)):
+        sns.set()
+
+        _, ax = plt.subplots(figsize=fig_dimensions)
+        player_speed = Speed(self.__match_analyzer.match.dataframe, self.__match_analyzer.category, player_number, side).results()
+
+        plt.plot(player_speed)
+        plt.show()
+
 
 
     def heatmap(self, left_players_unum: list[int] = [], 
