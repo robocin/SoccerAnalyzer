@@ -261,22 +261,22 @@ class MatchAnalyzer(AbstractFactory):
     def _run_analysis(self):
         if self.__cat is SIM2D:
             setattr(self, "__ball_possession", None)
-            self.__ball_possession = BallPossession(self.__match.dataframe, self.category)
+            self.__ball_possession = BallPossession(self.__match)
 
             setattr(self, "__tester_free_kick", None)
             self.__tester_free_kick = TesterFK(self.__match.dataframe, self.category)
 
             setattr(self, "__foul_charge", None)
-            self.__foul_charge = FoulCharge(self.__match.dataframe, self.category)
+            self.__foul_charge = FoulCharge(self.__match)
 
             setattr(self, "__penalty", None)
-            self.__penalty = Penalty(self.__match.dataframe, self.category)
+            self.__penalty = Penalty(self.__match)
 
             setattr(self, "__playmodes", None)
-            self.__playmodes = Playmodes(self.__match.dataframe, self.category)
+            self.__playmodes = Playmodes(self.__match)
 
             setattr(self, "__corners", None)
-            self.__corners_occurrencies = CornersOcurrencies(self.__match.dataframe, self.category)
+            self.__corners_occurrencies = CornersOcurrencies(self.__match)
 
             passing = Passing(self.__match.dataframe, self.category)
 
@@ -284,33 +284,33 @@ class MatchAnalyzer(AbstractFactory):
             self.__intercept_counter = InterceptCounter(self.__match, passing)
 
             setattr(self, "__passing_accuracy", None)
-            self.__passing_accuracy = PassingAccuracy(self.__match.dataframe, self.category, passing)
+            self.__passing_accuracy = PassingAccuracy(self.__match, passing)
 
             setattr(self, "__time_after_events", None)
-            self.__time_after_events = TimeAfterEvents(self.__match.dataframe, self.category,
+            self.__time_after_events = TimeAfterEvents(self.__match,
                                                        self.__corners_occurrencies.results(),
                                                        self.__foul_charge.results(tuple=True))
 
             setattr(self, "__ball_history", None)
-            self.__ball_history = BallHistory(self.__match.dataframe, self.category)
+            self.__ball_history = BallHistory(self.__match)
 
             setattr(self, "__stamina", None)
-            self.__stamina = Stamina(self.__match.dataframe, self.category)
+            self.__stamina = Stamina(self.__match)
 
             setattr(self, "__shooting", None)
-            self.__shooting = Shooting(self.__match.dataframe, self.category)
+            self.__shooting = Shooting(self.__match)
 
             setattr(self, "__heatmap", None)
-            self.__heatmap = Heatmap(self.__match.dataframe, self.category)
+            self.__heatmap = Heatmap(self.__match)
             
             setattr(self, "__speed", None)
-            self__speed = Speed(self.__match.dataframe, self.category, 9, "left")
+            self__speed = Speed(self.__match, 9, "left")
 
             setattr(self, "__find_goals", None)
-            self.__find_goals = FindGoals(self.__match.dataframe, self.category)
+            self.__find_goals = FindGoals(self.__match)
 
             setattr(self, "__goalkeeper", None)
-            self.__goalkeeper = GoalkeeperAnalysis(self.__match.dataframe, self.category)
+            self.__goalkeeper = GoalkeeperAnalysis(self.__match)
 
             #setattr(self, "__time_after_corner", None)
             #self.__time_after_corner = TimeAfterCorner(self.__match.dataframe, self.category)
