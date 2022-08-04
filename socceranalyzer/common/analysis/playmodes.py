@@ -1,5 +1,5 @@
 from socceranalyzer.common.analysis.abstract_analysis import AbstractAnalysis
-
+from socceranalyzer.common.basic.match import Match
 
 class Playmodes(AbstractAnalysis):
     """
@@ -8,12 +8,14 @@ class Playmodes(AbstractAnalysis):
         Attributes
         ----------
             private:
+                playmode_dictionary : dict
+                    a dictionary with playmodes as keys and how many times they appeared as values
+
+            public through @properties:
                 dataframe : pandas.Dataframe
                     match's log to be analyzed
                 category : enum
                     match's category (2D, VSS or SSL)
-                playmode_dictionary : dict
-                    a dictionary with playmodes as keys and how many times they appeared as values
 
         Methods
         -------
@@ -27,26 +29,25 @@ class Playmodes(AbstractAnalysis):
                 describe() -> None
                     provides which playmodes appeared
     """
-    def __init__(self, dataframe, category):
-        self.__category = category
-        self.__df = dataframe
+    def __init__(self, match : Match):
+        super().__init__(match)
         self.__playmode_dictionary = {}
 
         self._analyze()
 
     @property
     def category(self):
-        return self.__category
+        return self._category
 
     @property
     def dataframe(self):
-        return self.__df
+        return self._dataframe
 
     def _analyze(self):
         """
             Finds every playmode in the match and how many times they appeared.
         """
-        data = self.__df[str(self.category.PLAYMODE)].value_counts()
+        data = self.dataframe[str(self.category.PLAYMODE)].value_counts()
 
         playmodes = data.index.to_list()
         values = data.values.tolist()

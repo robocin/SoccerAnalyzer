@@ -1,3 +1,5 @@
+from socceranalyzer.common.basic.match import Match
+
 from socceranalyzer.common.evaluators.passing import Passing
 from socceranalyzer.common.analysis.abstract_analysis import AbstractAnalysis
 from socceranalyzer.common.basic.team import Team
@@ -14,6 +16,12 @@ class PassingAccuracy(AbstractAnalysis):
             private: 
                 passing_accuracy: dict[str, dict[str, Any]]
                     Contains passing stats of the teams
+            
+            public through @properties:
+                dataframe: pandas.DataFrame
+                    match's log
+                category: SSL | SIM2D | VSS
+                    match's category
 
         Methods
         -------
@@ -28,10 +36,9 @@ class PassingAccuracy(AbstractAnalysis):
                 serialize() -> dict[str, dict[str, Any]]
                     Returns an object containing computed stats
     """
-    def __init__(self, data_frame, category, passing_evaluator: Passing):
+    def __init__(self, match : Match, passing_evaluator: Passing):
+        super().__init__(match)
         self.__passing_accuracy = {}
-        self.__category = category
-        self.__current_game_log = data_frame
         self.__passing_evaluator = passing_evaluator
 
         self._analyze()
@@ -42,7 +49,11 @@ class PassingAccuracy(AbstractAnalysis):
 
     @property
     def category(self):
-        return self.__category
+        return self._category
+    
+    @property
+    def dataframe(self):
+        return self._dataframe
 
     def _analyze(self):
         """
@@ -76,8 +87,8 @@ class PassingAccuracy(AbstractAnalysis):
         """
         Shows a teams' passing stats.
         """
-        name_l = self.__current_game_log.loc[1, str(self.category.TEAM_LEFT)]
-        name_r = self.__current_game_log.loc[1, str(self.category.TEAM_RIGHT)]
+        name_l = self.dataframe.loc[1, str(self.category.TEAM_LEFT)]
+        name_r = self.dataframe.loc[1, str(self.category.TEAM_RIGHT)]
         print(f'{name_l}: acurácia = {self.__passing_accuracy["left_team"]["accuracy"]:.4f}    passes totais = {self.__passing_accuracy["left_team"]["total_passes"]}\n' 
                 f'{name_r}: acurácia = {self.__passing_accuracy["right_team"]["accuracy"]:.4f}    passes totais = {self.__passing_accuracy["right_team"]["total_passes"]}')
 

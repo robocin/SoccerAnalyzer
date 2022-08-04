@@ -1,12 +1,12 @@
 from socceranalyzer.common.analysis.abstract_analysis import AbstractAnalysis
+from socceranalyzer.common.basic.match import Match
 from socceranalyzer.common.collections.collections import ThresholdCollection
 from socceranalyzer.common.evaluators.ball_holder import BallHolderEvaluator
 
 
 class TimeAfterEvents(AbstractAnalysis):
-    def __init__(self, dataframe, category, corners, fouls=None, kick_ins=None):
-        self.__category = category
-        self.__dataframe = dataframe
+    def __init__(self, match : Match, corners, fouls=None, kick_ins=None):
+        super().__init__(match)
 
         self.__threshold = ThresholdCollection()
 
@@ -29,11 +29,11 @@ class TimeAfterEvents(AbstractAnalysis):
 
     @property
     def category(self):
-        return self.__category
+        return self._category
 
     @property
     def dataframe(self):
-        return self.__dataframe
+        return self._dataframe
 
     @property
     def thr(self):

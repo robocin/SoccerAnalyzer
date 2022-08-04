@@ -1,3 +1,4 @@
+from socceranalyzer.common.basic.match import Match
 from socceranalyzer.common.analysis.abstract_analysis import AbstractAnalysis
 from socceranalyzer.common.geometric.point import Point
 
@@ -9,16 +10,18 @@ class FoulCharge(AbstractAnalysis):
         Attributes
         ----------
             private:
-                dataframe : pandas.Dataframe
-                    match's log to be analyzed
-                category : enum
-                    match's category (2D, VSS or SSL)
                 team_left_charges : list[Point]
                     list containing tuples relative to the positions (x and y) where faults committed by the left team
                     happened
                 team_right_charges : list[Point]
                     list containing tuples relative to the positions (x and y) where faults committed by the right team
                     happened
+
+            public through @properties:
+                dataframe: pandas.DataFrame
+                    match's log
+                category: SSL | SIM2D | VSS
+                    match's category
 
         Methods
         -------
@@ -37,9 +40,8 @@ class FoulCharge(AbstractAnalysis):
                 describe() -> None
                     provides how many faults each team committed and their proportions relative to the total.
     """
-    def __init__(self, dataframe=None, category=None):
-        self.__dataframe = dataframe
-        self.__category = category
+    def __init__(self, match : Match):
+        super().__init__(match)
         self.__team_left_charges = []
         self.__team_right_charges = []
 
@@ -51,11 +53,11 @@ class FoulCharge(AbstractAnalysis):
 
     @property
     def category(self):
-        return self.__category
+        return self._category
 
     @property
     def dataframe(self):
-        return self.__dataframe
+        return self._dataframe
 
     @left_charges.setter
     def left_charges(self, val: Point):
@@ -91,23 +93,23 @@ class FoulCharge(AbstractAnalysis):
         return (quantities[0] / total, quantities[1] / total)
 
     def _analyze(self):
-        for i in range(len(self.__dataframe)):
+        for i in range(len(self.dataframe)):
             """
                 For every cycle in the log, investigates wether a fault happened and updates one of the lists if 
                 it is really the case.
             """
-            if (self.__dataframe.loc[i, str(self.category.PLAYMODE)] == str(self.category.FAULT_COMMITED_L)
-                    and self.__dataframe.loc[i - 1, str(self.category.PLAYMODE)] != str(
+            if (self.dataframe.loc[i, str(self.category.PLAYMODE)] == str(self.category.FAULT_COMMITED_L)
+                    and self.dataframe.loc[i - 1, str(self.category.PLAYMODE)] != str(
                         self.category.FAULT_COMMITED_L)):
 
-                self.left_charges = Point(int(self.__dataframe.loc[i, str(self.category.BALL_X)]),
-                                          int(self.__dataframe.loc[i, str(self.category.BALL_Y)]))
+                self.left_charges = Point(int(self.dataframe.loc[i, str(self.category.BALL_X)]),
+                                          int(self.dataframe.loc[i, str(self.category.BALL_Y)]))
 
-            elif (self.__dataframe.loc[i, str(self.category.PLAYMODE)] == str(self.category.FAULT_COMMITED_R)
-                  and self.__dataframe.loc[i - 1, str(self.category.PLAYMODE)] != str(self.category.FAULT_COMMITED_R)):
+            elif (self.dataframe.loc[i, str(self.category.PLAYMODE)] == str(self.category.FAULT_COMMITED_R)
+                  and self.dataframe.loc[i - 1, str(self.category.PLAYMODE)] != str(self.category.FAULT_COMMITED_R)):
 
-                self.right_charges = Point(int(self.__dataframe.loc[i, str(self.category.BALL_X)]),
-                                           int(self.__dataframe.loc[i, str(self.category.BALL_Y)]))
+                self.right_charges = Point(int(self.dataframe.loc[i, str(self.category.BALL_X)]),
+                                           int(self.dataframe.loc[i, str(self.category.BALL_Y)]))
 
     def results(self, side=None, tuple=False):
         """

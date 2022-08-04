@@ -1,11 +1,11 @@
+from socceranalyzer.common.basic.match import Match
+
 from socceranalyzer.common.analysis.abstract_analysis import AbstractAnalysis
 from socceranalyzer.common.utility.finders import find_last_unique_event_ocurrences
 
 class CornersOcurrencies(AbstractAnalysis):
-    def __init__(self, dataframe, category):
-        self.__category = category
-        self.__df = dataframe
-
+    def __init__(self, match : Match):
+        super().__init__(match)
         self.__left_occurrencies = []
         self.__right_occurrencies = []
 
@@ -13,11 +13,11 @@ class CornersOcurrencies(AbstractAnalysis):
 
     @property
     def dataframe(self):
-        return self.__df
+        return self._dataframe
 
     @property
     def category(self):
-        return self.__category
+        return self._category
 
     def _analyze(self):
         self.__left_occurrencies = find_last_unique_event_ocurrences(self.dataframe, str(self.category.TEAM_LEFT_CORNER))

@@ -11,10 +11,8 @@ from socceranalyzer.common.geometric.point import Point
 
 
 class Heatmap(AbstractAnalysis):
-    def __init__(self, dataframe: pandas.DataFrame, category: SSL | SIM2D | VSS) -> None:
-        self.__dataframe = dataframe
-        self.__category = category
-
+    def __init__(self, match : Match) -> None:
+        super().__init__(match)
         self.__ball_positions: dict[str, list] = {}
         self.__left_players: dict[str, list[list[float], list[float]]] = {
             'player_l2': [[],[]],
@@ -45,11 +43,11 @@ class Heatmap(AbstractAnalysis):
 
     @property
     def dataframe(self):
-        return self.__dataframe
+        return self._dataframe
 
     @property
     def category(self):
-        return self.__category
+        return self._category
 
     @property
     def data(self, left_players_unum: list[int] = [], right_players_unum: list[int] = []):

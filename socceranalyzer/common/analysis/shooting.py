@@ -1,5 +1,6 @@
 from typing import Literal
 from pandas import DataFrame
+from socceranalyzer.common.basic.match import Match
 from socceranalyzer.common.analysis.abstract_analysis import AbstractAnalysis
 from socceranalyzer.common.geometric.point import Point
 from socceranalyzer.common.geometric.triangle import Triangle
@@ -16,7 +17,7 @@ class Shooting(AbstractAnalysis):
     """
         Used to calculate simple and advanced shooting stats for specified game.
 
-        Shooting(dataframe: pandas.DataFrame, category)
+        Shooting(match : Match)
         
         Attributes
         ----------
@@ -30,6 +31,12 @@ class Shooting(AbstractAnalysis):
                 last_shooter : str
                     name of last player to register a shot
                     
+
+            public through @properties:
+                dataframe : pandas.Dataframe
+                    match's log to be analyzed
+                category : enum
+                    match's category (2D, VSS or SSL)
         Methods
         -------
             private:
@@ -61,9 +68,8 @@ class Shooting(AbstractAnalysis):
                 results_as_dataframe() -> pandas.DataFrame:
                     returns a copy of the match detailed shooting stats DataFrame
     """
-    def __init__(self, dataframe: DataFrame, category):
-        self.__category = category
-        self.__df = dataframe
+    def __init__(self, match : Match):
+        super().__init__(match)
         self.__shooting_stats = []
         self.__play_on_cycles = []
         self.__last_shooter = 'not'
@@ -71,11 +77,11 @@ class Shooting(AbstractAnalysis):
     
     @property
     def category(self):
-        return self.__category
+        return self._category
 
     @property
     def dataframe(self):
-        return self.__df
+        return self._dataframe
 
     def __get_kicker(self, cycle: int) -> str:
         """
@@ -90,13 +96,13 @@ class Shooting(AbstractAnalysis):
         for i in range(1, 12):
             for side in ['l', 'r']:
                 player = 'player_{}{}'.format(side, i)
-                player_counting_kicks = self.__df.loc[cycle, f'{player}_counting_kick']
-                player_counting_tackles = self.__df.loc[cycle, f'{player}_counting_tackle']
+                player_counting_kicks = self.dataframe.loc[cycle, f'{player}_counting_kick']
+                player_counting_tackles = self.dataframe.loc[cycle, f'{player}_counting_tackle']
                 
                 previous_cycle = cycle - 1
                 if(previous_cycle > 0):
-                    player_counting_kicks_before = self.__df.loc[previous_cycle, f'{player}_counting_kick']
-                    player_counting_tackles_before = self.__df.loc[previous_cycle, f'{player}_counting_tackle']
+                    player_counting_kicks_before = self.dataframe.loc[previous_cycle, f'{player}_counting_kick']
+                    player_counting_tackles_before = self.dataframe.loc[previous_cycle, f'{player}_counting_tackle']
 
                     if player_counting_kicks > player_counting_kicks_before or player_counting_tackles > player_counting_tackles_before:
                         return player
@@ -118,7 +124,7 @@ class Shooting(AbstractAnalysis):
         for i in range(1, 12):
             for side in ['l', 'r']:
                 player = 'player_{}{}'.format(side, i)                
-                agent_pos = Point(self.__df.loc[cycle, f'{player}_x'], self.__df.loc[cycle, f'{player}_y'])
+                agent_pos = Point(self.dataframe.loc[cycle, f'{player}_x'], self.dataframe.loc[cycle, f'{player}_y'])
                 if Triangle(a, b, c).is_inside(agent_pos):
                     players_inside += 1
         return players_inside
@@ -158,7 +164,7 @@ class Shooting(AbstractAnalysis):
         p12 = sqrt(p1)
         p13 = sqrt(p2)
         angle = acos((p1+p2-p3)/(2*p12*p13))
-        show_time = int(self.__df.loc[cycle, str(self.__category.GAME_TIME)])
+        show_time = int(self.dataframe.loc[cycle, str(self.category.GAME_TIME)])
         data = {
             'show_time': show_time,
             'player': player,
@@ -181,56 +187,56 @@ class Shooting(AbstractAnalysis):
             Parameters:
                     cycle (int): Indicates the index to look for on match DataFrame
         """
-        if not self.__df.loc[cycle, str(self.__category.GAME_TIME)] in self.__play_on_cycles:
+        if not self.dataframe.loc[cycle, str(self.category.GAME_TIME)] in self.__play_on_cycles:
             return
 
-        if((self.__df.loc[cycle, 'ball_vx']**2 + self.__df.loc[cycle, 'ball_vy']**2)** 0.5  > 1.65):
+        if((self.dataframe.loc[cycle, 'ball_vx']**2 + self.dataframe.loc[cycle, 'ball_vy']**2)** 0.5  > 1.65):
             kicker = self.__get_kicker(cycle)
             
             # Right team registered shot
-            if(kicker != '' and 'r' in kicker.split('_')[-1] and self.__df.loc[cycle, f'{kicker}_x'] < 0 and self.__df.loc[cycle, 'ball_vx'] != 0):
+            if(kicker != '' and 'r' in kicker.split('_')[-1] and self.dataframe.loc[cycle, f'{kicker}_x'] < 0 and self.dataframe.loc[cycle, 'ball_vx'] != 0):
                 # print(cycle)
-                ball_pos_before = (self.__df.loc[cycle-1, 'ball_x'], self.__df.loc[cycle-1, 'ball_y'])
-                ball_pos = (self.__df.loc[cycle, 'ball_x'], self.__df.loc[cycle, 'ball_y'])
+                ball_pos_before = (self.dataframe.loc[cycle-1, 'ball_x'], self.dataframe.loc[cycle-1, 'ball_y'])
+                ball_pos = (self.dataframe.loc[cycle, 'ball_x'], self.dataframe.loc[cycle, 'ball_y'])
                 # print(ball_pos_before, ball_pos)
                 
                 (x_right, y_right) = line_intersection((ball_pos_before,ball_pos), ((-53.0,1),(-53.0,0)))
                     
                 if 7.5 < abs(y_right) < 17.5:
                     self.__last_shooter = kicker
-                    pos_x = self.__df.loc[cycle, f'{kicker}_x']
-                    pos_y = self.__df.loc[cycle, f'{kicker}_y']
+                    pos_x = self.dataframe.loc[cycle, f'{kicker}_x']
+                    pos_y = self.dataframe.loc[cycle, f'{kicker}_y']
                     x = abs(pos_x)
                     y = (-1)*pos_y
                     players_inside = self.__get_players_inside_area(cycle,Point(pos_x,pos_y),Landmarks.L_GOAL_TOP_BAR,Landmarks.L_GOAL_BOTTOM_BAR)
                     self.__update_shot_data(cycle,self.__last_shooter,x,y,players_inside,0)  
                 elif abs(y_right) <= 7.5:
                     self.__last_shooter = kicker
-                    pos_x = self.__df.loc[cycle, f'{kicker}_x']
-                    pos_y = self.__df.loc[cycle, f'{kicker}_y']
+                    pos_x = self.dataframe.loc[cycle, f'{kicker}_x']
+                    pos_y = self.dataframe.loc[cycle, f'{kicker}_y']
                     x = abs(pos_x)
                     y = (-1)*pos_y
                     players_inside = self.__get_players_inside_area(cycle,Point(pos_x,pos_y),Landmarks.L_GOAL_TOP_BAR,Landmarks.L_GOAL_BOTTOM_BAR)
                     self.__update_shot_data(cycle,self.__last_shooter,x,y,players_inside,1)
             # Left team registered shot
-            elif(kicker != '' and 'l' in kicker.split('_')[-1] and self.__df.loc[cycle, f'{kicker}_x'] > 0 and self.__df.loc[cycle, 'ball_vx'] != 0):
+            elif(kicker != '' and 'l' in kicker.split('_')[-1] and self.dataframe.loc[cycle, f'{kicker}_x'] > 0 and self.dataframe.loc[cycle, 'ball_vx'] != 0):
                 # print(cycle)
-                ball_pos_before = (self.__df.loc[cycle-1, 'ball_x'], self.__df.loc[cycle-1, 'ball_y'])
-                ball_pos = (self.__df.loc[cycle, 'ball_x'], self.__df.loc[cycle, 'ball_y'])
+                ball_pos_before = (self.dataframe.loc[cycle-1, 'ball_x'], self.dataframe.loc[cycle-1, 'ball_y'])
+                ball_pos = (self.dataframe.loc[cycle, 'ball_x'], self.dataframe.loc[cycle, 'ball_y'])
                 # print(ball_pos_before, ball_pos)
 
                 (x_left, y_left) = line_intersection((ball_pos_before,ball_pos), ((53.0,1),(53.0,0)))
 
                 if 7.5 < abs(y_left) < 17.5:
                     self.__last_shooter = kicker
-                    x = self.__df.loc[cycle, f'{kicker}_x']
-                    y = self.__df.loc[cycle, f'{kicker}_y']
+                    x = self.dataframe.loc[cycle, f'{kicker}_x']
+                    y = self.dataframe.loc[cycle, f'{kicker}_y']
                     players_inside = self.__get_players_inside_area(cycle,Point(x,y),Landmarks.R_GOAL_TOP_BAR,Landmarks.R_GOAL_BOTTOM_BAR)
                     self.__update_shot_data(cycle,self.__last_shooter,x,y,players_inside,0)
                 elif abs(y_left) <= 7.5:
                     self.__last_shooter = kicker
-                    x = self.__df.loc[cycle, f'{kicker}_x']
-                    y = self.__df.loc[cycle, f'{kicker}_y']
+                    x = self.dataframe.loc[cycle, f'{kicker}_x']
+                    y = self.dataframe.loc[cycle, f'{kicker}_y']
                     players_inside = self.__get_players_inside_area(cycle,Point(x,y),Landmarks.R_GOAL_TOP_BAR,Landmarks.R_GOAL_BOTTOM_BAR)
                     self.__update_shot_data(cycle,self.__last_shooter,x,y,players_inside,1)
 
@@ -241,7 +247,7 @@ class Shooting(AbstractAnalysis):
             Parameters:
                     cycle (int): Indicates the index to look for on match DataFrame
         """
-        split_play_mode = self.__df.loc[cycle, str(self.category.PLAYMODE)].rsplit('_')
+        split_play_mode = self.dataframe.loc[cycle, str(self.category.PLAYMODE)].rsplit('_')
         mode = split_play_mode[0]
         side = split_play_mode[1]
         if side == 'kick': return
@@ -259,7 +265,7 @@ class Shooting(AbstractAnalysis):
         Performs match shooting analysis.
         """
         self.__play_on_cycles = list(PlaymodeSlicer.slice(self.dataframe, 'play_on')[str(self.category.GAME_TIME)])
-        for i, _ in self.__df.iterrows():
+        for i, _ in self.dataframe.iterrows():
             self.__check_shot(i)
             self.__check_goal(i)
         self.__shooting_stats_df = DataFrame(self.__shooting_stats)
@@ -310,11 +316,11 @@ class Shooting(AbstractAnalysis):
         """
         Shows a table with teams shooting stats.
         """
-        name_l = self.__df.loc[1, str(self.category.TEAM_LEFT)]
+        name_l = self.dataframe.loc[1, str(self.category.TEAM_LEFT)]
         left_shots = self.get_total_team_shots('l')
         left_on_target_shots = self.get_team_on_target_shots('l')
         left_xG = self.get_total_team_xG('l')
-        name_r = self.__df.loc[1, str(self.category.TEAM_RIGHT)]
+        name_r = self.dataframe.loc[1, str(self.category.TEAM_RIGHT)]
         right_shots = self.get_total_team_shots('r')
         right_on_target_shots = self.get_team_on_target_shots('r')
         right_xG = self.get_total_team_xG('r')

@@ -2,14 +2,14 @@ from turtle import speed
 from matplotlib import pyplot as plt
 from pandas import DataFrame
 import numpy as np
+from socceranalyzer.common.basic.match import Match
 from socceranalyzer.common.analysis.abstract_analysis import AbstractAnalysis
 from socceranalyzer.common.enums.sim2d import SIM2D
 from socceranalyzer.common.utility.slicers import PlaymodeSlicer
 
 class Speed(AbstractAnalysis):
-    def __init__(self, dataframe: DataFrame, category, player: int, side: str) -> None:
-        self.__dataframe = dataframe
-        self.__category = category
+    def __init__(self, match : Match, player: int, side: str) -> None:
+        super().__init__(match)
         self.__l_players_speed: list = []
         self.__r_players_speed: list = []
         self.__player_speed: list = []
@@ -18,11 +18,11 @@ class Speed(AbstractAnalysis):
 
     @property
     def category(self):
-        return self.__category
+        return self._category
 
     @property
     def dataframe(self):
-        return self.__dataframe
+        return self._dataframe
 
     @property
     def speed_left(self):
@@ -45,8 +45,8 @@ class Speed(AbstractAnalysis):
 
         player_number, side = self.__handle_values(player_number, side)
         
-        vx = np.array(self.__dataframe[f'player_{side}{player_number}_vx'].tolist())
-        vy = np.array(self.__dataframe[f'player_{side}{player_number}_vy'].tolist())
+        vx = np.array(self.dataframe[f'player_{side}{player_number}_vx'].tolist())
+        vy = np.array(self.dataframe[f'player_{side}{player_number}_vy'].tolist())
 
         velocity_vector = [[x,y] for x, y in zip(vx,vy)]
 

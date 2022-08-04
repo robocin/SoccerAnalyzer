@@ -1,4 +1,5 @@
 import pandas
+from socceranalyzer.common.basic.match import Match
 from socceranalyzer.common.analysis.abstract_analysis import AbstractAnalysis
 from socceranalyzer.common.enums.sim2d import SIM2D
 from socceranalyzer.common.chore.mediator import Mediator
@@ -32,9 +33,8 @@ class Stamina(AbstractAnalysis):
                     
             
     """
-    def __init__(self, dataframe: pandas.DataFrame, category: SIM2D | SSL | VSS):
-        self.__dataframe: pandas.DataFrame = dataframe
-        self.__category: SIM2D | VSS | SSL = category
+    def __init__(self, match : Match):
+        super().__init__(match)
         self.__l_players_stamina: list  = []
         self.__l_players_stamina_mean = 0
         self.__r_players_stamina: list = []
@@ -44,11 +44,11 @@ class Stamina(AbstractAnalysis):
 
     @property
     def category(self):
-        return self.__category
+        return self._category
 
     @property
     def dataframe(self):
-        return self.__dataframe
+        return self._dataframe
 
     def _analyze(self):
 

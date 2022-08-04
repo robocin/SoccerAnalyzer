@@ -4,10 +4,8 @@ from socceranalyzer.common.evaluators.passing import Passing
 from socceranalyzer.common.basic.match import Match
 
 class InterceptCounter(AbstractAnalysis):
-    def __init__(self, match: Match, passing_evaluator: Passing):
-        self.__match: Match = match
-        self.__category = match.category
-        self.__current_game_log: pd.DataFrame = match.dataframe
+    def __init__(self, match : Match, passing_evaluator: Passing):
+        super().__init__(match)
         self.__passing_evaluator = passing_evaluator
 
         self.__interceptions = {}
@@ -19,10 +17,12 @@ class InterceptCounter(AbstractAnalysis):
         return f'Team left: {values[0]}\nTeam right: {values[1]}'
 
     @property
-    def category(self): return self.__category
+    def category(self): 
+        return self._category
 
     @property
-    def dataframe(self): return self.__current_game_log
+    def dataframe(self): 
+        return self._dataframe
 
     def _analyze(self):
         self.__passing_evaluator.run_passing_evaluation()
@@ -35,8 +35,8 @@ class InterceptCounter(AbstractAnalysis):
         return (self.__interceptions['left_team'], self.__interceptions['right_team'])
 
     def describe(self):
-        name_l = self.__match.team_left.name
-        name_r = self.__match.team_right.name
+        name_l = self._match.team_left.name
+        name_r = self._match.team_right.name
         left_team = 'left_team'
         right_team = 'right_team'
 

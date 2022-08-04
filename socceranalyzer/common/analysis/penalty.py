@@ -1,3 +1,4 @@
+from socceranalyzer.common.basic.match import Match
 from socceranalyzer.common.analysis.abstract_analysis import AbstractAnalysis
 
 
@@ -8,14 +9,16 @@ class Penalty(AbstractAnalysis):
         Attributes
         ----------
             private:
-                dataframe : pandas.Dataframe
-                    match's log to be analyzed
-                category : enum
-                    match's category (2D, VSS or SSL)
                 penalty_left : list[int]
                     list containing every moment when left team had a penalty in their favor
                 penalty_right : list[int]
                     list containing every moment when right team had a penalty in their favor
+
+            public through @properties:
+                dataframe : pandas.Dataframe
+                    match's log to be analyzed
+                category : enum
+                    match's category (2D, VSS or SSL)
 
         Methods
         -------
@@ -29,9 +32,8 @@ class Penalty(AbstractAnalysis):
                 describe() -> None
                     provides how many penalties happened in the match
     """
-    def __init__(self, dataframe, category):
-        self.__dataframe = dataframe
-        self.__category = category
+    def __init__(self, match : Match):
+        super().__init__(match)
         self.__penalty_left = []
         self.__penalty_right = []
 
@@ -39,11 +41,11 @@ class Penalty(AbstractAnalysis):
 
     @property
     def category(self):
-        return self.__category
+        return self._category
 
     @property
     def dataframe(self):
-        return self.__dataframe
+        return self._dataframe
 
     def _analyze(self):
         """
