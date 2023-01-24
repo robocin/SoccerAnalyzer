@@ -21,8 +21,10 @@ from socceranalyzer.common.analysis.time_after_events import TimeAfterEvents
 from socceranalyzer.common.analysis.stamina import Stamina
 from socceranalyzer.common.analysis.shooting import Shooting
 from socceranalyzer.common.analysis.heatmap import Heatmap
+from socceranalyzer.common.analysis.dist_from_corner_mark import DistFromCornerMark
+from socceranalyzer.common.analysis.time_in_penalty_area import TimeInPenaltyArea
+from socceranalyzer.common.analysis.ball_taking_in_corner_area import BallTakingInCornerArea
 from socceranalyzer.common.evaluators.passing import Passing
-
 
 class MatchAnalyzer(AbstractFactory):
     """
@@ -182,6 +184,18 @@ class MatchAnalyzer(AbstractFactory):
     @property
     def heatmap(self):
         return self.__heatmap
+    
+    @property
+    def ball_taking_in_corner_area(self):
+        return self.__ball_taking_in_corner_area
+    
+    @property
+    def dist_from_corner_mark(self):
+        return self.__dist_from_corner_mark
+    
+    @property
+    def time_in_penalty_area(self):
+        return self.__time_in_penalty_area
 
     @property
     def analysis_dict(self):
@@ -274,6 +288,15 @@ class MatchAnalyzer(AbstractFactory):
 
             setattr(self, "__passing_accuracy", None)
             self.__passing_accuracy = PassingAccuracy(self.__match.dataframe, self.category, passing)
+
+            setattr(self, "__ball_taking_in_corner_area", None)
+            self.__ball_taking_in_corner_area = BallTakingInCornerArea(self.__match.dataframe, self.category)
+
+            setattr(self, "__time_in_penalty_area", None)
+            self.__time_in_penalty_area = TimeInPenaltyArea(self.__match.dataframe, self.category)
+
+            setattr(self, "__dist_from_corner_mark", None)
+            self.__dist_from_corner_mark = DistFromCornerMark(self.__match.dataframe, self.category)
 
             setattr(self, "__time_after_events", None)
             self.__time_after_events = TimeAfterEvents(self.__match.dataframe, self.category,
