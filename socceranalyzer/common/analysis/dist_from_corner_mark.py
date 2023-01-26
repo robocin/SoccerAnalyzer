@@ -31,13 +31,13 @@ class DistFromCornerMark(AbstractAnalysis):
         last_playmode = self.__dataframe.iloc[0]['playmode']
         last_row = self.__dataframe.iloc[0]
 
-        for cycle, row in self.__dataframe.itterows():
+        for cycle, row in self.__dataframe.iterrows():
             if row['playmode'] != last_playmode and last_playmode == 'corner_kick_l':
-                corner_dataframe.append(last_row)
+                pd.concat([corner_dataframe, last_row])
             last_playmode = row['playmode']
             last_row = row
 
-        for cycle, row in corner_dataframe.itterows():
+        for cycle, row in corner_dataframe.iterrows():
             ball_pos = Point(row['ball_x'], row['ball_y'])
 
             for i in range(1, 12):
@@ -48,14 +48,16 @@ class DistFromCornerMark(AbstractAnalysis):
                         (row['ball_y'] > 0 and self.__down_corner_area.is_inside(agent_pos)) ):
                         self.__average_distance += distance_sqrd(agent_pos, ball_pos)
                         self.__players_inside_area += 1
-                
-        self.__average_distance /= self.__players_inside_area
+
+        if self.__players_inside_area != 0:        
+            self.__average_distance /= self.__players_inside_area
 
     def describe(self):
+        print(f'Average distance of players from corner mark is {self.__average_distance}')
         return self.__average_distance
 
     def results(self):
-        print(f'Average distance of players from corner mark is {self.__average_distance}')
+        return self.__average_distance
 
     def serialize(self):
         raise NotImplementedError

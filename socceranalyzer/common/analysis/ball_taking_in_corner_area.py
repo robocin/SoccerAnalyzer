@@ -26,11 +26,11 @@ class BallTakingInCornerArea(AbstractAnalysis):
     def _analyze(self):
 
         corner_dataframe = self.__dataframe[
-            self.__dataframe[str(self.category.PLAYMODE)] == 'play_on' & 
-            self.__dataframe[str(self.category.BALL_X)] <= self.__corner_x_limit[0] & 
-            self.__dataframe[str(self.category.BALL_X)] >= self.__corner_x_limit[1] & 
-            (self.__dataframe[str(self.categoty.BALL_Y)] >= self.__corner_y_limit | 
-            self.__dataframe[str(self.categoty.BALL_Y)] <= -self.__corner_y_limit)
+            (self.__dataframe[str(self.category.PLAYMODE)] == 'play_on') & 
+            (self.__dataframe[str(self.category.BALL_X)] <= self.__corner_x_limit[0]) & 
+            (self.__dataframe[str(self.category.BALL_X)] >= self.__corner_x_limit[1]) & 
+            ((self.__dataframe[str(self.category.BALL_Y)] >= self.__corner_y_limit) | 
+            (self.__dataframe[str(self.category.BALL_Y)] <= -self.__corner_y_limit))
         ]
 
         ball_holder = BallHolderEvaluator(corner_dataframe, self.__category)

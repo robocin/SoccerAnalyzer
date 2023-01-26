@@ -24,10 +24,10 @@ class TimeInPenaltyArea(AbstractAnalysis):
     def _analyze(self):
 
         inside_penalty_area_dataframe = self.__dataframe[
-            self.__dataframe[str(self.category.BALL_X)] <= self.__penalty_x_limits[0] & 
-            self.__dataframe[str(self.category.BALL_X)] >= self.__penalty_x_limits[1] & 
-            abs(self.__dataframe[str(self.category.BALL_Y)]) <= self.__penalty_y_limit &
-            self.__dataframe[str(self.category.PLAYMODE)] == 'play_on'
+            (self.__dataframe[str(self.category.BALL_X)] <= self.__penalty_x_limits[0]) & 
+            (self.__dataframe[str(self.category.BALL_X)] >= self.__penalty_x_limits[1]) & 
+            (abs(self.__dataframe[str(self.category.BALL_Y)]) <= self.__penalty_y_limit) &
+            (self.__dataframe[str(self.category.PLAYMODE)] == 'play_on')
         ]
         
         self.__cycles_inside = inside_penalty_area_dataframe.shape[0]
