@@ -117,8 +117,9 @@ class GoalkeeperAnalysis:
             
             if (dist > self.__max_distance):
                 self.__max_distance = dist
-
-        self.__average_distance = self.__average_distance / len(enemy_goals)
+        
+        adversary_goal_quantity = max(1, len(enemy_goals))
+        self.__average_distance = self.__average_distance / adversary_goal_quantity
         
     def results(self) -> tuple:
         """

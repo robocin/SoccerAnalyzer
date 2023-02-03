@@ -9,3 +9,4 @@
 *.ipynb
 *.csv
 .venv
+build/
