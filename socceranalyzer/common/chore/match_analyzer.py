@@ -91,7 +91,7 @@ class MatchAnalyzer(AbstractFactory):
         self._DEBUG = debug
         self.__match = match
         self.__cat = match.category
-        self.__run_configuration: RunConfiguration = None
+        self.__run_configuration: RunConfiguration = run_config
         self.__evaluators: EvaluatorCollection = None
 
         try:
@@ -262,8 +262,8 @@ class MatchAnalyzer(AbstractFactory):
                 setattr(self, "__playmodes", None)
                 self.__playmodes = Playmodes(self.__match.dataframe, self.category, self._DEBUG)
 
-            if self.config.corners:
-                setattr(self, "__corners", None)
+            if self.config.corners_occurrencies:
+                setattr(self, "__corners_occurrencies", None)
                 self.__corners_occurrencies = CornersOcurrencies(self.__match.dataframe, self.category, self._DEBUG)
 
             if self.config.intercept_counter or self.config.passing_accuracy:
@@ -281,7 +281,7 @@ class MatchAnalyzer(AbstractFactory):
                                                         self.__foul_charge.results(tuple=True),
                                                         self._DEBUG)
 
-            if self.config.ball_hisory:
+            if self.config.ball_history:
                 setattr(self, "__ball_history", None)
                 self.__ball_history = BallHistory(self.__match.dataframe, self.category, self._DEBUG)
 
@@ -305,7 +305,7 @@ class MatchAnalyzer(AbstractFactory):
                 setattr(self, "__find_goals", None)
                 self.__find_goals = FindGoals(self.__match.dataframe, self.category, self._DEBUG)
 
-            if self.config.goalkpeeper:
+            if self.config.goalkeeper:
                 setattr(self, "__goalkeeper", None)
                 self.__goalkeeper = GoalkeeperAnalysis(self.__match.dataframe, self.category, self._DEBUG)
 

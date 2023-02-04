@@ -24,14 +24,15 @@ class JsonReader:
             Logger.error(f"Could not open {path}: {err}")
             return
         else:
+            information_dict = {}
             file_data = json.load(file)
             if JsonReader.isValid(file_data):
                 for key, values in file_data.items():
-                    match key:
-                        case "analysis":
-                            Logger.info(f"{path} parsed")
-                            file.close()
-                            return values
+                    information_dict[key] = values
+                    
+            file.close()
+            Logger.info(f"{path} parsed")
+            return information_dict
 
     @staticmethod
     def isValid(file_data):

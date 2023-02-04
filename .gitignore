@@ -9,4 +9,3 @@
 *.csv
 .venv
 build/
-main.py

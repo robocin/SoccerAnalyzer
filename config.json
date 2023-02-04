@@ -1,8 +1,10 @@
 {
     "logs_folder":"path/to/unified/logs",
+    "file_path":"./20221115151248-RoboCIn_0-vs-otherTeam_0.rcg.csv",
+    "category":"sim2d",
     "analysis": {
         "tester_2d": true,
-        "ball_possesion": true,
+        "ball_possession": true,
         "foul_charge": true,
         "playmodes": true,
         "penalty": true,
@@ -15,6 +17,7 @@
         "stamina": true,
         "shooting": true,
         "heatmap": true,
+        "speed": false,
         "find_goals": true,
         "goalkeeper": true
     }
