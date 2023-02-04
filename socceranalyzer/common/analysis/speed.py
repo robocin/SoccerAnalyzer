@@ -4,7 +4,7 @@ from pandas import DataFrame
 import numpy as np
 from socceranalyzer.common.analysis.abstract_analysis import AbstractAnalysis
 from socceranalyzer.common.enums.sim2d import SIM2D
-from socceranalyzer.common.utility.slicers import PlaymodeSlicer
+from socceranalyzer.common.dataframe.slicers import PlaymodeSlicer
 from socceranalyzer.logger import Logger
 
 class Speed(AbstractAnalysis):

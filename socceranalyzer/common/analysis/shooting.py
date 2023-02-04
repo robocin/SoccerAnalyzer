@@ -4,7 +4,7 @@ from socceranalyzer.common.analysis.abstract_analysis import AbstractAnalysis
 from socceranalyzer.common.geometric.point import Point
 from socceranalyzer.common.geometric.triangle import Triangle
 from socceranalyzer.common.operations.measures import *
-from socceranalyzer.common.utility.slicers import PlaymodeSlicer
+from socceranalyzer.common.dataframe.slicers import PlaymodeSlicer
 from socceranalyzer.common.enums.sim2d import Landmarks
 from socceranalyzer.logger import Logger
 from math import sqrt, acos
