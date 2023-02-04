@@ -58,3 +58,6 @@ from socceranalyzer.common.analysis.speed import Speed
 
 # Utils
 from socceranalyzer.common.utils import Utils
+
+# io
+from socceranalyzer.common.io.reader import JsonReader
