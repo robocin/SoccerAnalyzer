@@ -4,9 +4,9 @@
 .idea/*
 /dist/
 /*.egg-info
-./main.py
 .ipynb_checkpoints
 *.ipynb
 *.csv
 .venv
 build/
+main.py
