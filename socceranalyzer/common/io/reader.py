@@ -1,5 +1,6 @@
 import json
 from socceranalyzer.utils.logger import Logger
+from socceranalyzer.utils.run_configuration import RunConfiguration
 
 class Reader:
     def __init__(self, games=None, games_count=0):
@@ -17,22 +18,31 @@ class Reader:
 class JsonReader:
     @staticmethod
     def read(path:str):
-        file = open(path)
-        file_data = json.load(file)
-        
-        if JsonReader.isValid(file_data):
-            for key, value in file_data.items():
-                print(key, value)
-            Logger.info("Json parsed.")
-
-        file.close()
-        
+        try:
+            file = open(path)
+        except Exception as err:
+            Logger.error(f"Could not open {path}: {err}")
+            return
+        else:
+            file_data = json.load(file)
+            if JsonReader.isValid(file_data):
+                for key, values in file_data.items():
+                    match key:
+                        case "analysis":
+                            Logger.info(f"{path} parsed")
+                            file.close()
+                            return values
 
     @staticmethod
     def isValid(file_data):
         for key, value in file_data.items():
-            if key == "" or value not in [True, False]:
-                Logger.error(f"Json invalid argument: {key, value}")
+            if key == "":
+                Logger.error(f"Json invalid argument: {key}")
                 return False
+            if key == "analysis":
+                for analysis_key, analysis_value in value.items():
+                    if analysis_key == "" or analysis_value not in [True, False]:
+                        Logger.error(f"Json invalid argument: {key}")
+                        return False
             
         return True

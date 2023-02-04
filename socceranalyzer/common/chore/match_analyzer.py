@@ -25,6 +25,7 @@ from socceranalyzer.common.analysis.heatmap import Heatmap
 from socceranalyzer.common.evaluators.passing import Passing
 from socceranalyzer.common.analysis.find_goals import FindGoals
 from socceranalyzer.common.analysis.goalkeeper import GoalkeeperAnalysis
+from socceranalyzer.utils.run_configuration import RunConfiguration
 from socceranalyzer.utils.logger import Logger
 
 class MatchAnalyzer(AbstractFactory):
@@ -86,11 +87,11 @@ class MatchAnalyzer(AbstractFactory):
 
 
     """
-    def __init__(self, match: Match = None, debug: bool = False):
+    def __init__(self, match: Match = None, debug: bool = False, run_config: RunConfiguration = None):
         self._DEBUG = debug
         self.__match = match
         self.__cat = match.category
-        self.__analysis_dict: dict[str, None] = {}
+        self.__run_configuration: RunConfiguration = None
         self.__evaluators: EvaluatorCollection = None
 
         try:
@@ -108,6 +109,10 @@ class MatchAnalyzer(AbstractFactory):
     @property
     def match(self):
         return self.__match
+
+    @property
+    def config(self):
+        return self.__run_configuration
 
     @property
     def category(self):
@@ -237,58 +242,72 @@ class MatchAnalyzer(AbstractFactory):
 
     def _run_analysis(self):
         if self.__cat is SIM2D:
-            setattr(self, "__ball_possession", None)
-            self.__ball_possession = BallPossession(self.__match.dataframe, self.category, self._DEBUG)
-
-            setattr(self, "__tester_free_kick", None)
-            self.__tester_free_kick = TesterFK(self.__match.dataframe, self.category, self._DEBUG)
-
-            setattr(self, "__foul_charge", None)
-            self.__foul_charge = FoulCharge(self.__match.dataframe, self.category, self._DEBUG)
-
-            setattr(self, "__penalty", None)
-            self.__penalty = Penalty(self.__match.dataframe, self.category, self._DEBUG)
-
-            setattr(self, "__playmodes", None)
-            self.__playmodes = Playmodes(self.__match.dataframe, self.category, self._DEBUG)
-
-            setattr(self, "__corners", None)
-            self.__corners_occurrencies = CornersOcurrencies(self.__match.dataframe, self.category, self._DEBUG)
-
-            passing = Passing(self.__match.dataframe, self.category, self._DEBUG)
-
-            setattr(self, "__intercept_counter", None)
-            self.__intercept_counter = InterceptCounter(self.__match, passing, self._DEBUG)
-
-            setattr(self, "__passing_accuracy", None)
-            self.__passing_accuracy = PassingAccuracy(self.__match.dataframe, self.category, passing, self._DEBUG)
-
-            setattr(self, "__time_after_events", None)
-            self.__time_after_events = TimeAfterEvents(self.__match.dataframe, self.category,
-                                                       self.__corners_occurrencies.results(),
-                                                       self.__foul_charge.results(tuple=True),
-                                                       self._DEBUG)
-
-            setattr(self, "__ball_history", None)
-            self.__ball_history = BallHistory(self.__match.dataframe, self.category, self._DEBUG)
-
-            setattr(self, "__stamina", None)
-            self.__stamina = Stamina(self.__match.dataframe, self.category, self._DEBUG)
-
-            setattr(self, "__shooting", None)
-            self.__shooting = Shooting(self.__match.dataframe, self.category, self._DEBUG)
-
-            setattr(self, "__heatmap", None)
-            self.__heatmap = Heatmap(self.__match.dataframe, self.category, self._DEBUG)
+            if self.config.ball_possession:
+                setattr(self, "__ball_possession", None)
+                self.__ball_possession = BallPossession(self.__match.dataframe, self.category, self._DEBUG)
             
-            setattr(self, "__speed", None)
-            self__speed = Speed(self.__match.dataframe, self.category, 9, "left", self._DEBUG)
+            if self.config.tester_free_kick:
+                setattr(self, "__tester_free_kick", None)
+                self.__tester_free_kick = TesterFK(self.__match.dataframe, self.category, self._DEBUG)
 
-            setattr(self, "__find_goals", None)
-            self.__find_goals = FindGoals(self.__match.dataframe, self.category, self._DEBUG)
+            if self.config.foul_charge:
+                setattr(self, "__foul_charge", None)
+                self.__foul_charge = FoulCharge(self.__match.dataframe, self.category, self._DEBUG)
 
-            setattr(self, "__goalkeeper", None)
-            self.__goalkeeper = GoalkeeperAnalysis(self.__match.dataframe, self.category, self._DEBUG)
+            if self.config.penalty:
+                setattr(self, "__penalty", None)
+                self.__penalty = Penalty(self.__match.dataframe, self.category, self._DEBUG)
+
+            if self.config.playmodes:
+                setattr(self, "__playmodes", None)
+                self.__playmodes = Playmodes(self.__match.dataframe, self.category, self._DEBUG)
+
+            if self.config.corners:
+                setattr(self, "__corners", None)
+                self.__corners_occurrencies = CornersOcurrencies(self.__match.dataframe, self.category, self._DEBUG)
+
+            if self.config.intercept_counter or self.config.passing_accuracy:
+                passing = Passing(self.__match.dataframe, self.category, self._DEBUG)
+                setattr(self, "__intercept_counter", None)
+                self.__intercept_counter = InterceptCounter(self.__match, passing, self._DEBUG)
+
+                setattr(self, "__passing_accuracy", None)
+                self.__passing_accuracy = PassingAccuracy(self.__match.dataframe, self.category, passing, self._DEBUG)
+
+            if self.config.time_after_events:
+                setattr(self, "__time_after_events", None)
+                self.__time_after_events = TimeAfterEvents(self.__match.dataframe, self.category,
+                                                        self.__corners_occurrencies.results(),
+                                                        self.__foul_charge.results(tuple=True),
+                                                        self._DEBUG)
+
+            if self.config.ball_hisory:
+                setattr(self, "__ball_history", None)
+                self.__ball_history = BallHistory(self.__match.dataframe, self.category, self._DEBUG)
+
+            if self.config.stamina:
+                setattr(self, "__stamina", None)
+                self.__stamina = Stamina(self.__match.dataframe, self.category, self._DEBUG)
+
+            if self.config.shooting:
+                setattr(self, "__shooting", None)
+                self.__shooting = Shooting(self.__match.dataframe, self.category, self._DEBUG)
+
+            if self.config.heatmap:
+                setattr(self, "__heatmap", None)
+                self.__heatmap = Heatmap(self.__match.dataframe, self.category, self._DEBUG)
+            
+            if self.config.speed:
+                setattr(self, "__speed", None)
+                self__speed = Speed(self.__match.dataframe, self.category, 9, "left", self._DEBUG)
+
+            if self.config.find_goals:
+                setattr(self, "__find_goals", None)
+                self.__find_goals = FindGoals(self.__match.dataframe, self.category, self._DEBUG)
+
+            if self.config.goalkpeeper:
+                setattr(self, "__goalkeeper", None)
+                self.__goalkeeper = GoalkeeperAnalysis(self.__match.dataframe, self.category, self._DEBUG)
 
             #setattr(self, "__time_after_corner", None)
             #self.__time_after_corner = TimeAfterCorner(self.__match.dataframe, self.category)

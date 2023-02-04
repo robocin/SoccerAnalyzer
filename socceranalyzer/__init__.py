@@ -57,7 +57,8 @@ from socceranalyzer.common.analysis.time_after_events import TimeAfterEvents
 from socceranalyzer.common.analysis.speed import Speed
 
 # Utils
-from socceranalyzer.common.utils import Utils
+from socceranalyzer.utils.run_configuration import RunConfiguration
+from socceranalyzer.utils.logger import Logger
 
 # io
 from socceranalyzer.common.io.reader import JsonReader

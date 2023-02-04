@@ -1,0 +1,21 @@
+{
+    "logs_folder":"path/to/unified/logs",
+    "analysis": {
+        "tester_2d": true,
+        "ball_possesion": true,
+        "foul_charge": true,
+        "playmodes": true,
+        "penalty": true,
+        "ball_history": true,
+        "corners_occurrencies": true,
+        "passing_accuracy": true,
+        "intercept_counter": true,
+        "tester_free_kick": true,
+        "time_after_events": true,
+        "stamina": true,
+        "shooting": true,
+        "heatmap": true,
+        "find_goals": true,
+        "goalkeeper": true
+    }
+}
