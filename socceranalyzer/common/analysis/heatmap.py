@@ -8,10 +8,11 @@ from socceranalyzer.common.enums.sim2d import SIM2D
 from socceranalyzer.common.enums.ssl import SSL
 from socceranalyzer.common.enums.vss import VSS
 from socceranalyzer.common.geometric.point import Point
+from socceranalyzer.utils.logger import Logger
 
 
 class Heatmap(AbstractAnalysis):
-    def __init__(self, dataframe: pandas.DataFrame, category: SSL | SIM2D | VSS) -> None:
+    def __init__(self, dataframe: pandas.DataFrame, category: SSL | SIM2D | VSS, debug) -> None:
         self.__dataframe = dataframe
         self.__category = category
 
@@ -41,8 +42,14 @@ class Heatmap(AbstractAnalysis):
             'player_r11': [[],[]],
         }
 
-        self._analyze()
-
+        try:
+            self._analyze()
+        except Exception as err:
+            Logger.error(f"Heatmap failed: {err.args[0]}")
+            if debug:
+                raise
+        else:
+            Logger.success("Heatmap has results.")
     @property
     def dataframe(self):
         return self.__dataframe

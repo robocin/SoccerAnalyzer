@@ -1,4 +1,5 @@
 from time import time
+from socceranalyzer.common.analysis.speed import Speed
 
 from socceranalyzer.common.chore.abstract_factory import AbstractFactory
 from socceranalyzer.common.chore.builder import Builder
@@ -22,7 +23,10 @@ from socceranalyzer.common.analysis.stamina import Stamina
 from socceranalyzer.common.analysis.shooting import Shooting
 from socceranalyzer.common.analysis.heatmap import Heatmap
 from socceranalyzer.common.evaluators.passing import Passing
-
+from socceranalyzer.common.analysis.find_goals import FindGoals
+from socceranalyzer.common.analysis.goalkeeper import GoalkeeperAnalysis
+from socceranalyzer.utils.run_configuration import RunConfiguration
+from socceranalyzer.utils.logger import Logger
 
 class MatchAnalyzer(AbstractFactory):
     """
@@ -83,29 +87,32 @@ class MatchAnalyzer(AbstractFactory):
 
 
     """
-    def __init__(self, match: Match = None):
+    def __init__(self, match: Match = None, debug: bool = False, run_config: RunConfiguration = None):
+        self._DEBUG = debug
         self.__match = match
         self.__cat = match.category
-        self.__analysis_dict: dict[str, None] = {}
+        self.__run_configuration: RunConfiguration = run_config
         self.__evaluators: EvaluatorCollection = None
 
         try:
             if self.__cat is None:
                 raise ValueError('MatchAnalyzer requires a Category as argument and none was given')
         except ValueError as err:
-            print(err)
-            raise
+            Logger.error("Match analyzer failed: " + err.args[0])
         else:
+            Logger.info(f"Started analyzing.")
             begin: float = time()
-            #self._generate_evaluators()
             self._run_analysis()
             end: float = time()
-
-            print(f'socceranalyzer: Ran all analysis in {end - begin} seconds.')
+            Logger.info(f'Ran all analysis in {end - begin} seconds.')
 
     @property
     def match(self):
         return self.__match
+
+    @property
+    def config(self):
+        return self.__run_configuration
 
     @property
     def category(self):
@@ -184,6 +191,14 @@ class MatchAnalyzer(AbstractFactory):
         return self.__heatmap
 
     @property
+    def find_goals(self):
+        return self.__find_goals
+
+    @property
+    def goalkeeper(self):
+        return self.__goalkeeper
+
+    @property
     def analysis_dict(self):
         raise NotImplementedError
         # return self.__analysis_dict
@@ -215,29 +230,7 @@ class MatchAnalyzer(AbstractFactory):
         """
         Shows the final score.
         """
-        print(f'{self.__match.team_left_name} {self.__match.score_left} x {self.__match.score_right} {self.__match.team_right_name}')
-
-    def available(self):
-        """
-        Shows currently available analysis.
-        """
-        BallPossession = ("BallPossession", True)
-        FoulCharge = ("FoulCharge", True)
-        Playmodes = ("Playmodes", True)
-        Corners = ("Corners", True)
-        Penalty = ("Penalty", True)
-        BallHistory = ("BallHistory", True)
-        TesterFK = ("Tester Free Kick", True)
-        TimeAfterEvents = ("TimeAfterEvents", False)
-        Stamina = ("Stamina", True)
-        Shooting = ("Shooting", True)
-
-        analysis = [BallPossession, FoulCharge, Penalty, Stamina, BallHistory,
-                    Playmodes, Corners, TesterFK, TimeAfterEvents, Shooting]
-
-        for a in analysis:
-            if a[1]:
-                print(a[0])
+        Logger.data(f'{self.__match.team_left_name} {self.__match.score_left} x {self.__match.score_right} {self.__match.team_right_name}')
 
     def _generate_evaluators(self):
         if self.__cat is SIM2D:
@@ -249,48 +242,72 @@ class MatchAnalyzer(AbstractFactory):
 
     def _run_analysis(self):
         if self.__cat is SIM2D:
-            setattr(self, "__ball_possession", None)
-            self.__ball_possession = BallPossession(self.__match.dataframe, self.category)
+            if self.config.ball_possession:
+                setattr(self, "__ball_possession", None)
+                self.__ball_possession = BallPossession(self.__match.dataframe, self.category, self._DEBUG)
+            
+            if self.config.tester_free_kick:
+                setattr(self, "__tester_free_kick", None)
+                self.__tester_free_kick = TesterFK(self.__match.dataframe, self.category, self._DEBUG)
 
-            setattr(self, "__tester_free_kick", None)
-            self.__tester_free_kick = TesterFK(self.__match.dataframe, self.category)
+            if self.config.foul_charge:
+                setattr(self, "__foul_charge", None)
+                self.__foul_charge = FoulCharge(self.__match.dataframe, self.category, self._DEBUG)
 
-            setattr(self, "__foul_charge", None)
-            self.__foul_charge = FoulCharge(self.__match.dataframe, self.category)
+            if self.config.penalty:
+                setattr(self, "__penalty", None)
+                self.__penalty = Penalty(self.__match.dataframe, self.category, self._DEBUG)
 
-            setattr(self, "__penalty", None)
-            self.__penalty = Penalty(self.__match.dataframe, self.category)
+            if self.config.playmodes:
+                setattr(self, "__playmodes", None)
+                self.__playmodes = Playmodes(self.__match.dataframe, self.category, self._DEBUG)
 
-            setattr(self, "__playmodes", None)
-            self.__playmodes = Playmodes(self.__match.dataframe, self.category)
+            if self.config.corners_occurrencies:
+                setattr(self, "__corners_occurrencies", None)
+                self.__corners_occurrencies = CornersOcurrencies(self.__match.dataframe, self.category, self._DEBUG)
 
-            setattr(self, "__corners", None)
-            self.__corners_occurrencies = CornersOcurrencies(self.__match.dataframe, self.category)
+            if self.config.intercept_counter or self.config.passing_accuracy:
+                passing = Passing(self.__match.dataframe, self.category, self._DEBUG)
+                setattr(self, "__intercept_counter", None)
+                self.__intercept_counter = InterceptCounter(self.__match, passing, self._DEBUG)
 
-            passing = Passing(self.__match.dataframe, self.category)
+                setattr(self, "__passing_accuracy", None)
+                self.__passing_accuracy = PassingAccuracy(self.__match.dataframe, self.category, passing, self._DEBUG)
 
-            setattr(self, "__intercept_counter", None)
-            self.__intercept_counter = InterceptCounter(self.__match, passing)
+            if self.config.time_after_events:
+                setattr(self, "__time_after_events", None)
+                self.__time_after_events = TimeAfterEvents(self.__match.dataframe, self.category,
+                                                        self.__corners_occurrencies.results(),
+                                                        self.__foul_charge.results(tuple=True),
+                                                        self._DEBUG)
 
-            setattr(self, "__passing_accuracy", None)
-            self.__passing_accuracy = PassingAccuracy(self.__match.dataframe, self.category, passing)
+            if self.config.ball_history:
+                setattr(self, "__ball_history", None)
+                self.__ball_history = BallHistory(self.__match.dataframe, self.category, self._DEBUG)
 
-            setattr(self, "__time_after_events", None)
-            self.__time_after_events = TimeAfterEvents(self.__match.dataframe, self.category,
-                                                       self.__corners_occurrencies.results(),
-                                                       self.__foul_charge.results(tuple=True))
+            if self.config.stamina:
+                setattr(self, "__stamina", None)
+                self.__stamina = Stamina(self.__match.dataframe, self.category, self._DEBUG)
 
-            setattr(self, "__ball_history", None)
-            self.__ball_history = BallHistory(self.__match.dataframe, self.category)
+            if self.config.shooting:
+                setattr(self, "__shooting", None)
+                self.__shooting = Shooting(self.__match.dataframe, self.category, self._DEBUG)
 
-            setattr(self, "__stamina", None)
-            self.__stamina = Stamina(self.__match.dataframe, self.category)
+            if self.config.heatmap:
+                setattr(self, "__heatmap", None)
+                self.__heatmap = Heatmap(self.__match.dataframe, self.category, self._DEBUG)
+            
+            if self.config.speed:
+                setattr(self, "__speed", None)
+                self__speed = Speed(self.__match.dataframe, self.category, 9, "left", self._DEBUG)
 
-            setattr(self, "__shooting", None)
-            self.__shooting = Shooting(self.__match.dataframe, self.category)
+            if self.config.find_goals:
+                setattr(self, "__find_goals", None)
+                self.__find_goals = FindGoals(self.__match.dataframe, self.category, self._DEBUG)
 
-            setattr(self, "__heatmap", None)
-            self.__heatmap = Heatmap(self.__match.dataframe, self.category)
+            if self.config.goalkeeper:
+                setattr(self, "__goalkeeper", None)
+                self.__goalkeeper = GoalkeeperAnalysis(self.__match.dataframe, self.category, self._DEBUG)
 
             #setattr(self, "__time_after_corner", None)
             #self.__time_after_corner = TimeAfterCorner(self.__match.dataframe, self.category)

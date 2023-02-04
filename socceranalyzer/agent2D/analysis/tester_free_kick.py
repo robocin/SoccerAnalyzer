@@ -1,9 +1,10 @@
 from socceranalyzer.common.analysis.abstract_analysis import AbstractAnalysis
-from socceranalyzer.common.utility.finders import find_last_unique_event_ocurrences
+from socceranalyzer.common.dataframe.finders import find_last_unique_event_ocurrences
+from socceranalyzer.utils.logger import Logger
 
 
 class TesterFK(AbstractAnalysis):
-    def __init__(self, dataframe, category):
+    def __init__(self, dataframe, category, debug):
         self.__dataframe = dataframe
         self.__category = category
 
@@ -17,7 +18,14 @@ class TesterFK(AbstractAnalysis):
         self.__goals_taken_r = 0
         self.__goals_scored_r = 0
 
-        self._analyze()
+        try:
+            self._analyze()
+        except Exception as err:
+            Logger.error(f"TesterFK failed: {err.args[0]}")
+            if debug:
+                raise
+        else:
+            Logger.success("TesterFK has results.")
 
     def _analyze(self):
         free_kicks_to_left = find_last_unique_event_ocurrences(self.dataframe, str(self.category.FK_LEFT))

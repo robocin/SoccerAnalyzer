@@ -30,6 +30,8 @@ class SIM2D(Enum):
     FK_RIGHT = "free_kick_r"
     GOAL_SCORED_L = "goal_l"
     GOAL_SCORED_R = "goal_r"
+    LEFT_GOALKEEPER_CATCHES = "player_l1_counting_catch"
+    RIGHT_GOALKEEPER_CATCHES = "player_r1_counting_catch"
 
     def __str__(self):
         return self.value

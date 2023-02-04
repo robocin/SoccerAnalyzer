@@ -2,7 +2,6 @@
 ![](https://img.shields.io/badge/version-v2.0.0-success)
 ![](https://img.shields.io/badge/python-v3.10-blue)
 ![](https://img.shields.io/badge/pandas-v1.2.4-informational)
-![](https://img.shields.io/badge/numpy-v1.20.3-yellow)
 
 ## Description  
 This is a Python package created by the members of RobôCIn robotics team
@@ -28,12 +27,24 @@ This project was created with:
 - [Matplotlib](https://matplotlib.org/) 3.5 or above
 - [Seaborn](https://seaborn.pydata.org/) 0.11.2 or above
 
-### Setup
-You can install this project as Python package through pip. **We highly recommend you to install SoccerAnalyzer in miniconda environment using our requirements.txt file.**
+## Setup
+You can install this project as Python package through pip or via git. **We highly recommend you to install SoccerAnalyzer in a miniconda environment using our requirements.txt file.**
 
 ```
 $ conda create --name analyzer python>=3.10
 $ conda activate analyzer
+```
+
+### Via github (with miniconda environment)
+```
+$ git clone git@github.com:robocin/SoccerAnalyzer.git
+$ cd SoccerAnalyzer
+$ pip install requirements.txt
+$ pip install .
+```
+
+### Via pip (with miniconda environment)
+```
 $ pip install socceranalyzer
 ```
 

@@ -1,5 +1,5 @@
 from socceranalyzer.common.analysis.abstract_analysis import AbstractAnalysis
-
+from socceranalyzer.utils.logger import Logger
 
 class Playmodes(AbstractAnalysis):
     """
@@ -27,12 +27,19 @@ class Playmodes(AbstractAnalysis):
                 describe() -> None
                     provides which playmodes appeared
     """
-    def __init__(self, dataframe, category):
+    def __init__(self, dataframe, category, debug):
         self.__category = category
         self.__df = dataframe
         self.__playmode_dictionary = {}
 
-        self._analyze()
+        try:
+            self._analyze()
+        except Exception as err:
+            Logger.error(f"Playmodes failed: {err.args[0]}")
+            if debug:
+                raise
+        else:
+            Logger.success("Playmodes has results.")
 
     @property
     def category(self):

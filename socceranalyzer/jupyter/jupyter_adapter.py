@@ -8,6 +8,7 @@ import seaborn as sns
 import os
 
 import socceranalyzer
+from socceranalyzer.common.analysis.speed import Speed
 from socceranalyzer.common.chore.match_analyzer import MatchAnalyzer
 from socceranalyzer.common.enums.sim2d import Landmarks
 
@@ -98,6 +99,8 @@ class JupyterAdapter:
         self.__config["shadow"] = True
         self.__config["startangle"] = 90
         self.__config["sim2d_field_img"] = f'{os.path.dirname(socceranalyzer.__file__)}/images/sim2d_field.png'
+        self.__config["hit_color"] = '#36FF51' 
+        self.__config["miss_color"] = '#FF2222'
 
         # colorize my team
         if team_l_name == my_team_name:
@@ -129,6 +132,7 @@ class JupyterAdapter:
 
     def fault_position(self, width: int = 10, height: int = 10, title: str = "Foul charges"):
         self._helper.team_color_validate()
+        sns.reset_defaults()
     
         left_faults, right_faults = self.__match_analyzer.foul_charge.results(tuple=True)
 
@@ -210,6 +214,17 @@ class JupyterAdapter:
             ax.set_title(title)
             plt.legend()
             plt.show()
+
+
+    def speed(self, player_number: int, side: str, fig_dimensions:tuple[float, float] = (40,5)):
+        sns.set()
+
+        _, ax = plt.subplots(figsize=fig_dimensions)
+        player_speed = Speed(self.__match_analyzer.match.dataframe, self.__match_analyzer.category, player_number, side).results()
+
+        plt.plot(player_speed)
+        plt.show()
+
 
 
     def heatmap(self, left_players_unum: list[int] = [], 
@@ -460,3 +475,29 @@ class JupyterAdapter:
             plt.gca().set_aspect('equal', adjustable='box')
         return fig, axs
 
+    def passing_accuracy(self, figsize: tuple[int, int]=(6,6)):
+        sns.set()
+        labels = [self.__config["left_label"], self.__config["right_label"]]
+        acc_left, acc_right, total_passes_left, total_passes_right = self.__match_analyzer.passing_accuracy.results()
+
+        correct_passes = [int(total_passes_left*acc_left), int(total_passes_right*acc_right)]
+        wrong_passes = [total_passes_left-correct_passes[0], total_passes_right-correct_passes[1]]
+
+        width = 0.5
+
+        fig, ax = plt.subplots(figsize=figsize)
+
+        ax.bar(labels, correct_passes, width, label='Hits', color=self.__config["hit_color"], align='center')
+        rects2 = ax.bar(labels, wrong_passes, width, label='Misses', bottom=correct_passes, color=self.__config["miss_color"])
+
+        for i, rect in enumerate(rects2):
+            text = f"{100*correct_passes[i]/(wrong_passes[i]+correct_passes[i]):2.2f}%"
+            height = rect.get_height()
+            ax.text(s=text, x=rect.get_x()+rect.get_width()/2,y=correct_passes[i]+wrong_passes[i], ha="center", va="bottom", color="black", fontsize=13, fontweight='bold')
+
+        ax.set_ylabel('passes')
+        ax.set_title('Passing accuracy')
+
+        ax.legend()
+
+        plt.show()

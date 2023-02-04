@@ -1,5 +1,6 @@
 from socceranalyzer.common.enums.sim2d import SIM2D
 from socceranalyzer.common.evaluators.ball_holder import BallHolderEvaluator
+from socceranalyzer.utils.logger import Logger
 
 class BallPossession:
     """
@@ -34,14 +35,21 @@ class BallPossession:
                     updates the object with new game and calculates the new ball possession
     """
 
-    def __init__(self, data_frame, category):
+    def __init__(self, data_frame, category, debug):
         self.__left_team_possession = 0
         self.__right_team_possession = 0
         self.__category = category
         self.__current_game_log = data_frame
         self.__total = 0
 
-        self.__calculate()
+        try:
+            self.__calculate()
+        except Exception as err:
+            Logger.error(err.args[0])
+            if debug:
+                raise
+        else: 
+            Logger.success("BallPossession has results.")
 
     def __str__(self):
         values = self.results()

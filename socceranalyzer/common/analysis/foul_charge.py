@@ -1,5 +1,6 @@
 from socceranalyzer.common.analysis.abstract_analysis import AbstractAnalysis
 from socceranalyzer.common.geometric.point import Point
+from socceranalyzer.utils.logger import Logger
 
 
 class FoulCharge(AbstractAnalysis):
@@ -37,13 +38,20 @@ class FoulCharge(AbstractAnalysis):
                 describe() -> None
                     provides how many faults each team committed and their proportions relative to the total.
     """
-    def __init__(self, dataframe=None, category=None):
+    def __init__(self, dataframe, category, debug):
         self.__dataframe = dataframe
         self.__category = category
         self.__team_left_charges = []
         self.__team_right_charges = []
 
-        self._analyze()
+        try:
+            self._analyze()
+        except Exception as err:
+            Logger.error(f"FoulCharge failed: {err.args[0]}")
+            if debug:
+                raise
+        else:
+            Logger.success("FoulCharge has results.")
 
     @property
     def left_charges(self):
@@ -107,7 +115,8 @@ class FoulCharge(AbstractAnalysis):
                   and self.__dataframe.loc[i - 1, str(self.category.PLAYMODE)] != str(self.category.FAULT_COMMITED_R)):
 
                 self.right_charges = Point(int(self.__dataframe.loc[i, str(self.category.BALL_X)]),
-                                           int(self.__dataframe.loc[i, str(self.category.BALL_Y)]))
+                                           int(self.__dataframe.loc[i, str(self.category.BALL_Y)])) 
+        
 
     def results(self, side=None, tuple=False):
         """

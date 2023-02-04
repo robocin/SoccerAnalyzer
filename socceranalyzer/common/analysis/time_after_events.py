@@ -1,10 +1,11 @@
 from socceranalyzer.common.analysis.abstract_analysis import AbstractAnalysis
 from socceranalyzer.common.collections.collections import ThresholdCollection
 from socceranalyzer.common.evaluators.ball_holder import BallHolderEvaluator
+from socceranalyzer.utils.logger import Logger
 
 
 class TimeAfterEvents(AbstractAnalysis):
-    def __init__(self, dataframe, category, corners, fouls=None, kick_ins=None):
+    def __init__(self, dataframe, category, corners, debug, fouls=None, kick_ins=None):
         self.__category = category
         self.__dataframe = dataframe
 
@@ -25,7 +26,12 @@ class TimeAfterEvents(AbstractAnalysis):
         self.__goals_scored_l = 0
         self.__goals_scored_r = 0
 
-        self._analyze()
+        try:
+            self._analyze()
+        except Exception as err:
+            Logger.error(f"TimeAfterEvents failed: {err.args[0]}")
+            if debug:
+                raise
 
     @property
     def category(self):
@@ -106,6 +112,7 @@ class TimeAfterEvents(AbstractAnalysis):
                     self._is_goal_scored(i)
 
     def _analyze(self):
+        Logger.warn("TimeAfterEvents has no results.")
         pass
 
     def results(self):

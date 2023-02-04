@@ -4,6 +4,7 @@ from socceranalyzer.common.enums.sim2d import SIM2D
 from socceranalyzer.common.chore.mediator import Mediator
 from socceranalyzer.common.enums.ssl import SSL
 from socceranalyzer.common.enums.vss import VSS
+from socceranalyzer.utils.logger import Logger
 
 class Stamina(AbstractAnalysis):
     """
@@ -32,7 +33,7 @@ class Stamina(AbstractAnalysis):
                     
             
     """
-    def __init__(self, dataframe: pandas.DataFrame, category: SIM2D | SSL | VSS):
+    def __init__(self, dataframe: pandas.DataFrame, category: SIM2D | SSL | VSS, debug):
         self.__dataframe: pandas.DataFrame = dataframe
         self.__category: SIM2D | VSS | SSL = category
         self.__l_players_stamina: list  = []
@@ -40,7 +41,14 @@ class Stamina(AbstractAnalysis):
         self.__r_players_stamina: list = []
         self.__r_players_stamina_mean = 0
 
-        self._analyze()
+        try:
+            self._analyze()
+        except Exception as err:
+            Logger.error(f"Stamina failed: {err.args[0]}")
+            if debug:
+                raise
+        else:
+            Logger.success("Stamina has results.")
 
     @property
     def category(self):
