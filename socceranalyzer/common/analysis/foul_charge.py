@@ -1,5 +1,6 @@
 from socceranalyzer.common.analysis.abstract_analysis import AbstractAnalysis
 from socceranalyzer.common.geometric.point import Point
+from socceranalyzer.logger import Logger
 
 
 class FoulCharge(AbstractAnalysis):
@@ -108,6 +109,8 @@ class FoulCharge(AbstractAnalysis):
 
                 self.right_charges = Point(int(self.__dataframe.loc[i, str(self.category.BALL_X)]),
                                            int(self.__dataframe.loc[i, str(self.category.BALL_Y)]))
+        Logger.success("FoulCharge has results.")    
+        
 
     def results(self, side=None, tuple=False):
         """

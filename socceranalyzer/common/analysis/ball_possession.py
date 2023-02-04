@@ -1,5 +1,6 @@
 from socceranalyzer.common.enums.sim2d import SIM2D
 from socceranalyzer.common.evaluators.ball_holder import BallHolderEvaluator
+from socceranalyzer.logger import Logger
 
 class BallPossession:
     """
@@ -72,6 +73,7 @@ class BallPossession:
                 self.__right_team_possession += 1
 
         self.__total = self.__right_team_possession + self.__left_team_possession
+        Logger.success("BallPossession has results.")
 
     def results(self):
         return (self.__left_team_possession / self.__total, self.__right_team_possession / self.__total)

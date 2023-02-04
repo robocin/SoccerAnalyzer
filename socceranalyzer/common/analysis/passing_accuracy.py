@@ -1,6 +1,7 @@
 from socceranalyzer.common.evaluators.passing import Passing
 from socceranalyzer.common.analysis.abstract_analysis import AbstractAnalysis
 from socceranalyzer.common.basic.team import Team
+from socceranalyzer.logger import Logger
 
 
 class PassingAccuracy(AbstractAnalysis):
@@ -61,6 +62,7 @@ class PassingAccuracy(AbstractAnalysis):
                 'accuracy': self.__passing_evaluator.right_team_passing_stats['accuracy']
             }
         }
+        Logger.success("PassingAccuracy has results.")
     
     def results(self) -> tuple[float, float, int, int]:
         """

@@ -4,6 +4,7 @@ from socceranalyzer.common.enums.sim2d import SIM2D
 from socceranalyzer.common.chore.mediator import Mediator
 from socceranalyzer.common.enums.ssl import SSL
 from socceranalyzer.common.enums.vss import VSS
+from socceranalyzer.logger import Logger
 
 class Stamina(AbstractAnalysis):
     """
@@ -60,6 +61,7 @@ class Stamina(AbstractAnalysis):
 
         for stamina_attr in Mediator.players_right_stamina_attr(SIM2D):
             self.__r_players_stamina.append(self.dataframe[stamina_attr].tolist())
+        Logger.success("Stamina has results.")
 
     @property
     def stamina_left(self):

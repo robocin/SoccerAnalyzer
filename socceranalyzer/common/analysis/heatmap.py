@@ -8,6 +8,7 @@ from socceranalyzer.common.enums.sim2d import SIM2D
 from socceranalyzer.common.enums.ssl import SSL
 from socceranalyzer.common.enums.vss import VSS
 from socceranalyzer.common.geometric.point import Point
+from socceranalyzer.logger import Logger
 
 
 class Heatmap(AbstractAnalysis):
@@ -77,6 +78,7 @@ class Heatmap(AbstractAnalysis):
 
             self.__right_players[f'player_r{ith+2}'][0] = self.dataframe[right_players_column.items[ith].x]
             self.__right_players[f'player_r{ith+2}'][1] = self.dataframe[right_players_column.items[ith].y] * (-1)
+        Logger.success("Heatmap has results")
 
 
     def describe(self):

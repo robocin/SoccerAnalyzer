@@ -25,6 +25,7 @@ from socceranalyzer.common.analysis.heatmap import Heatmap
 from socceranalyzer.common.evaluators.passing import Passing
 from socceranalyzer.common.analysis.find_goals import FindGoals
 from socceranalyzer.common.analysis.goalkeeper import GoalkeeperAnalysis
+from socceranalyzer.logger import Logger
 
 
 class MatchAnalyzer(AbstractFactory):
@@ -96,15 +97,14 @@ class MatchAnalyzer(AbstractFactory):
             if self.__cat is None:
                 raise ValueError('MatchAnalyzer requires a Category as argument and none was given')
         except ValueError as err:
-            print(err)
+            Logger.error(err)
             raise
         else:
             begin: float = time()
-            #self._generate_evaluators()
             self._run_analysis()
             end: float = time()
 
-            print(f'socceranalyzer: Ran all analysis in {end - begin} seconds.')
+            Logger.info(f'Ran all analysis in {end - begin} seconds.')
 
     @property
     def match(self):
@@ -226,29 +226,7 @@ class MatchAnalyzer(AbstractFactory):
         """
         Shows the final score.
         """
-        print(f'{self.__match.team_left_name} {self.__match.score_left} x {self.__match.score_right} {self.__match.team_right_name}')
-
-    def available(self):
-        """
-        Shows currently available analysis.
-        """
-        BallPossession = ("BallPossession", True)
-        FoulCharge = ("FoulCharge", True)
-        Playmodes = ("Playmodes", True)
-        Corners = ("Corners", True)
-        Penalty = ("Penalty", True)
-        BallHistory = ("BallHistory", True)
-        TesterFK = ("Tester Free Kick", True)
-        TimeAfterEvents = ("TimeAfterEvents", False)
-        Stamina = ("Stamina", True)
-        Shooting = ("Shooting", True)
-
-        analysis = [BallPossession, FoulCharge, Penalty, Stamina, BallHistory,
-                    Playmodes, Corners, TesterFK, TimeAfterEvents, Shooting]
-
-        for a in analysis:
-            if a[1]:
-                print(a[0])
+        Logger.info(f'{self.__match.team_left_name} {self.__match.score_left} x {self.__match.score_right} {self.__match.team_right_name}')
 
     def _generate_evaluators(self):
         if self.__cat is SIM2D:
@@ -259,6 +237,7 @@ class MatchAnalyzer(AbstractFactory):
             raise NotImplementedError
 
     def _run_analysis(self):
+        Logger.info("Starting analysis")
         if self.__cat is SIM2D:
             setattr(self, "__ball_possession", None)
             self.__ball_possession = BallPossession(self.__match.dataframe, self.category)

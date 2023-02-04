@@ -6,6 +6,7 @@ from socceranalyzer.common.geometric.triangle import Triangle
 from socceranalyzer.common.operations.measures import *
 from socceranalyzer.common.utility.slicers import PlaymodeSlicer
 from socceranalyzer.common.enums.sim2d import Landmarks
+from socceranalyzer.logger import Logger
 from math import sqrt, acos
 from numpy import exp
 
@@ -263,6 +264,7 @@ class Shooting(AbstractAnalysis):
             self.__check_shot(i)
             self.__check_goal(i)
         self.__shooting_stats_df = DataFrame(self.__shooting_stats)
+        Logger.success("Shooting has results")
 
     def get_total_team_shots(self, team: Literal['l', 'r']) -> int:
         """

@@ -2,6 +2,7 @@ import pandas as pd
 from socceranalyzer.common.analysis.abstract_analysis import AbstractAnalysis
 from socceranalyzer.common.evaluators.passing import Passing
 from socceranalyzer.common.basic.match import Match
+from socceranalyzer.logger import Logger
 
 class InterceptCounter(AbstractAnalysis):
     def __init__(self, match: Match, passing_evaluator: Passing):
@@ -30,6 +31,7 @@ class InterceptCounter(AbstractAnalysis):
             'left_team': self.__passing_evaluator.left_team_passing_stats['interceptions'],
             'right_team': self.__passing_evaluator.right_team_passing_stats['interceptions']
         }
+        Logger.success("InterceptCounter has results.")
 
     def results(self):
         return (self.__interceptions['left_team'], self.__interceptions['right_team'])

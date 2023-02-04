@@ -7,6 +7,7 @@ from socceranalyzer.common.enums.vss import VSS
 from socceranalyzer.common.evaluators.kick import kick
 from socceranalyzer.common.geometric.circle import Circle
 from socceranalyzer.common.geometric.point import Point
+from socceranalyzer.logger import Logger
 
 
 class Passing:
@@ -240,4 +241,5 @@ class Passing:
         self.__left_team_interceptions = intercepted_passes_l
         self.__right_team_interceptions = intercepted_passes_r
         self.__ran_all_analysis = True
+        Logger.success("Passing has results.")
     

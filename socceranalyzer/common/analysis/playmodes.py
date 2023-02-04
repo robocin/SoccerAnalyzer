@@ -1,5 +1,5 @@
 from socceranalyzer.common.analysis.abstract_analysis import AbstractAnalysis
-
+from socceranalyzer.logger import Logger
 
 class Playmodes(AbstractAnalysis):
     """
@@ -56,6 +56,7 @@ class Playmodes(AbstractAnalysis):
             value = values.pop(0)
 
             self.__playmode_dictionary[key] = value
+        Logger.success("Playmodes has results.")
 
     def results(self):
         """

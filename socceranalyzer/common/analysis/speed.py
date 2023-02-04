@@ -5,6 +5,7 @@ import numpy as np
 from socceranalyzer.common.analysis.abstract_analysis import AbstractAnalysis
 from socceranalyzer.common.enums.sim2d import SIM2D
 from socceranalyzer.common.utility.slicers import PlaymodeSlicer
+from socceranalyzer.logger import Logger
 
 class Speed(AbstractAnalysis):
     def __init__(self, dataframe: DataFrame, category, player: int, side: str) -> None:
@@ -51,6 +52,7 @@ class Speed(AbstractAnalysis):
         velocity_vector = [[x,y] for x, y in zip(vx,vy)]
 
         self.__player_speed = self._calculate_speed(velocity_vector)
+        Logger.success("Speed has results")
 
     def _calculate_speed(self, velocity_over_time):
         velocity_over_time = np.array(velocity_over_time)

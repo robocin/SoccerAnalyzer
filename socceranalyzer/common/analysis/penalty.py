@@ -1,5 +1,5 @@
 from socceranalyzer.common.analysis.abstract_analysis import AbstractAnalysis
-
+from socceranalyzer.logger import Logger
 
 class Penalty(AbstractAnalysis):
     """
@@ -56,6 +56,7 @@ class Penalty(AbstractAnalysis):
         # penalty in favor of right side
         t_dataframe = self.dataframe[self.dataframe[str(self.category.PLAYMODE)] == str(self.category.PENALTY_TO_RIGHT)]
         self.__penalty_right = t_dataframe[str(self.category.GAME_TIME)].tolist()
+        Logger.success("Penalty has results.")
 
     def results(self):
         """

@@ -2,6 +2,7 @@ import pandas
 from socceranalyzer.common.enums.sim2d import SIM2D
 from socceranalyzer.common.enums.ssl import SSL
 from socceranalyzer.common.enums.vss import VSS
+from socceranalyzer.logger import Logger
 
 class FindGoals:
     """
@@ -59,6 +60,7 @@ class FindGoals:
 
                 else:
                     self.__right_team_goals.append(index)
+        Logger.success("FindGoals has results.")
 
     def results(self, team: str = None) -> list:
         """

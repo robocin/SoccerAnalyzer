@@ -2,6 +2,7 @@ from enum import Enum
 
 from socceranalyzer.common.analysis.abstract_analysis import AbstractAnalysis
 from socceranalyzer.common.geometric.point import Point
+from socceranalyzer.logger import Logger
 
 
 class BallHistory(AbstractAnalysis):
@@ -12,9 +13,12 @@ class BallHistory(AbstractAnalysis):
         self.__dataframe = dataframe
         self.__category = category
         self.__ball_positions = ()
-
-        self._analyze()
-
+        try:
+            self._analyze()
+            raise RuntimeError("this is a runtime error")
+            Logger.success("BallHistory has results.")
+        except RuntimeError as error:
+            Logger.error(f"BallHistory failed: {error}")
     @property
     def dataframe(self):
         return self.__dataframe

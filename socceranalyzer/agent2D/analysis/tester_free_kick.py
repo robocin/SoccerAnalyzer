@@ -1,5 +1,6 @@
 from socceranalyzer.common.analysis.abstract_analysis import AbstractAnalysis
 from socceranalyzer.common.utility.finders import find_last_unique_event_ocurrences
+from socceranalyzer.logger import Logger
 
 
 class TesterFK(AbstractAnalysis):
@@ -33,6 +34,7 @@ class TesterFK(AbstractAnalysis):
 
         self.__goals_taken_r = self.__goals_scored_l
         self.__goals_scored_r = self.__goals_taken_l
+        Logger.success("TesterFK has results.")
 
     @property
     def dataframe(self):
