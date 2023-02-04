@@ -1,6 +1,6 @@
 from socceranalyzer.common.analysis.abstract_analysis import AbstractAnalysis
 from socceranalyzer.common.geometric.point import Point
-from socceranalyzer.logger import Logger
+from socceranalyzer.utils.logger import Logger
 
 
 class FoulCharge(AbstractAnalysis):

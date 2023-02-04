@@ -4,7 +4,7 @@ from socceranalyzer.common.enums.sim2d import SIM2D
 from socceranalyzer.common.chore.mediator import Mediator
 from socceranalyzer.common.enums.ssl import SSL
 from socceranalyzer.common.enums.vss import VSS
-from socceranalyzer.logger import Logger
+from socceranalyzer.utils.logger import Logger
 
 class Stamina(AbstractAnalysis):
     """

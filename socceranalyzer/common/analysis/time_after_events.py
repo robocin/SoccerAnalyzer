@@ -1,7 +1,7 @@
 from socceranalyzer.common.analysis.abstract_analysis import AbstractAnalysis
 from socceranalyzer.common.collections.collections import ThresholdCollection
 from socceranalyzer.common.evaluators.ball_holder import BallHolderEvaluator
-from socceranalyzer.logger import Logger
+from socceranalyzer.utils.logger import Logger
 
 
 class TimeAfterEvents(AbstractAnalysis):

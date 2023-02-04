@@ -6,7 +6,7 @@ from socceranalyzer.common.geometric.triangle import Triangle
 from socceranalyzer.common.operations.measures import *
 from socceranalyzer.common.dataframe.slicers import PlaymodeSlicer
 from socceranalyzer.common.enums.sim2d import Landmarks
-from socceranalyzer.logger import Logger
+from socceranalyzer.utils.logger import Logger
 from math import sqrt, acos
 from numpy import exp
 

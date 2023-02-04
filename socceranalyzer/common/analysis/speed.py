@@ -5,7 +5,7 @@ import numpy as np
 from socceranalyzer.common.analysis.abstract_analysis import AbstractAnalysis
 from socceranalyzer.common.enums.sim2d import SIM2D
 from socceranalyzer.common.dataframe.slicers import PlaymodeSlicer
-from socceranalyzer.logger import Logger
+from socceranalyzer.utils.logger import Logger
 
 class Speed(AbstractAnalysis):
     def __init__(self, dataframe: DataFrame, category, player: int, side: str, debug) -> None:

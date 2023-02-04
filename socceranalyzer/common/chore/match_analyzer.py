@@ -25,7 +25,7 @@ from socceranalyzer.common.analysis.heatmap import Heatmap
 from socceranalyzer.common.evaluators.passing import Passing
 from socceranalyzer.common.analysis.find_goals import FindGoals
 from socceranalyzer.common.analysis.goalkeeper import GoalkeeperAnalysis
-from socceranalyzer.logger import Logger
+from socceranalyzer.utils.logger import Logger
 
 class MatchAnalyzer(AbstractFactory):
     """

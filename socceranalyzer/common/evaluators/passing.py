@@ -7,7 +7,7 @@ from socceranalyzer.common.enums.vss import VSS
 from socceranalyzer.common.evaluators.kick import kick
 from socceranalyzer.common.geometric.circle import Circle
 from socceranalyzer.common.geometric.point import Point
-from socceranalyzer.logger import Logger
+from socceranalyzer.utils.logger import Logger
 
 
 class Passing:

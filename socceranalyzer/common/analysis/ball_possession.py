@@ -1,6 +1,6 @@
 from socceranalyzer.common.enums.sim2d import SIM2D
 from socceranalyzer.common.evaluators.ball_holder import BallHolderEvaluator
-from socceranalyzer.logger import Logger
+from socceranalyzer.utils.logger import Logger
 
 class BallPossession:
     """

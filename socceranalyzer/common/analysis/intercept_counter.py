@@ -2,7 +2,7 @@ import pandas as pd
 from socceranalyzer.common.analysis.abstract_analysis import AbstractAnalysis
 from socceranalyzer.common.evaluators.passing import Passing
 from socceranalyzer.common.basic.match import Match
-from socceranalyzer.logger import Logger
+from socceranalyzer.utils.logger import Logger
 
 class InterceptCounter(AbstractAnalysis):
     def __init__(self, match: Match, passing_evaluator: Passing, debug):

@@ -9,7 +9,7 @@ from socceranalyzer.common.basic.ball import Ball
 from socceranalyzer.common.basic.team import Team
 from socceranalyzer.common.chore.builder import Builder
 from socceranalyzer.agent2D.agent import Agent2D
-from socceranalyzer.logger import Logger
+from socceranalyzer.utils.logger import Logger
 
 
 class Match:

@@ -6,7 +6,7 @@ from socceranalyzer.common.analysis.find_goals import FindGoals
 from socceranalyzer.common.geometric.point import Point
 from socceranalyzer.common.chore.mediator import Mediator
 from socceranalyzer.common.operations.measures import distance
-from socceranalyzer.logger import Logger
+from socceranalyzer.utils.logger import Logger
 
 class GoalkeeperAnalysis:
     """
