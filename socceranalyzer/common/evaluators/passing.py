@@ -7,6 +7,7 @@ from socceranalyzer.common.enums.vss import VSS
 from socceranalyzer.common.evaluators.kick import kick
 from socceranalyzer.common.geometric.circle import Circle
 from socceranalyzer.common.geometric.point import Point
+from socceranalyzer.utils.logger import Logger
 
 
 class Passing:
@@ -56,7 +57,7 @@ class Passing:
                 run_passing_evaluation() -> None:
                     Computes all wrong and correct passes occurrences
     """
-    def __init__(self, data_frame: DataFrame, category: SIM2D | SSL | VSS):
+    def __init__(self, data_frame: DataFrame, category: SIM2D | SSL | VSS, debug):
         self.__left_team_passing_accuracy = 0
         self.__right_team_passing_accuracy = 0
         self.__left_team_total_passes = 0
@@ -240,4 +241,5 @@ class Passing:
         self.__left_team_interceptions = intercepted_passes_l
         self.__right_team_interceptions = intercepted_passes_r
         self.__ran_all_analysis = True
+        Logger.success("Passing has results.")
     

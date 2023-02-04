@@ -4,17 +4,25 @@ from pandas import DataFrame
 import numpy as np
 from socceranalyzer.common.analysis.abstract_analysis import AbstractAnalysis
 from socceranalyzer.common.enums.sim2d import SIM2D
-from socceranalyzer.common.utility.slicers import PlaymodeSlicer
+from socceranalyzer.common.dataframe.slicers import PlaymodeSlicer
+from socceranalyzer.utils.logger import Logger
 
 class Speed(AbstractAnalysis):
-    def __init__(self, dataframe: DataFrame, category, player: int, side: str) -> None:
+    def __init__(self, dataframe: DataFrame, category, player: int, side: str, debug) -> None:
         self.__dataframe = dataframe
         self.__category = category
         self.__l_players_speed: list = []
         self.__r_players_speed: list = []
         self.__player_speed: list = []
 
-        self._analyze(player, side)
+        try:
+            self._analyze(player, side)
+        except Exception as err:
+            Logger.error(f"Speed failed: {err.args[0]}")
+            if debug:
+                raise
+        else:
+            Logger.success("Speed has results.")
 
     @property
     def category(self):

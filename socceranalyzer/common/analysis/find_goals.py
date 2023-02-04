@@ -2,6 +2,7 @@ import pandas
 from socceranalyzer.common.enums.sim2d import SIM2D
 from socceranalyzer.common.enums.ssl import SSL
 from socceranalyzer.common.enums.vss import VSS
+from socceranalyzer.utils.logger import Logger
 
 class FindGoals:
     """
@@ -33,14 +34,21 @@ class FindGoals:
                 results() -> [int]
     """
 
-    def __init__(self, dataframe: pandas.DataFrame, category: SSL | SIM2D | VSS) -> None:
+    def __init__(self, dataframe: pandas.DataFrame, category: SSL | SIM2D | VSS, debug) -> None:
         self.__dataframe = dataframe
         self.__category = category
         self.__goal_moments = []
         self.__left_team_goals = []
         self.__right_team_goals = []
 
-        self._analyze()
+        try:
+            self._analyze()
+        except Exception as err:
+            Logger.error(f"FindGoals failed: {err.args[0]}")
+            if debug:
+                raise
+        else:
+            Logger.success("FindGoals has results.")
 
     def _analyze(self) -> None:
         """

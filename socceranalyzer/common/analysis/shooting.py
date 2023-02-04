@@ -4,8 +4,9 @@ from socceranalyzer.common.analysis.abstract_analysis import AbstractAnalysis
 from socceranalyzer.common.geometric.point import Point
 from socceranalyzer.common.geometric.triangle import Triangle
 from socceranalyzer.common.operations.measures import *
-from socceranalyzer.common.utility.slicers import PlaymodeSlicer
+from socceranalyzer.common.dataframe.slicers import PlaymodeSlicer
 from socceranalyzer.common.enums.sim2d import Landmarks
+from socceranalyzer.utils.logger import Logger
 from math import sqrt, acos
 from numpy import exp
 
@@ -61,13 +62,21 @@ class Shooting(AbstractAnalysis):
                 results_as_dataframe() -> pandas.DataFrame:
                     returns a copy of the match detailed shooting stats DataFrame
     """
-    def __init__(self, dataframe: DataFrame, category):
+    def __init__(self, dataframe: DataFrame, category, debug):
         self.__category = category
         self.__df = dataframe
         self.__shooting_stats = []
         self.__play_on_cycles = []
         self.__last_shooter = 'not'
-        self._analyze()
+
+        try:
+            self._analyze()
+        except Exception as err:
+            Logger.error(f"Shooting failed: {err.args[0]}")
+            if debug:
+                raise
+        else:
+            Logger.success("Shooting has results.")
     
     @property
     def category(self):
