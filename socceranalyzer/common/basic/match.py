@@ -4,13 +4,12 @@ from socceranalyzer.common.basic.team import Team
 from socceranalyzer.common.enums.vss import VSS
 from socceranalyzer.common.enums.sim2d import SIM2D
 from socceranalyzer.common.enums.ssl import SSL
-
 from socceranalyzer.common.basic.field import Field
 from socceranalyzer.common.basic.ball import Ball
 from socceranalyzer.common.basic.team import Team
 from socceranalyzer.common.chore.builder import Builder
-
 from socceranalyzer.agent2D.agent import Agent2D
+from socceranalyzer.logger import Logger
 
 
 class Match:
@@ -51,7 +50,7 @@ class Match:
 
 
     """
-    def __init__(self, dataframe: pandas.DataFrame, category: SIM2D | SSL | VSS):
+    def __init__(self, dataframe: pandas.DataFrame, category: SIM2D | SSL | VSS = None):
         self.__category = category
 
         self.__df = dataframe
@@ -68,10 +67,10 @@ class Match:
             if self.category is None:
                 raise ValueError('A Match requires a Category as argument and none was given')
             elif self.category is VSS: 
-                raise RuntimeError(f'This version of SoccerAnalyzer does not support {self.category} matches.\n'
+                raise ValueError(f'This version of SoccerAnalyzer does not support {self.category} matches.\n'
                 f'Please visit https://github.com/robocin/SoccerAnalyzer for more information.')
-        except RuntimeError:
-            raise
+        except ValueError as err:
+            Logger.error("Match failed: " + err.args[0])
         else:
             builder = Builder(self.__df, self.__category)
 

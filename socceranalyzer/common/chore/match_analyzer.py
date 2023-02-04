@@ -97,9 +97,9 @@ class MatchAnalyzer(AbstractFactory):
             if self.__cat is None:
                 raise ValueError('MatchAnalyzer requires a Category as argument and none was given')
         except ValueError as err:
-            Logger.error(err)
-            raise
+            Logger.error("Match analyzer failed: " + err.args[0])
         else:
+            Logger.info(f"Started analyzing.")
             begin: float = time()
             self._run_analysis()
             end: float = time()
@@ -237,7 +237,6 @@ class MatchAnalyzer(AbstractFactory):
             raise NotImplementedError
 
     def _run_analysis(self):
-        Logger.info("Starting analysis")
         if self.__cat is SIM2D:
             setattr(self, "__ball_possession", None)
             self.__ball_possession = BallPossession(self.__match.dataframe, self.category)
