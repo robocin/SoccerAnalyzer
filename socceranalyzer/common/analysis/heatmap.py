@@ -12,7 +12,7 @@ from socceranalyzer.logger import Logger
 
 
 class Heatmap(AbstractAnalysis):
-    def __init__(self, dataframe: pandas.DataFrame, category: SSL | SIM2D | VSS) -> None:
+    def __init__(self, dataframe: pandas.DataFrame, category: SSL | SIM2D | VSS, debug) -> None:
         self.__dataframe = dataframe
         self.__category = category
 
@@ -42,8 +42,14 @@ class Heatmap(AbstractAnalysis):
             'player_r11': [[],[]],
         }
 
-        self._analyze()
-
+        try:
+            self._analyze()
+        except Exception as err:
+            Logger.error(f"Heatmap failed: {err.args[0]}")
+            if debug:
+                raise
+        else:
+            Logger.success("Heatmap has results.")
     @property
     def dataframe(self):
         return self.__dataframe
@@ -78,7 +84,6 @@ class Heatmap(AbstractAnalysis):
 
             self.__right_players[f'player_r{ith+2}'][0] = self.dataframe[right_players_column.items[ith].x]
             self.__right_players[f'player_r{ith+2}'][1] = self.dataframe[right_players_column.items[ith].y] * (-1)
-        Logger.success("Heatmap has results")
 
 
     def describe(self):

@@ -25,4 +25,8 @@ class Logger:
     @staticmethod
     def success(message):
         print("[" + Colors.OKGREEN + " OK " +  Colors.ENDC + "]: " + message)
+
+    @staticmethod
+    def data(message):
+        print("[" + Colors.HEADER + "DATA" +  Colors.ENDC + "]: " + message)
         

@@ -33,7 +33,7 @@ class Stamina(AbstractAnalysis):
                     
             
     """
-    def __init__(self, dataframe: pandas.DataFrame, category: SIM2D | SSL | VSS):
+    def __init__(self, dataframe: pandas.DataFrame, category: SIM2D | SSL | VSS, debug):
         self.__dataframe: pandas.DataFrame = dataframe
         self.__category: SIM2D | VSS | SSL = category
         self.__l_players_stamina: list  = []
@@ -41,7 +41,14 @@ class Stamina(AbstractAnalysis):
         self.__r_players_stamina: list = []
         self.__r_players_stamina_mean = 0
 
-        self._analyze()
+        try:
+            self._analyze()
+        except Exception as err:
+            Logger.error(f"Stamina failed: {err.args[0]}")
+            if debug:
+                raise
+        else:
+            Logger.success("Stamina has results.")
 
     @property
     def category(self):
@@ -61,7 +68,6 @@ class Stamina(AbstractAnalysis):
 
         for stamina_attr in Mediator.players_right_stamina_attr(SIM2D):
             self.__r_players_stamina.append(self.dataframe[stamina_attr].tolist())
-        Logger.success("Stamina has results.")
 
     @property
     def stamina_left(self):

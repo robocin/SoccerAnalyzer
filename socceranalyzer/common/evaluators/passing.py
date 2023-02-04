@@ -57,7 +57,7 @@ class Passing:
                 run_passing_evaluation() -> None:
                     Computes all wrong and correct passes occurrences
     """
-    def __init__(self, data_frame: DataFrame, category: SIM2D | SSL | VSS):
+    def __init__(self, data_frame: DataFrame, category: SIM2D | SSL | VSS, debug):
         self.__left_team_passing_accuracy = 0
         self.__right_team_passing_accuracy = 0
         self.__left_team_total_passes = 0

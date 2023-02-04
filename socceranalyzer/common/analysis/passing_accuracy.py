@@ -29,13 +29,20 @@ class PassingAccuracy(AbstractAnalysis):
                 serialize() -> dict[str, dict[str, Any]]
                     Returns an object containing computed stats
     """
-    def __init__(self, data_frame, category, passing_evaluator: Passing):
+    def __init__(self, data_frame, category, passing_evaluator: Passing, debug):
         self.__passing_accuracy = {}
         self.__category = category
         self.__current_game_log = data_frame
         self.__passing_evaluator = passing_evaluator
 
-        self._analyze()
+        try:
+            self._analyze()
+        except Exception as err:
+            Logger.error(f"PassingAccuracy failed: {err.args[0]}")
+            if debug:
+                raise
+        else:
+            Logger.success("PassingAccuracy has results.")
 
     def __str__(self):
         values = self.results()
@@ -62,7 +69,6 @@ class PassingAccuracy(AbstractAnalysis):
                 'accuracy': self.__passing_evaluator.right_team_passing_stats['accuracy']
             }
         }
-        Logger.success("PassingAccuracy has results.")
     
     def results(self) -> tuple[float, float, int, int]:
         """

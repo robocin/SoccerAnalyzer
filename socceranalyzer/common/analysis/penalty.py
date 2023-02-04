@@ -29,13 +29,20 @@ class Penalty(AbstractAnalysis):
                 describe() -> None
                     provides how many penalties happened in the match
     """
-    def __init__(self, dataframe, category):
+    def __init__(self, dataframe, category, debug):
         self.__dataframe = dataframe
         self.__category = category
         self.__penalty_left = []
         self.__penalty_right = []
 
-        self._analyze()
+        try:
+            self._analyze()
+        except Exception as err:
+            Logger.error(f"Penalty failed: {err.args[0]}")
+            if debug:
+                raise
+        else:
+            Logger.success("Penalty has results.")
 
     @property
     def category(self):
@@ -56,7 +63,6 @@ class Penalty(AbstractAnalysis):
         # penalty in favor of right side
         t_dataframe = self.dataframe[self.dataframe[str(self.category.PLAYMODE)] == str(self.category.PENALTY_TO_RIGHT)]
         self.__penalty_right = t_dataframe[str(self.category.GAME_TIME)].tolist()
-        Logger.success("Penalty has results.")
 
     def results(self):
         """

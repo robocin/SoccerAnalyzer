@@ -8,14 +8,21 @@ from socceranalyzer.common.utility.slicers import PlaymodeSlicer
 from socceranalyzer.logger import Logger
 
 class Speed(AbstractAnalysis):
-    def __init__(self, dataframe: DataFrame, category, player: int, side: str) -> None:
+    def __init__(self, dataframe: DataFrame, category, player: int, side: str, debug) -> None:
         self.__dataframe = dataframe
         self.__category = category
         self.__l_players_speed: list = []
         self.__r_players_speed: list = []
         self.__player_speed: list = []
 
-        self._analyze(player, side)
+        try:
+            self._analyze(player, side)
+        except Exception as err:
+            Logger.error(f"Speed failed: {err.args[0]}")
+            if debug:
+                raise
+        else:
+            Logger.success("Speed has results.")
 
     @property
     def category(self):
@@ -52,7 +59,6 @@ class Speed(AbstractAnalysis):
         velocity_vector = [[x,y] for x, y in zip(vx,vy)]
 
         self.__player_speed = self._calculate_speed(velocity_vector)
-        Logger.success("Speed has results")
 
     def _calculate_speed(self, velocity_over_time):
         velocity_over_time = np.array(velocity_over_time)

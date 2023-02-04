@@ -62,13 +62,21 @@ class Shooting(AbstractAnalysis):
                 results_as_dataframe() -> pandas.DataFrame:
                     returns a copy of the match detailed shooting stats DataFrame
     """
-    def __init__(self, dataframe: DataFrame, category):
+    def __init__(self, dataframe: DataFrame, category, debug):
         self.__category = category
         self.__df = dataframe
         self.__shooting_stats = []
         self.__play_on_cycles = []
         self.__last_shooter = 'not'
-        self._analyze()
+
+        try:
+            self._analyze()
+        except Exception as err:
+            Logger.error(f"Shooting failed: {err.args[0]}")
+            if debug:
+                raise
+        else:
+            Logger.success("Shooting has results.")
     
     @property
     def category(self):
@@ -264,7 +272,6 @@ class Shooting(AbstractAnalysis):
             self.__check_shot(i)
             self.__check_goal(i)
         self.__shooting_stats_df = DataFrame(self.__shooting_stats)
-        Logger.success("Shooting has results")
 
     def get_total_team_shots(self, team: Literal['l', 'r']) -> int:
         """

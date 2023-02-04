@@ -5,7 +5,7 @@ from socceranalyzer.common.basic.match import Match
 from socceranalyzer.logger import Logger
 
 class InterceptCounter(AbstractAnalysis):
-    def __init__(self, match: Match, passing_evaluator: Passing):
+    def __init__(self, match: Match, passing_evaluator: Passing, debug):
         self.__match: Match = match
         self.__category = match.category
         self.__current_game_log: pd.DataFrame = match.dataframe
@@ -13,7 +13,14 @@ class InterceptCounter(AbstractAnalysis):
 
         self.__interceptions = {}
 
-        self._analyze()
+        try:
+            self._analyze()
+        except Exception as err:
+            Logger.error(f"InterceptCounter failed: {err.args[0]}")
+            if debug:
+                raise
+        else:
+            Logger.success("InterceptCounter has results.")
 
     def __str__(self):
         values = self.results()
@@ -31,7 +38,6 @@ class InterceptCounter(AbstractAnalysis):
             'left_team': self.__passing_evaluator.left_team_passing_stats['interceptions'],
             'right_team': self.__passing_evaluator.right_team_passing_stats['interceptions']
         }
-        Logger.success("InterceptCounter has results.")
 
     def results(self):
         return (self.__interceptions['left_team'], self.__interceptions['right_team'])

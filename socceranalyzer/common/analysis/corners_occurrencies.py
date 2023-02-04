@@ -3,14 +3,21 @@ from socceranalyzer.common.utility.finders import find_last_unique_event_ocurren
 from socceranalyzer.logger import Logger
 
 class CornersOcurrencies(AbstractAnalysis):
-    def __init__(self, dataframe, category):
+    def __init__(self, dataframe, category, debug):
         self.__category = category
         self.__df = dataframe
 
         self.__left_occurrencies = []
         self.__right_occurrencies = []
 
-        self._analyze()
+        try:
+            self._analyze()
+        except Exception as err:
+            Logger.error(f"CornersOccurrencies failed: {err.args[0]}")
+            if debug:
+                raise
+        else:
+            Logger.success("CornersOccurrencies has results.")
 
     @property
     def dataframe(self):
@@ -23,7 +30,6 @@ class CornersOcurrencies(AbstractAnalysis):
     def _analyze(self):
         self.__left_occurrencies = find_last_unique_event_ocurrences(self.dataframe, str(self.category.TEAM_LEFT_CORNER))
         self.__right_occurrencies = find_last_unique_event_ocurrences(self.dataframe, str(self.category.TEAM_RIGHT_CORNER))
-        Logger.success("CornersOcurrencies has results.")
 
     def results(self):
         return (self.__left_occurrencies, self.__right_occurrencies)

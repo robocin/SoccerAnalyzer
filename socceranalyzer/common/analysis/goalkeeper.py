@@ -49,7 +49,7 @@ class GoalkeeperAnalysis:
 
                 
     """
-    def __init__(self, dataframe: pandas.DataFrame, category: SIM2D | SSL | VSS) -> None:
+    def __init__(self, dataframe: pandas.DataFrame, category: SIM2D | SSL | VSS, debug) -> None:
         self.__dataframe = dataframe
         self.__category = category
         self.__goalie_positions = []
@@ -58,8 +58,16 @@ class GoalkeeperAnalysis:
         self.__max_distance = 0
         self.__average_distance = 0
         self.__catches = None
+        self.__debug = debug
 
-        self._analyze()
+        try:
+            self._analyze()
+        except Exception as err:
+            Logger.error(f"GoalkeeperAnalysis failed: {err.args[0]}")
+            if debug:
+                raise
+        else:
+            Logger.success("GoalkeeperAnalysis has results.")
 
     def _analyze(self) -> None:
         """
@@ -79,7 +87,7 @@ class GoalkeeperAnalysis:
 
             self.__catches = self.__dataframe.iloc[len(self.__dataframe) - 1][str(self.__category.RIGHT_GOALKEEPER_CATCHES)]
 
-        enemy_goals = FindGoals(self.__dataframe, SIM2D).results(enemy_team)
+        enemy_goals = FindGoals(self.__dataframe, SIM2D, self.__debug).results(enemy_team)
 
         for goal_moment in enemy_goals:
             ball_x = self.__dataframe.iloc[goal_moment][str(self.__category.BALL_X)]
@@ -121,7 +129,6 @@ class GoalkeeperAnalysis:
         
         adversary_goal_quantity = max(1, len(enemy_goals))
         self.__average_distance = self.__average_distance / adversary_goal_quantity
-        Logger.success("GoalkeeperAnalysis has results.")
         
     def results(self) -> tuple:
         """

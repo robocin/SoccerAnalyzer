@@ -27,12 +27,19 @@ class Playmodes(AbstractAnalysis):
                 describe() -> None
                     provides which playmodes appeared
     """
-    def __init__(self, dataframe, category):
+    def __init__(self, dataframe, category, debug):
         self.__category = category
         self.__df = dataframe
         self.__playmode_dictionary = {}
 
-        self._analyze()
+        try:
+            self._analyze()
+        except Exception as err:
+            Logger.error(f"Playmodes failed: {err.args[0]}")
+            if debug:
+                raise
+        else:
+            Logger.success("Playmodes has results.")
 
     @property
     def category(self):
@@ -56,7 +63,6 @@ class Playmodes(AbstractAnalysis):
             value = values.pop(0)
 
             self.__playmode_dictionary[key] = value
-        Logger.success("Playmodes has results.")
 
     def results(self):
         """

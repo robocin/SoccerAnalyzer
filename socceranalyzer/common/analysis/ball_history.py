@@ -9,16 +9,19 @@ class BallHistory(AbstractAnalysis):
     """
         Contains the position of the ball in all playmode=play_on moments of the game
     """
-    def __init__(self, dataframe, category: Enum):
+    def __init__(self, dataframe, category: Enum, debug):
         self.__dataframe = dataframe
         self.__category = category
         self.__ball_positions = ()
         try:
             self._analyze()
-            raise RuntimeError("this is a runtime error")
+        except Exception as err:
+            Logger.error(f"BallHistory failed: {err.args[0]}")
+            if debug:
+                raise
+        else:
             Logger.success("BallHistory has results.")
-        except RuntimeError as error:
-            Logger.error(f"BallHistory failed: {error}")
+            
     @property
     def dataframe(self):
         return self.__dataframe
@@ -33,7 +36,7 @@ class BallHistory(AbstractAnalysis):
         self.__ball_positions = (x, y)
 
     def describe(self):
-        print("No description available")
+        Logger.data("No description available")
 
     def results(self):
         return self.__ball_positions
