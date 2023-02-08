@@ -1,0 +1,11 @@
+load("@rules_python//python:defs.bzl", "py_binary")
+# #load("@socceranalyzer_dependencies//:requirements.bzl", "requirement")
+
+py_binary(
+  name = "socceranalyzer",
+  srcs = ["main.py"],
+  main = "main.py"
+#   deps = [
+#     requirement("pandas")
+#   ]
+)
