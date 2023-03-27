@@ -1,0 +1,1 @@
+__all__ = ['auto_generate_proto']
