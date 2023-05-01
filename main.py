@@ -1,7 +1,7 @@
 import pandas as pd
 import argparse
 from socceranalyzer import Match, MatchAnalyzer, SIM2D, JsonReader, RunConfiguration, Logger
-
+from socceranalyzer.RobotSSL import 
 
 def setup():
     arg_parser = argparse.ArgumentParser()

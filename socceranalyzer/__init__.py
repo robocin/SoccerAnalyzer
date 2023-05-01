@@ -62,3 +62,4 @@ from socceranalyzer.utils.logger import Logger
 
 # io
 from socceranalyzer.common.io.reader import JsonReader
+from socceranalyzer.common.io.reader import GzReader
