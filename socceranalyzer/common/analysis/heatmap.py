@@ -1,5 +1,6 @@
 import numpy as np
 import pandas
+import matplotlib.pyplot as plt
 
 from socceranalyzer.common.basic.match import Match
 from socceranalyzer.common.analysis.abstract_analysis import AbstractAnalysis
@@ -16,31 +17,11 @@ class Heatmap(AbstractAnalysis):
         self.__dataframe = dataframe
         self.__category = category
 
-        self.__ball_positions: dict[str, list] = {}
-        self.__left_players: dict[str, list[list[float], list[float]]] = {
-            'player_l2': [[],[]],
-            'player_l3': [[],[]],
-            'player_l4': [[],[]],
-            'player_l5': [[],[]],
-            'player_l6': [[],[]],
-            'player_l7': [[],[]],
-            'player_l8': [[],[]],
-            'player_l9': [[],[]],
-            'player_l10': [[],[]],
-            'player_l11': [[],[]],
-        }
-        self.__right_players: dict[str, list[list[float], list[float]]] = {
-            'player_r2': [[],[]],
-            'player_r3': [[],[]],
-            'player_r4': [[],[]],
-            'player_r5': [[],[]],
-            'player_r6': [[],[]],
-            'player_r7': [[],[]],
-            'player_r8': [[],[]],
-            'player_r9': [[],[]],
-            'player_r10': [[],[]],
-            'player_r11': [[],[]],
-        }
+        self.left_players_x = []
+        self.left_players_y = []
+
+        self.right_players_x = []
+        self.right_players_y = []
 
         try:
             self._analyze()
@@ -58,33 +39,27 @@ class Heatmap(AbstractAnalysis):
     def category(self):
         return self.__category
 
-    @property
-    def data(self, left_players_unum: list[int] = [], right_players_unum: list[int] = []):
-        
-        return self.__left_players.values(), self.__right_players.values(), self.__ball_positions
-
     def _analyze(self):
-        ball_x = np.array(self.dataframe[str(self.category.BALL_X)])
-        ball_y = np.array(self.dataframe[str(self.category.BALL_Y)])
-        
-        # Reflect y positions due to SIM2D server config
-        ball_y = ball_y * (-1)
-
-        self.__ball_positions['x'] = ball_x
-        self.__ball_positions['y'] = ball_y
-
         left_players_column = Mediator.players_left_position(self.category, gkeeper=False)
         right_players_column = Mediator.players_right_position(self.category, gkeeper=False)
+        
+        for i in range(len(left_players_column.items)):
+            self.left_players_x = self.left_players_x + self.dataframe[left_players_column.items[i].x].values.tolist()
+            self.left_players_y = self.left_players_y + self.dataframe[left_players_column.items[i].y].values.tolist()
 
-        # TODO: Refactor when player class is implemented 
-        for ith in range(0, 10):
-            # +2 because it starts at 0 going up to 9 and needs to reach 2 up to 11
-            self.__left_players[f'player_l{ith+2}'][0] = self.dataframe[left_players_column.items[ith].x]
-            self.__left_players[f'player_l{ith+2}'][1] = self.dataframe[left_players_column.items[ith].y] * (-1)
+        for i in range(len(right_players_column.items)):
+            self.right_players_x = self.right_players_x + self.dataframe[right_players_column.items[i].x].values.tolist()
+            self.right_players_y = self.right_players_y + self.dataframe[right_players_column.items[i].y].values.tolist()
 
-            self.__right_players[f'player_r{ith+2}'][0] = self.dataframe[right_players_column.items[ith].x]
-            self.__right_players[f'player_r{ith+2}'][1] = self.dataframe[right_players_column.items[ith].y] * (-1)
+    def plot_left(self):
+        hist2d_y = plt.hist2d(np.array(self.left_players_x), np.array(self.left_players_y), bins=30, cmap='Greens')
+        plt.plot(hist2d_y)
+        plt.show()
 
+    def plot_right(self):
+        hist2d_y = plt.hist2d(np.array(self.right_players_x), np.array(self.right_players_y), bins=30, cmap='Reds')
+        plt.plot(hist2d_y)
+        plt.show()
 
     def describe(self):
         raise NotImplementedError
