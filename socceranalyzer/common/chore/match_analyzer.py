@@ -25,6 +25,7 @@ from socceranalyzer.common.analysis.heatmap import Heatmap
 from socceranalyzer.common.evaluators.passing import Passing
 from socceranalyzer.common.analysis.find_goals import FindGoals
 from socceranalyzer.common.analysis.goalkeeper import GoalkeeperAnalysis
+from socceranalyzer.common.analysis.kick_in import KickIn
 from socceranalyzer.utils.run_configuration import RunConfiguration
 from socceranalyzer.utils.logger import Logger
 
@@ -149,6 +150,10 @@ class MatchAnalyzer(AbstractFactory):
     @property
     def ball_possession(self):
         return self.__ball_possession
+
+    @property
+    def kick_in(self):
+        return self.__kick_in
     
     @property
     def intercept_counter(self):
@@ -189,7 +194,7 @@ class MatchAnalyzer(AbstractFactory):
     @property
     def heatmap(self):
         return self.__heatmap
-
+    
     @property
     def find_goals(self):
         return self.__find_goals
@@ -253,6 +258,10 @@ class MatchAnalyzer(AbstractFactory):
             if self.config.foul_charge:
                 setattr(self, "__foul_charge", None)
                 self.__foul_charge = FoulCharge(self.__match.dataframe, self.category, self._DEBUG)
+            
+            if self.config.kick_in:
+                setattr(self, "__kick_in", None)
+                self.__kick_in = KickIn(self.__match.dataframe, self.category, self._DEBUG)
 
             if self.config.penalty:
                 setattr(self, "__penalty", None)

@@ -7,6 +7,7 @@ class RunConfiguration:
         self.ball_possession = False
         self.tester_free_kick = False
         self.foul_charge = False
+        self.kick_in = False
         self.penalty = False
         self.playmodes = False
         self.corners_occurrencies = False
@@ -31,6 +32,7 @@ class RunConfiguration:
         self.ball_possession = json_info["analysis"]["ball_possession"]
         self.tester_free_kick = json_info["analysis"]["tester_free_kick"]
         self.foul_charge = json_info["analysis"]["foul_charge"]
+        self.kick_in = json_info["analysys"]["kick_in"]
         self.penalty = json_info["analysis"]["penalty"]
         self.playmodes = json_info["analysis"]["playmodes"]
         self.corners_occurrencies = json_info["analysis"]["corners_occurrencies"]
