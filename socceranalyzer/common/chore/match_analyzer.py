@@ -26,6 +26,7 @@ from socceranalyzer.common.evaluators.passing import Passing
 from socceranalyzer.common.analysis.find_goals import FindGoals
 from socceranalyzer.common.analysis.goalkeeper import GoalkeeperAnalysis
 from socceranalyzer.common.analysis.kick_in import KickIn
+from socceranalyzer.common.analysis.kick_in_occurrences import KickInOcurrences
 from socceranalyzer.utils.run_configuration import RunConfiguration
 from socceranalyzer.utils.logger import Logger
 
@@ -154,7 +155,11 @@ class MatchAnalyzer(AbstractFactory):
     @property
     def kick_in(self):
         return self.__kick_in
-    
+
+    @property
+    def kick_in_occurrences(self):
+        return self.__kick_ins_occurrences
+            
     @property
     def intercept_counter(self):
         return self.__intercept_counter
@@ -274,6 +279,10 @@ class MatchAnalyzer(AbstractFactory):
             if self.config.corners_occurrencies:
                 setattr(self, "__corners_occurrencies", None)
                 self.__corners_occurrencies = CornersOcurrencies(self.__match.dataframe, self.category, self._DEBUG)
+            
+            if self.config.kick_in_occurrences:
+                setattr(self, "__kick_in_occurrences", None)
+                self.__kick_ins_occurrences = KickInOcurrences(self.__match.dataframe, self.category, self._DEBUG)
 
             if self.config.intercept_counter or self.config.passing_accuracy:
                 passing = Passing(self.__match.dataframe, self.category, self._DEBUG)

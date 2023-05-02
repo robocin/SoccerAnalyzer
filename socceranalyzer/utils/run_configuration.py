@@ -12,6 +12,7 @@ class RunConfiguration:
         self.playmodes = False
         self.corners_occurrencies = False
         self.intercept_counter = False
+        self.kick_in_occurrences = False
         self.passing_accuracy = False
         self.time_after_events = False
         self.ball_history = False
@@ -36,6 +37,7 @@ class RunConfiguration:
         self.penalty = json_info["analysis"]["penalty"]
         self.playmodes = json_info["analysis"]["playmodes"]
         self.corners_occurrencies = json_info["analysis"]["corners_occurrencies"]
+        self.kick_in = json_info["analysis"]["kick_in_occurrencies"]
         self.intercept_counter = json_info["analysis"]["intercept_counter"]
         self.passing_accuracy = json_info["analysis"]["passing_accuracy"]
         self.time_after_events = json_info["analysis"]["time_after_events"]
