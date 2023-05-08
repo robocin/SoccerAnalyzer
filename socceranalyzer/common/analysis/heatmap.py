@@ -1,6 +1,6 @@
-import numpy as np
 import pandas
 import matplotlib.pyplot as plt
+import seaborn as sns
 
 from socceranalyzer.common.basic.match import Match
 from socceranalyzer.common.analysis.abstract_analysis import AbstractAnalysis
@@ -41,7 +41,7 @@ class Heatmap(AbstractAnalysis):
 
     def _analyze(self):
         # Filtering to playmode where the game is running
-        self.__dataframe = self.__dataframe[self.__dataframe[str(self.__category.PLAYMODE)] == self.__category.RUNNING_GAME]
+        self.__dataframe = self.__dataframe[self.__dataframe[str(self.__category.PLAYMODE)] == str(self.__category.RUNNING_GAME)]
 
         left_players_column = Mediator.players_left_position(self.category, gkeeper=False)
         right_players_column = Mediator.players_right_position(self.category, gkeeper=False)
@@ -53,15 +53,17 @@ class Heatmap(AbstractAnalysis):
         for i in range(len(right_players_column.items)):
             self.right_players_x = self.right_players_x + self.__dataframe[right_players_column.items[i].x].values.tolist()
             self.right_players_y = self.right_players_y + self.__dataframe[right_players_column.items[i].y].values.tolist()
+        
+    def plot(self):
+        sns.kdeplot(x=self.left_players_x, y=self.left_players_y, fill=True, thresh=False, n_levels = 15, alpha=0.5, cmap='Greens')
+        sns.kdeplot(x=self.right_players_x, y=self.right_players_y, fill=True, thresh=False, n_levels = 15, alpha=0.5, cmap='Reds')
 
-    def plot_left(self):
-        hist2d_left = plt.hist2d(np.array(self.left_players_x), np.array(self.left_players_y), bins=30, cmap='Greens')
-        plt.plot(hist2d_left)
-        plt.show()
+        # Add labels and a title
+        plt.xlabel('X')
+        plt.ylabel('Y')
+        plt.title('Team position heatmap')
 
-    def plot_right(self):
-        hist2d_right = plt.hist2d(np.array(self.right_players_x), np.array(self.right_players_y), bins=30, cmap='Reds')
-        plt.plot(hist2d_right)
+        # Show the plot
         plt.show()
 
     def describe(self):
