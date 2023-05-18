@@ -313,11 +313,12 @@ class MatchAnalyzer(AbstractFactory):
             #self.__time_after_corner = TimeAfterCorner(self.__match.dataframe, self.category)
 
         elif self.__cat is SSL:
+            if self.config.heatmap:
+                setattr(self, "__heatmap", None)
+                self.__heatmap = Heatmap(self.__match.dataframe, self.category, self._DEBUG)
             if self.config.ball_possession:
                 setattr(self, "__ball_possession", None)
                 self.__ball_possession = BallPossession(self.__match.dataframe, self.category, self._DEBUG)
-            # setattr(self, "__heatmap", None)
-            # self.__heatmap = Heatmap(self.__match.dataframe, self.category)
 
         elif self.__cat is VSS:
             raise NotImplementedError
