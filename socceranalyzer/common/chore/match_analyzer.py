@@ -316,6 +316,9 @@ class MatchAnalyzer(AbstractFactory):
             if self.config.heatmap:
                 setattr(self, "__heatmap", None)
                 self.__heatmap = Heatmap(self.__match.dataframe, self.category, self._DEBUG)
+            if self.config.ball_possession:
+                setattr(self, "__ball_possession", None)
+                self.__ball_possession = BallPossession(self.__match.dataframe, self.category, self._DEBUG)
 
         elif self.__cat is VSS:
             raise NotImplementedError
