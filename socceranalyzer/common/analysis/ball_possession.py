@@ -5,6 +5,10 @@ from socceranalyzer.common.chore.mediator import Mediator
 from socceranalyzer.common.geometric.point import Point
 from socceranalyzer.common.operations.measures import distance_sqrd
 
+import pandas as pd
+
+pd.options.mode.chained_assignment = None
+
 class BallPossession:
     """
         Used to calculate the simple ball possession of the game.
@@ -48,7 +52,7 @@ class BallPossession:
         # Left players stand for RoboCIn team in SSL category
         self.__players_left = Mediator.players_left_position(self.category)
         self.__players_right = Mediator.players_right_position(self.category)
-        self.__ball_range = 10 ** 2
+        self.__ball_range = 115 ** 2
 
         try:
             self.__calculate()
@@ -78,11 +82,16 @@ class BallPossession:
         filtered_game = self.__filter_playmode(str(self.category.RUNNING_GAME))
 
         filtered_game['ball_possession'] = filtered_game.apply(self.__ball_holder, axis=1)
+        
+        value_counts = filtered_game['ball_possession'].value_counts()
 
-        self.__left_team_possession = filtered_game['ball_possession'].value_counts()['L']
-        self.__right_team_possession = filtered_game['ball_possession'].value_counts()['R']
+        if 'L' in value_counts:
+            self.__left_team_possession = filtered_game['ball_possession'].value_counts()['L']
+        if 'R' in value_counts:
+            self.__right_team_possession = filtered_game['ball_possession'].value_counts()['R']
 
         self.__total = self.__right_team_possession + self.__left_team_possession
+        print(self.__total)
 
     def __ball_holder(self, df_row):
         """
