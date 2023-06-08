@@ -52,8 +52,7 @@ $ pip install socceranalyzer
 This package is capable of delivering built-in analysis that were already
 created or to be a platform that enables you to create your own analysis.
 
-### Using as analyzer
-##### How it works?
+#### How it works?
 Each analysis is a class, they are instantiated and interfaced by a [Facade](https://refactoring.guru/design-patterns/facade)
 which is the **common.chore.match_analyzer** module. It is responsible for
 creating each analysis object.
@@ -65,37 +64,61 @@ The **MatchAnalyzer** receives a **Match** object as parameter.
 The **Match** receives a **pandas.DataFrame** and a **Category** object as parameter.
 
 These inputs are **mandatory**, otherwise there will be no data to be analyzed.
-
-##### 2D Simulation code example
+### Usage
+The execution has a common main for every analysis and category, and extending to new categories and analysis should preserve this strucutre. To run analysis from a specific category set, you can specify the **category** param from the configuration file.
 
 ```python
 import pandas as pd
+import argparse
+from socceranalyzer import Match, MatchAnalyzer, YamlReader, RunConfiguration
 
-from socceranalyzer import MatchAnalyzer, Match, SIM2D
+def setup():
+    arg_parser = argparse.ArgumentParser()
+    arg_parser.add_argument("-f", "--file", help="configuration file, either json or yml")
+    args = arg_parser.parse_args()
 
-SIM2D_LOGFILE_PATH = "location/to/log/file2d.csv"
-dataframe = pd.read_csv(SIM2D_LOGFILE_PATH)
+    info = YamlReader.read(args.file)
+    config = RunConfiguration()
+    config.parse(info)
+    
+    return config
 
-match_object = Match(dataframe, SIM2D)
-match_analyzer = MatchAnalyzer(match_object)
-match_analyzer.collect_results()
+if __name__ == "__main__":
+    
+    config:RunConfiguration = setup()
+    
+    dataframe = pd.read_csv(config.file_path)
+    match = Match(dataframe, config.category)
+    match_analyzer = MatchAnalyzer(match,run_config=config)
+
 ```
-##### SSL
-```python
-import pandas as pd
 
-from socceranalyzer import MatchAnalyzer, Match, SSL
-
-SSL_LOGFILE_PATH = "location/to/log/filessl.csv"
-dataframe = pd.read_csv(SSL_LOGFILE_PATH)
-
-match_object = Match(dataframe, SSL)
-match_analyzer = MatchAnalyzer(match_object)
-match_analyzer.collect_results()
+#### Configuration file
+To run the Analyzer, the configuration.yml file is needed and should be given as parameter when running the script.
+```yaml
+category: sim2d
+logs_folder: path/to/logs
+file_path: path/to/my/file
+output_results: false
+analysis:
+  tester_2d: true
+  ball_possession: true
+  foul_charge: true
+  playmodes: true
+  ball_history: true
+  penalty: true
+  passing_accuracy: true
+  corners_occurrencies: true
+  tester_free_kick: true
+  intercept_counter: true
+  stamina: true
+  time_after_events: true
+  heatmap: true
+  shooting: true
+  speed: false
+  find_goals: true
+  goalkeeper: true
 ```
-
-#### VSS
-> Not available yet
 
 ---
 > 2021, RobôCIn
