@@ -29,6 +29,7 @@ from socceranalyzer.utils.run_configuration import RunConfiguration
 from socceranalyzer.utils.logger import Logger
 
 class MatchAnalyzer(AbstractFactory):
+    #todo(fnap): update docstrings
     """
         ==== Add new analysis in this class ====
         - A class that represents a implementation of AbstractFactory. 

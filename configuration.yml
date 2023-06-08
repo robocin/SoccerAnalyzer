@@ -1,0 +1,21 @@
+category: sim2d
+logs_folder: path/to/unified/logs
+file_path: ./20221115151248-RoboCIn_0-vs-otherTeam_0.rcg.csv
+analysis:
+  tester_2d: true
+  ball_possession: true
+  foul_charge: true
+  playmodes: true
+  ball_history: true
+  penalty: true
+  passing_accuracy: true
+  corners_occurrencies: true
+  tester_free_kick: true
+  intercept_counter: true
+  stamina: true
+  time_after_events: true
+  heatmap: true
+  shooting: true
+  speed: false
+  find_goals: true
+  goalkeeper: true

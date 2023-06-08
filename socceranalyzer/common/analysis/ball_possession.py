@@ -1,9 +1,13 @@
+import pandas as pd
+
 from socceranalyzer.common.enums.sim2d import SIM2D
 from socceranalyzer.common.enums.ssl import SSL
 from socceranalyzer.utils.logger import Logger
 from socceranalyzer.common.chore.mediator import Mediator
 from socceranalyzer.common.geometric.point import Point
 from socceranalyzer.common.operations.measures import distance_sqrd
+
+pd.options.mode.chained_assignment = None # disable warnings
 
 class BallPossession:
     """
