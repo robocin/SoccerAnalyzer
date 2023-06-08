@@ -1,9 +1,17 @@
 from socceranalyzer.common.enums.sim2d import SIM2D
+from enum import Enum
+
+class ExecutionType(Enum):
+    RUN = 1
+    TESTER = 2
+    UNSPECIFIED = 0
 
 class RunConfiguration:
     def __init__(self) -> False:
+        self.execution = None
         self.logs_dir = None
         self.file_path = None
+        self.output_results = False
         self.tester_2d = False
         self.ball_possession = False
         self.tester_free_kick = False
@@ -26,8 +34,16 @@ class RunConfiguration:
         if info["category"].upper() == "SIM2D":
             self.category = SIM2D
 
+        if info["execution"].upper() == "RUN":
+            self.execution = ExecutionType.RUN
+        elif info["execution"].upper() == "TESTER":
+            self.execution = ExecutionType.TESTER
+        else:
+            self.execution = ExecutionType.UNSPECIFIED
+
         self.logs_dir = info["logs_folder"]
         self.file_path = info["file_path"]
+        self.output_results = self.handle_input(info["output_results"])
         self.tester_2d = self.handle_input(info["analysis"]["tester_2d"])
         self.ball_possession = self.handle_input(info["analysis"]["ball_possession"])
         self.tester_free_kick = self.handle_input(info["analysis"]["tester_free_kick"])
@@ -47,7 +63,7 @@ class RunConfiguration:
         self.find_goals = self.handle_input(info["analysis"]["find_goals"])
 
     def handle_input(self, parameter):
-        """Misspelling check from user input"""
+        """Misspelling check from user input on boolean params"""
         if parameter != True:
             return False
 

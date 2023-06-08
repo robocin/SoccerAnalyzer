@@ -28,6 +28,7 @@ from socceranalyzer.common.enums.ssl import SSL
 # Chore
 from socceranalyzer.common.chore.match_analyzer import MatchAnalyzer
 from socceranalyzer.common.chore.mediator import Mediator
+from socceranalyzer.common.chore.analyzer_command import AnalyzerCommand
 
 # Collections
 from socceranalyzer.common.collections.collections import PlayersCollection

@@ -10,23 +10,30 @@ class Colors:
     UNDERLINE = '\033[4m'
 
 class Logger:
+    enable=True
+
     @staticmethod
     def info(message):
-        print("[" + Colors.OKBLUE + "INFO" +  Colors.ENDC + "]: " + message)
+        if __class__.enable:
+            print("[" + Colors.OKBLUE + "INFO" +  Colors.ENDC + "]: " + message)
 
     @staticmethod
     def warn(message):
-        print("[" + Colors.WARNING + "WARN" +  Colors.ENDC + "]: " + message)
+        if __class__.enable:
+            print("[" + Colors.WARNING + "WARN" +  Colors.ENDC + "]: " + message)
 
     @staticmethod
     def error(message):
-        print("[" + Colors.FAIL + "FAIL" +  Colors.ENDC + "]: " + message)
+        if __class__.enable:
+            print("[" + Colors.FAIL + "FAIL" +  Colors.ENDC + "]: " + message)
 
     @staticmethod
     def success(message):
-        print("[" + Colors.OKGREEN + " OK " +  Colors.ENDC + "]: " + message)
+        if __class__.enable:
+            print("[" + Colors.OKGREEN + " OK " +  Colors.ENDC + "]: " + message)
 
     @staticmethod
     def data(message):
-        print("[" + Colors.HEADER + "DATA" +  Colors.ENDC + "]: " + message)
+        if __class__.enable:
+            print("[" + Colors.HEADER + "DATA" +  Colors.ENDC + "]: " + message)
         

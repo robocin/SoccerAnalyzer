@@ -27,7 +27,6 @@ class CLI:
         self._get_goal_balance()
         self.__time_end = time.time()
 
-
     def _get_filenames(self):
         print(f'socceranalyzer.{CONTEXT}: searching for game logs in {self.__folder_path}/')
 
@@ -37,7 +36,6 @@ class CLI:
 
         print(f'socceranalyzer.{CONTEXT}: {len(self.__filenames)} logs read')
 
-
     def __is_valid_file(self, logname: str):
         if("null" not in logname):
             return True
@@ -45,7 +43,6 @@ class CLI:
         print(f'socceranalyzer.{CONTEXT}: invalid file {logname}')
         return False
     
-
     def __had_penalti_shotout(self, logname):
         team_left = logname.split('-')[3].split('.')[0]   
         return False if team_left.count('_') == 1 else True
@@ -70,7 +67,6 @@ class CLI:
                     self.__team_left.data["name"] = team_left_name
                     self.__team_right.data["name"] = team_right_name 
                     break
-
 
     def _update_team_scores(self, logname, left_team, right_team):
 
@@ -108,7 +104,6 @@ class CLI:
             self._get_team_dict(team_left_name).data["draw"] += 1
             self._get_team_dict(team_right_name).data["draw"] += 1
 
-
     def _get_goal_balance(self):
         print(f'socceranalyzer.{CONTEXT}: interpreting game logs...')
         for logname in self.__filenames:
@@ -144,7 +139,5 @@ class CLI:
         print(f'{self.__team_right.data["name"]} victories: {(self.__team_right.data["victory"]/total_games)*100}%')
         print(f'Draws: {(self.__team_left.data["draw"]/total_games)*100}%')
 
-
-    
-        
+  
 CONTEXT='CLI'
