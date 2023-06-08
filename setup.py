@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='socceranalyzer',
-    version='2.0.1',
+    version='2.0.6',
     description='Robocup Soccer data analysis package for SIM2D, SSL and VSS categories',
     long_description= open('README.md').read(),
     long_description_content_type='text/markdown',
@@ -24,7 +24,7 @@ setup(
     ],
     keywords="data science analysis robotics jupyter matplotlib pandas",
     project_urls={
-        'Documentation': 'TBA',
+        'Documentation': 'https://github.com/robocin/SoccerAnalyzer',
         'Source': 'https://github.com/robocin/SoccerAnalyzer',
         'Tracker': 'https://github.com/robocin/SoccerAnalyzer/issues'
     },
