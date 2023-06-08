@@ -30,5 +30,5 @@ setup(
     },
     include_package_data=True,
     packages=[package for package in find_packages() if package.startswith("socceranalyzer")],
-    install_requires=['pandas', 'numpy', 'seaborn', 'matplotlib', 'protobuf', 'betterproto']
+    install_requires=['pandas', 'numpy', 'seaborn', 'matplotlib', 'protobuf', 'betterproto','mdutils']
 )

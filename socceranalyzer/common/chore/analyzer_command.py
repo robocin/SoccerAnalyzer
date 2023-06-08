@@ -13,3 +13,5 @@ class AnalyzerCommand:
             Logger.info(f"Searching for files in {config.logs_dir}")
             rcg_files = FolderReader.read(config.logs_dir)
             Tester.statistics_from_filenames(rcg_files)
+            Tester.log(rcg_files)
+            Tester.save_to_file()

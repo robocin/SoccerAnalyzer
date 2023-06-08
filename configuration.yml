@@ -3,6 +3,7 @@ category: sim2d
 logs_folder: /home/fnap/Desktop/logs/unified
 file_path: ./20221115151248-RoboCIn_0-vs-otherTeam_0.rcg.csv
 output_results: false
+output_file_name: "./output.txt"
 enable_analysis: false
 analysis:
   tester_2d: true
