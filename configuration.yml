@@ -1,8 +1,9 @@
 execution: tester
 category: sim2d
-logs_folder: path/to/unified/logs
+logs_folder: /home/fnap/Documents/robocin/simulation-2d/tools/SoccerAnalyzer/dummy
 file_path: ./20221115151248-RoboCIn_0-vs-otherTeam_0.rcg.csv
 output_results: false
+enable_analysis: false
 analysis:
   tester_2d: true
   ball_possession: true

@@ -1,6 +1,7 @@
 import json
 import sys
 import yaml
+import os
 
 from abc import abstractmethod
 from betterproto import Casing
@@ -112,3 +113,13 @@ class YamlReader:
         except Exception as err:
             Logger.error(f"Could not open {path} with YamlReader: {err}")
             return
+
+class FolderReader(Reader):
+    @staticmethod
+    def read(path: str):
+        try:
+            file_or_folder = os.listdir(path)
+            files_list = [file for file in file_or_folder if os.path.isfile(os.path.join(path, file))]
+            Logger.info(f"Found {len(files_list)} files in {path}")
+        except Exception as err:
+            Logger.error(f"Could not open folder: {err}")
