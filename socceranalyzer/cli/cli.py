@@ -24,38 +24,17 @@ class CLI:
 
         print(f'socceranalyzer.{CONTEXT}: {len(self.__filenames)} logs read')
 
-    def __is_valid_file(self, logname: str):
-        if("null" not in logname):
-            return True
-
         print(f'socceranalyzer.{CONTEXT}: invalid file {logname}')
         return False
     
-    def __had_penalti_shotout(self, logname):
-        team_left = logname.split('-')[3].split('.')[0]   
-        return False if team_left.count('_') == 1 else True
+
 
     def _get_team_dict(self, team_name):
         if(self.__team_left.data["name"] == team_name):
             return self.__team_left
         else:
             return self.__team_right
-
-    # TODO: Refactor for split array usage
-    def _get_team_names(self):
-        for logname in self.__filenames:
-            if self.__is_valid_file(logname):
-                if not self.__had_penalti_shotout(logname):
-                    team_right = logname.split('-')[3].split('.')[0]
-                    team_left = logname.split('-')[1] 
-
-                    team_left_name = team_left[:-2]
-                    team_right_name = team_right[:-2]
-
-                    self.__team_left.data["name"] = team_left_name
-                    self.__team_right.data["name"] = team_right_name 
-                    break
-
+        
     def _update_team_scores(self, logname, left_team, right_team):
 
         team_left_splitted = left_team.split('_')
