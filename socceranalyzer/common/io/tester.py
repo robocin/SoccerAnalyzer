@@ -133,9 +133,8 @@ class Tester:
             print(f'|  Draws: {(__class__.team_left.data["draw"]/__class__.total_games)*100}%')
 
     @staticmethod
-    def save_to_file():
-        try:
-            output_file_name = "tester_analyzer.txt" 
+    def save_to_file(output_file_name: str):
+        try:  
             with open(output_file_name, "a") as file:
                 title = "{} x {}, {}\n".format(
                     __class__.team_left.data["name"], 

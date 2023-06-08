@@ -12,6 +12,7 @@ class RunConfiguration:
         self.logs_dir = None
         self.file_path = None
         self.output_results = False
+        self.output_file_name = "output.txt"
         self.enable_analysis = False
         self.ball_possession = False
         self.tester_free_kick = False
@@ -44,6 +45,7 @@ class RunConfiguration:
         self.logs_dir = info["logs_folder"]
         self.file_path = info["file_path"]
         self.output_results = self.handle_input(info["output_results"])
+        self.output_file_name = info["output_file_name"]
         self.enable_analysis = self.handle_input(info["enable_analysis"])
         if self.enable_analysis:
             self.tester_2d = self.handle_input(info["analysis"]["tester_2d"])
