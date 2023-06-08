@@ -1,4 +1,5 @@
 from socceranalyzer.common.enums.sim2d import SIM2D
+
 class RunConfiguration:
     def __init__(self) -> False:
         self.logs_dir = None
@@ -27,24 +28,27 @@ class RunConfiguration:
 
         self.logs_dir = info["logs_folder"]
         self.file_path = info["file_path"]
-        self.tester_2d = self.is_enabled(info["analysis"]["tester_2d"])
-        self.ball_possession = self.is_enabled(info["analysis"]["ball_possession"])
-        self.tester_free_kick = self.is_enabled(info["analysis"]["tester_free_kick"])
-        self.foul_charge = self.is_enabled(info["analysis"]["foul_charge"])
-        self.penalty = self.is_enabled(info["analysis"]["penalty"])
-        self.playmodes = self.is_enabled(info["analysis"]["playmodes"])
-        self.corners_occurrencies = self.is_enabled(info["analysis"]["corners_occurrencies"])
-        self.intercept_counter = self.is_enabled(info["analysis"]["intercept_counter"])
-        self.passing_accuracy = self.is_enabled(info["analysis"]["passing_accuracy"])
-        self.time_after_events = self.is_enabled(info["analysis"]["time_after_events"])
-        self.ball_history = self.is_enabled(info["analysis"]["ball_history"])
-        self.stamina = self.is_enabled(info["analysis"]["stamina"])
-        self.shooting = self.is_enabled(info["analysis"]["shooting"])
-        self.heatmap = self.is_enabled(info["analysis"]["heatmap"])
-        self.speed = self.is_enabled(info["analysis"]["speed"])
-        self.goalkeeper = self.is_enabled(info["analysis"]["goalkeeper"])
-        self.find_goals = self.is_enabled(info["analysis"]["find_goals"])
+        self.tester_2d = self.handle_input(info["analysis"]["tester_2d"])
+        self.ball_possession = self.handle_input(info["analysis"]["ball_possession"])
+        self.tester_free_kick = self.handle_input(info["analysis"]["tester_free_kick"])
+        self.foul_charge = self.handle_input(info["analysis"]["foul_charge"])
+        self.penalty = self.handle_input(info["analysis"]["penalty"])
+        self.playmodes = self.handle_input(info["analysis"]["playmodes"])
+        self.corners_occurrencies = self.handle_input(info["analysis"]["corners_occurrencies"])
+        self.intercept_counter = self.handle_input(info["analysis"]["intercept_counter"])
+        self.passing_accuracy = self.handle_input(info["analysis"]["passing_accuracy"])
+        self.time_after_events = self.handle_input(info["analysis"]["time_after_events"])
+        self.ball_history = self.handle_input(info["analysis"]["ball_history"])
+        self.stamina = self.handle_input(info["analysis"]["stamina"])
+        self.shooting = self.handle_input(info["analysis"]["shooting"])
+        self.heatmap = self.handle_input(info["analysis"]["heatmap"])
+        self.speed = self.handle_input(info["analysis"]["speed"])
+        self.goalkeeper = self.handle_input(info["analysis"]["goalkeeper"])
+        self.find_goals = self.handle_input(info["analysis"]["find_goals"])
 
-    def is_enabled(self, parameter):
+    def handle_input(self, parameter):
+        """Misspelling check from user input"""
         if parameter != True:
             return False
+
+        return True
