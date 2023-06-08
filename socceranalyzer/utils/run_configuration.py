@@ -21,27 +21,30 @@ class RunConfiguration:
         self.goalkeeper = False
         self.find_goals = False
 
-    def parse(self, json_info):
-        if json_info["category"].upper() == "SIM2D":
+    def parse(self, info):
+        if info["category"].upper() == "SIM2D":
             self.category = SIM2D
 
-        self.logs_dir = json_info["logs_folder"]
-        self.file_path = json_info["file_path"]
-        self.tester_2d = json_info["analysis"]["tester_2d"]
-        self.ball_possession = json_info["analysis"]["ball_possession"]
-        self.tester_free_kick = json_info["analysis"]["tester_free_kick"]
-        self.foul_charge = json_info["analysis"]["foul_charge"]
-        self.penalty = json_info["analysis"]["penalty"]
-        self.playmodes = json_info["analysis"]["playmodes"]
-        self.corners_occurrencies = json_info["analysis"]["corners_occurrencies"]
-        self.intercept_counter = json_info["analysis"]["intercept_counter"]
-        self.passing_accuracy = json_info["analysis"]["passing_accuracy"]
-        self.time_after_events = json_info["analysis"]["time_after_events"]
-        self.ball_history = json_info["analysis"]["ball_history"]
-        self.stamina = json_info["analysis"]["stamina"]
-        self.shooting = json_info["analysis"]["shooting"]
-        self.heatmap = json_info["analysis"]["heatmap"]
-        self.speed = json_info["analysis"]["speed"]
-        self.goalkeeper = json_info["analysis"]["goalkeeper"]
-        self.find_goals = json_info["analysis"]["find_goals"]
+        self.logs_dir = info["logs_folder"]
+        self.file_path = info["file_path"]
+        self.tester_2d = self.is_enabled(info["analysis"]["tester_2d"])
+        self.ball_possession = self.is_enabled(info["analysis"]["ball_possession"])
+        self.tester_free_kick = self.is_enabled(info["analysis"]["tester_free_kick"])
+        self.foul_charge = self.is_enabled(info["analysis"]["foul_charge"])
+        self.penalty = self.is_enabled(info["analysis"]["penalty"])
+        self.playmodes = self.is_enabled(info["analysis"]["playmodes"])
+        self.corners_occurrencies = self.is_enabled(info["analysis"]["corners_occurrencies"])
+        self.intercept_counter = self.is_enabled(info["analysis"]["intercept_counter"])
+        self.passing_accuracy = self.is_enabled(info["analysis"]["passing_accuracy"])
+        self.time_after_events = self.is_enabled(info["analysis"]["time_after_events"])
+        self.ball_history = self.is_enabled(info["analysis"]["ball_history"])
+        self.stamina = self.is_enabled(info["analysis"]["stamina"])
+        self.shooting = self.is_enabled(info["analysis"]["shooting"])
+        self.heatmap = self.is_enabled(info["analysis"]["heatmap"])
+        self.speed = self.is_enabled(info["analysis"]["speed"])
+        self.goalkeeper = self.is_enabled(info["analysis"]["goalkeeper"])
+        self.find_goals = self.is_enabled(info["analysis"]["find_goals"])
 
+    def is_enabled(self, parameter):
+        if parameter != True:
+            return False
