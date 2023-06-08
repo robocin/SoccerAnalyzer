@@ -117,9 +117,18 @@ class YamlReader:
 class FolderReader(Reader):
     @staticmethod
     def read(path: str):
+        return __class__.read_rcg(path)
+
+    @staticmethod
+    def read_rcg(path: str):
         try:
             file_or_folder = os.listdir(path)
-            files_list = [file for file in file_or_folder if os.path.isfile(os.path.join(path, file))]
-            Logger.info(f"Found {len(files_list)} files in {path}")
+            files_list = []
+            for file in file_or_folder:
+                if os.path.isfile(os.path.join(path, file)) and file.endswith(".rcg"):
+                    files_list.append(file)
+            Logger.info(f"Found {len(files_list)} files")
+
+            return files_list
         except Exception as err:
             Logger.error(f"Could not open folder: {err}")
