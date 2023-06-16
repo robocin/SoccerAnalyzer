@@ -17,6 +17,5 @@ def generate_proto_classes():
     ret = subprocess.call(command, cwd=str(proto_src_path.resolve()) , shell=True, timeout=10.0)
 
     if ret != 0:
-        print("Error at generate proto classes!")
+        print("Error at generating proto classes!")
         raise subprocess.CalledProcessError(ret, command)
-    print("Success in generating proto classes!")

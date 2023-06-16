@@ -1,4 +1,9 @@
 import zlib
+import sys
+
+sys.path.append('socceranalyzer/RobotSSL/')
+from proto_compiler import auto_generate_proto
+auto_generate_proto.generate_proto_classes()
 import protobuf.generated.RCLog as ProtoRCLog
 
 class CompressedProtoRecordReader:

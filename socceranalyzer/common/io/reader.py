@@ -6,9 +6,8 @@ from abc import abstractmethod
 from betterproto import Casing
 from socceranalyzer.utils.logger import Logger
 from socceranalyzer.utils.run_configuration import RunConfiguration
-#from socceranalyzer.RobotSSL.pyrecordio.compressed_proto_record_reader import CompressedProtoRecordReader as ProtoRecordReader
-#from socceranalyzer.RobotSSL.proto_compiler import auto_generate_proto
-#from socceranalyzer.RobotSSL.protobuf.generated import RCLog
+from socceranalyzer.RobotSSL.pyrecordio.compressed_proto_record_reader import CompressedProtoRecordReader as ProtoRecordReader
+from socceranalyzer.RobotSSL.protobuf.generated import RCLog
 
 sys.path.append('socceranalyzer/RobotSSL/')
 
@@ -65,8 +64,6 @@ class GzReader:
                         'planning', 'navigation']
 
         try:
-            auto_generate_proto.generate_proto_classes()
-            
             log_data = []
 
             with open(path, "rb") as inp:
