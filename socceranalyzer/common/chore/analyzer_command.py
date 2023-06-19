@@ -14,4 +14,5 @@ class AnalyzerCommand:
             rcg_files = FolderReader.read(config.logs_dir)
             Tester.statistics_from_filenames(rcg_files)
             Tester.log(rcg_files)
-            Tester.save_to_file(config.output_file_name)
+            if config.output_results:
+                Tester.save_to_file(config.output_file_name)
