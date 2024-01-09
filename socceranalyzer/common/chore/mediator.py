@@ -79,6 +79,25 @@ class Mediator:
             raise NotImplementedError
 
     @staticmethod
+    def ball_position(category):
+
+        slp = StringListPositions()
+
+        if category is SIM2D:
+            raise NotImplementedError
+            
+        
+        # For SSL this is the enemy team
+        elif category is SSL:
+            slp.items.append(StringListItem(f'ball_position_x', f'ball_position_y'))
+
+            return slp
+
+        elif category is VSS:
+            raise NotImplementedError
+
+
+    @staticmethod
     def players_left_stamina_attr(category):
         string_list = []
         if category is SIM2D:
