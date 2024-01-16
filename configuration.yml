@@ -1,6 +1,6 @@
-category: sim2d
+category: ssl
 logs_folder: path/to/unified/logs
-file_path: /home/emilly/github/rcss-log-extractor/bin/20231002113734-RoboCIn_6-vs-RoboCInMaster_4.rcg.csv
+file_path: /home/emilly/github/SoccerAnalyzer/socceranalyzer/objPositions.csv
 analysis:
   tester_2d: false
   ball_possession: false

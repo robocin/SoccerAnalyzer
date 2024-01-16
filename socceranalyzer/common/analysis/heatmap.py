@@ -11,9 +11,10 @@ from socceranalyzer.common.enums.ssl import SSL
 from socceranalyzer.common.enums.vss import VSS
 from socceranalyzer.common.geometric.point import Point
 from socceranalyzer.utils.logger import Logger
+from socceranalyzer.common.basic.field import Field
 
 class Heatmap(AbstractAnalysis):
-    def __init__(self, dataframe: pandas.DataFrame, category: SSL | SIM2D | VSS, debug, plot_Players = True) -> None:
+    def __init__(self, dataframe: pandas.DataFrame, category: SSL | SIM2D | VSS, debug, plot_players = True) -> None:
         self.__dataframe = dataframe
         self.__category = category
 
@@ -26,7 +27,7 @@ class Heatmap(AbstractAnalysis):
         self.ball_x = []
         self.ball_y = []
 
-        self.__plot_Players = plot_Players
+        self.__plot_players = plot_players
 
         try:
             self._analyze()
@@ -46,7 +47,7 @@ class Heatmap(AbstractAnalysis):
 
     def _analyze(self):
         
-        if self.__plot_Players:
+        if self.__plot_players:
             # Filtering to playmode where the game is running
             self.__dataframe = self.__dataframe[self.__dataframe[str(self.__category.PLAYMODE)] == str(self.__category.RUNNING_GAME)]
 
@@ -71,29 +72,30 @@ class Heatmap(AbstractAnalysis):
         
     def plot(self):
         fig, ax = plt.subplots(figsize=(13.5, 8))
+        image = "../../images/ssl-pitch.png"
+        field = Field(width = 3000, length = 4500) 
+        self._background(field, image, ax)
 
-        if self.__plot_Players:
+        if self.__plot_players:
             sns.kdeplot(x=self.left_players_x, y=self.left_players_y, fill=True, thresh=0.05, n_levels = 7, alpha=0.5, cmap='Greens')
             sns.kdeplot(x=self.right_players_x, y=self.right_players_y, fill=True, thresh=0.05, n_levels = 7, alpha=0.5, cmap='Reds')
         
         else:
             sns.kdeplot(x=self.ball_x, y=self.ball_y, fill=True, thresh=0.05, n_levels = 7, alpha=0.5, cmap='Greens')
         
-        # Add background pitch and title
-        if (self.__category == SSL):
-            module_path = os.path.dirname(os.path.abspath(__file__))
-            image_path = os.path.join(module_path, '../../images/ssl-pitch.png')
-            soccer_pitch = plt.imread(image_path)
-            ax.imshow(soccer_pitch, extent=[-5200, 5200, -3700, 3700])
-            ax.set_xlim(-5200, 5200)
-            ax.set_ylim(-3700, 3700)
-            ax.set_xticks([])
-            ax.set_yticks([])
-
         plt.title('Team position heatmap')
 
-        # Show the plot
         plt.show()
+
+    def _background(self, field, image_path, ax):
+        module_path = os.path.dirname(os.path.abspath(__file__))
+        absolute_image_path = os.path.join(module_path, image_path)
+        soccer_pitch = plt.imread(absolute_image_path)
+        ax.imshow(soccer_pitch, extent=[-field.length, field.length, -field.width, field.width])
+        ax.set_xlim(-field.length, field.length)
+        ax.set_ylim(-field.width, field.width)
+        ax.set_xticks([-4500, -3000, -1500, 0, 1500, 3000, 4500])
+        ax.set_yticks([-3000, -2000, -1000, 0, 1000, 2000, 3000])
 
     def describe(self):
         raise NotImplementedError
@@ -104,13 +106,3 @@ class Heatmap(AbstractAnalysis):
     def serialize(self):
         raise NotImplementedError
     
-
-df = pandas.read_csv('/home/emilly/github/SoccerAnalyzer/socceranalyzer/objPositions.csv')
-
-df.query('whatObject == "ball" ', inplace = True)
-
-df.drop (['Unnamed: 0', 'id'], axis = 1)
-
-df.rename(columns={'position_x': 'ball_position_x', 'position_y': 'ball_position_y'}, inplace = True)
-
-heatmap = Heatmap(df, SSL, debug = False, plot_Players = False)

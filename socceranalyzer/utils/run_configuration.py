@@ -1,4 +1,6 @@
 from socceranalyzer.common.enums.sim2d import SIM2D
+from socceranalyzer.common.enums.ssl import SSL
+from socceranalyzer.common.enums.vss import VSS
 
 class RunConfiguration:
     def __init__(self) -> False:
@@ -25,6 +27,10 @@ class RunConfiguration:
     def parse(self, info):
         if info["category"].upper() == "SIM2D":
             self.category = SIM2D
+        elif info["category"].upper() == "SSL":
+            self.category = SSL
+        elif info["category"].upper() == "VSS":
+            self.category = VSS
 
         self.logs_dir = info["logs_folder"]
         self.file_path = info["file_path"]
@@ -45,6 +51,7 @@ class RunConfiguration:
         self.speed = self.handle_input(info["analysis"]["speed"])
         self.goalkeeper = self.handle_input(info["analysis"]["goalkeeper"])
         self.find_goals = self.handle_input(info["analysis"]["find_goals"])
+
 
     def handle_input(self, parameter):
         """Misspelling check from user input"""

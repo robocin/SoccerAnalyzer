@@ -316,7 +316,7 @@ class MatchAnalyzer(AbstractFactory):
         elif self.__cat is SSL:
             if self.config.heatmap:
                 setattr(self, "__heatmap", None)
-                self.__heatmap = Heatmap(self.__match.dataframe, self.category, self._DEBUG)
+                self.__heatmap = Heatmap(self.__match.dataframe, self.category, self._DEBUG, plot_players= False)
             if self.config.ball_possession:
                 setattr(self, "__ball_possession", None)
                 self.__ball_possession = BallPossession(self.__match.dataframe, self.category, self._DEBUG)

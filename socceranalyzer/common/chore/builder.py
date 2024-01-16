@@ -9,7 +9,7 @@ from socceranalyzer.agent2D.agent import Agent2D
 
 from socceranalyzer.common.enums.vss import VSS
 from socceranalyzer.common.enums.sim2d import SIM2D, Landmarks
-from socceranalyzer.common.enums.ssl import SSL
+from socceranalyzer.common.enums.ssl import SSL, LandmarksSSL
 
 class Builder:
     def __init__(self, dataframe: pd.DataFrame=None, category: SIM2D | SSL | VSS=None):
@@ -91,5 +91,7 @@ class Builder:
 
         elif self.__category == VSS:
             raise NotImplementedError
+        
         elif self.__category == SSL:
-            raise NotImplementedError
+            field = Field(3000, 4500, LandmarksSSL.CENTER)
+            return field
