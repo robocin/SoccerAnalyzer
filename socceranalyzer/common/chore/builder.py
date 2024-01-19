@@ -35,7 +35,8 @@ class Builder:
             raise NotImplementedError
 
         elif self.__category == SSL:
-            raise NotImplementedError
+            pass
+            #to-do (nunes)- débito técnico
 
     def teamBuilder(self, identifier: str) -> Team:
         """
@@ -58,8 +59,9 @@ class Builder:
             raise NotImplementedError
 
         elif self.__category == SSL:
-            raise NotImplementedError
+            pass
 
+            #to-do (nunes)- débito técnico
     def ballBuilder(self) -> Ball:
         """
         Retuns an instance of a Ball class representing the ball in the field, starting at the center of the field

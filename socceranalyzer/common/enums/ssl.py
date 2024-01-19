@@ -45,3 +45,4 @@ class LandmarksSSL:
     CENTER = Point (0, 0)
     TOP_CENTER = Point(0, 3000)
     BOTTOM_CENTER = Point (0, -3000)
+    

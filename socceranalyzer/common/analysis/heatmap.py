@@ -13,6 +13,28 @@ from socceranalyzer.common.geometric.point import Point
 from socceranalyzer.utils.logger import Logger
 from socceranalyzer.common.basic.field import Field
 
+class HeatmapDimensions:
+    """ l = left
+        r = right
+        d = down
+        u = up
+    """
+    def __init__(self):
+        self.l_side_end = -4500
+        self.l_side_second_mark = -3000
+        self.l_side_first_mark = -1500
+        self.center= 0
+        self.r_side_first_mark= 1500
+        self.r_side_second_mark = 3000
+        self.r_side_end= 4500
+
+        self.d_side_end = -3000
+        self.d_side_second_mark = -2000
+        self.d_side_first_mark = -1000
+        self.u_side_first_mark = 1000
+        self.u_side_second_mark = 2000
+        self.u_side_side_end = 3000
+
 class Heatmap(AbstractAnalysis):
     def __init__(self, dataframe: pandas.DataFrame, category: SSL | SIM2D | VSS, debug, plot_players = True) -> None:
         self.__dataframe = dataframe
@@ -63,10 +85,11 @@ class Heatmap(AbstractAnalysis):
                 self.right_players_y = self.right_players_y + self.__dataframe[right_players_column.items[i].y].values.tolist()
         
         else:
-            ball_column = Mediator.ball_position()
+            ball_column = Mediator.ball_position(self.category)
 
-            self.ball_x = self.ball_x + self.__dataframe[ball_column.items[0].x].values.tolist()
-            self.ball_y = self.ball_y + self.__dataframe[ball_column.items[0].y].values.tolist()
+            self.dataframe.query('whatObject == "ball" ', inplace = True)
+            self.ball_x = self.ball_x + self.__dataframe["position_x"].values.tolist()
+            self.ball_y = self.ball_y + self.__dataframe["position_y"].values.tolist()
 
         self.plot()
         
@@ -81,7 +104,7 @@ class Heatmap(AbstractAnalysis):
             sns.kdeplot(x=self.right_players_x, y=self.right_players_y, fill=True, thresh=0.05, n_levels = 7, alpha=0.5, cmap='Reds')
         
         else:
-            sns.kdeplot(x=self.ball_x, y=self.ball_y, fill=True, thresh=0.05, n_levels = 7, alpha=0.5, cmap='Greens')
+            sns.kdeplot(x=self.ball_x, y=self.ball_y, fill=True, thresh=0.05, n_levels = 7, alpha=0.5, cmap='inferno_r')
         
         plt.title('Team position heatmap')
 
@@ -94,9 +117,9 @@ class Heatmap(AbstractAnalysis):
         ax.imshow(soccer_pitch, extent=[-field.length, field.length, -field.width, field.width])
         ax.set_xlim(-field.length, field.length)
         ax.set_ylim(-field.width, field.width)
-        ax.set_xticks([-4500, -3000, -1500, 0, 1500, 3000, 4500])
-        ax.set_yticks([-3000, -2000, -1000, 0, 1000, 2000, 3000])
-
+        dimensions = HeatmapDimensions()
+        ax.set_xticks([dimensions.l_side_end, dimensions.l_side_second_mark, dimensions.l_side_first_mark , dimensions.center, dimensions.r_side_first_mark, dimensions.r_side_second_mark, dimensions.r_side_end])
+        ax.set_yticks([dimensions.d_side_end, dimensions.d_side_second_mark,dimensions.d_side_first_mark, dimensions.center, dimensions.u_side_first_mark, dimensions.u_side_second_mark , dimensions.u_side_side_end])
     def describe(self):
         raise NotImplementedError
 

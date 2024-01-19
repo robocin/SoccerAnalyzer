@@ -89,7 +89,7 @@ class Mediator:
         
         # For SSL this is the enemy team
         elif category is SSL:
-            slp.items.append(StringListItem(f'ball_position_x', f'ball_position_y'))
+            slp.items.append(StringListItem(f'position_x', f'position_y'))
 
             return slp
 
