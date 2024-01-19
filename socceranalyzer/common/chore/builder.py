@@ -9,7 +9,7 @@ from socceranalyzer.agent2D.agent import Agent2D
 
 from socceranalyzer.common.enums.vss import VSS
 from socceranalyzer.common.enums.sim2d import SIM2D, Landmarks
-from socceranalyzer.common.enums.ssl import SSL
+from socceranalyzer.common.enums.ssl import SSL, LandmarksSSL
 
 class Builder:
     def __init__(self, dataframe: pd.DataFrame=None, category: SIM2D | SSL | VSS=None):
@@ -35,7 +35,8 @@ class Builder:
             raise NotImplementedError
 
         elif self.__category == SSL:
-            raise NotImplementedError
+            pass
+            #to-do (nunes)- débito técnico
 
     def teamBuilder(self, identifier: str) -> Team:
         """
@@ -58,8 +59,9 @@ class Builder:
             raise NotImplementedError
 
         elif self.__category == SSL:
-            raise NotImplementedError
+            pass
 
+            #to-do (nunes)- débito técnico
     def ballBuilder(self) -> Ball:
         """
         Retuns an instance of a Ball class representing the ball in the field, starting at the center of the field
@@ -91,5 +93,7 @@ class Builder:
 
         elif self.__category == VSS:
             raise NotImplementedError
+        
         elif self.__category == SSL:
-            raise NotImplementedError
+            field = Field(3000, 4500, LandmarksSSL.CENTER)
+            return field

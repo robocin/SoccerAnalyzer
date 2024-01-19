@@ -1,4 +1,6 @@
 from enum import Enum
+from socceranalyzer.common.geometric.point import Point
+
 
 class SSL(Enum):
     """
@@ -34,3 +36,13 @@ class SSL(Enum):
 
     def __str__(self):
         return self.value
+
+class LandmarksSSL:
+    BOTTOM_LEFT = Point(-4500, -3000)
+    BOTTOM_RIGHT = Point(4500, -3000)
+    TOP_LEFT = Point(-4500, 3000)
+    TOP_RIGHT = Point(-4500, 3000) 
+    CENTER = Point (0, 0)
+    TOP_CENTER = Point(0, 3000)
+    BOTTOM_CENTER = Point (0, -3000)
+    
