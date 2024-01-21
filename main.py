@@ -1,12 +1,11 @@
 import pandas as pd
 import argparse
-from socceranalyzer import Match, MatchAnalyzer, SIM2D, JsonReader, YamlReader, RunConfiguration, Logger
+from socceranalyzer import Match, MatchAnalyzer,YamlReader, RunConfiguration
 
 def setup():
     arg_parser = argparse.ArgumentParser()
-    arg_parser.add_argument("run", help="run analysis")
     arg_parser.add_argument("-v", "--version", help="show socceranalyzer version")
-    arg_parser.add_argument("-f", "--file", help="configuration file, either json or yml")
+    arg_parser.add_argument("-f", "--file", help="configuration file, either json or yml", default="configuration.yml")
     args = arg_parser.parse_args()
 
     info = YamlReader.read(args.file)
