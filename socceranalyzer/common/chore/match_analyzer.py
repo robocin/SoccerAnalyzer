@@ -29,6 +29,7 @@ from socceranalyzer.utils.run_configuration import RunConfiguration
 from socceranalyzer.utils.logger import Logger
 
 class MatchAnalyzer(AbstractFactory):
+    #todo(fnap): update docstrings
     """
         ==== Add new analysis in this class ====
         - A class that represents a implementation of AbstractFactory. 
@@ -313,9 +314,12 @@ class MatchAnalyzer(AbstractFactory):
             #self.__time_after_corner = TimeAfterCorner(self.__match.dataframe, self.category)
 
         elif self.__cat is SSL:
-            pass
-            # setattr(self, "__heatmap", None)
-            # self.__heatmap = Heatmap(self.__match.dataframe, self.category)
+            if self.config.heatmap:
+                setattr(self, "__heatmap", None)
+                self.__heatmap = Heatmap(self.__match.dataframe, self.category, self._DEBUG, plot_players= False)
+            if self.config.ball_possession:
+                setattr(self, "__ball_possession", None)
+                self.__ball_possession = BallPossession(self.__match.dataframe, self.category, self._DEBUG)
 
         elif self.__cat is VSS:
             raise NotImplementedError

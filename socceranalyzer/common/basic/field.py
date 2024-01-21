@@ -30,13 +30,13 @@ class Field:
                     defines the right goalpost in the field 
                 
     """
-    def __init__(self, width: float, length: float, center: Point,
-                penalty_area_left: Rectangle,
-                penalty_area_right: Rectangle,
-                small_penalty_area_left: Rectangle, 
-                small_penalty_area_right: Rectangle, 
-                goalpost_left: Rectangle,
-                goalpost_right: Rectangle
+    def __init__(self, width: float = None, length: float = None, center: Point = None,
+                penalty_area_left: Rectangle = None,
+                penalty_area_right: Rectangle = None,
+                small_penalty_area_left: Rectangle = None, 
+                small_penalty_area_right: Rectangle = None,
+                goalpost_left: Rectangle = None,
+                goalpost_right: Rectangle = None
                 ):
                 
         self.__width = width

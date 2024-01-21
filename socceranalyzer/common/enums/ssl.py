@@ -1,4 +1,6 @@
 from enum import Enum
+from socceranalyzer.common.geometric.point import Point
+
 
 class SSL(Enum):
     """
@@ -12,12 +14,12 @@ class SSL(Enum):
     """
 
     GAME_TIME = "showtime"
-    PLAYMODE = "playmode"
-    RUNNING_GAME = "UNKNOWN"
+    PLAYMODE = "game_state_name"
+    RUNNING_GAME = "GameRunning"
     # FAULT_COMMITED_L = "foul_charge_l"
     # FAULT_COMMITED_R = "foul_charge_r"
-    BALL_X = "ball_x"
-    BALL_Y = "ball_y"
+    BALL_X = "ball_position_x"
+    BALL_Y = "ball_position_y"
     BALL_VX = "ball_vx",
     BALL_VY = "ball_vy",
     TEAM_LEFT = "team_l_name"
@@ -34,3 +36,13 @@ class SSL(Enum):
 
     def __str__(self):
         return self.value
+
+class LandmarksSSL:
+    BOTTOM_LEFT = Point(-4500, -3000)
+    BOTTOM_RIGHT = Point(4500, -3000)
+    TOP_LEFT = Point(-4500, 3000)
+    TOP_RIGHT = Point(-4500, 3000) 
+    CENTER = Point (0, 0)
+    TOP_CENTER = Point(0, 3000)
+    BOTTOM_CENTER = Point (0, -3000)
+    
