@@ -52,8 +52,18 @@ $ pip install socceranalyzer
 This package is capable of delivering built-in analysis that were already
 created or to be a platform that enables you to create your own analysis.
 
+### Parameters
+Before SoccerAnalyzer execute it's analysis, it consumes a configuration [file](configuration.yml). **You should change this file values in order to SoccerAnalyzer work as you expect.** 
+
+| Parameters      | Type          | Default value     |
+| -------------  | ------------- | ----------------  |
+| -v, --version  | `string`      | `None`            |
+| -f, --file     | `string`      | configuration.yml |
+
+The [configuration.yml](configuration.yml) is responsible for setting up your SoccerAnalyzer execution. All analysis should be mapped into a entry here. You should specify your .csv log file path, category, and which analysis do you want to run.
+
 ### Using as analyzer
-##### How it works?
+##### How does it work?
 Each analysis is a class, they are instantiated and interfaced by a [Facade](https://refactoring.guru/design-patterns/facade)
 which is the **common.chore.match_analyzer** module. It is responsible for
 creating each analysis object.
@@ -66,36 +76,17 @@ The **Match** receives a **pandas.DataFrame** and a **Category** object as param
 
 These inputs are **mandatory**, otherwise there will be no data to be analyzed.
 
-##### 2D Simulation code example
+##### Code example
 
 ```python
 import pandas as pd
 
 from socceranalyzer import MatchAnalyzer, Match, SIM2D
 
-SIM2D_LOGFILE_PATH = "location/to/log/file2d.csv"
-dataframe = pd.read_csv(SIM2D_LOGFILE_PATH)
-
 match_object = Match(dataframe, SIM2D)
 match_analyzer = MatchAnalyzer(match_object)
 match_analyzer.collect_results()
 ```
-##### SSL
-```python
-import pandas as pd
-
-from socceranalyzer import MatchAnalyzer, Match, SSL
-
-SSL_LOGFILE_PATH = "location/to/log/filessl.csv"
-dataframe = pd.read_csv(SSL_LOGFILE_PATH)
-
-match_object = Match(dataframe, SSL)
-match_analyzer = MatchAnalyzer(match_object)
-match_analyzer.collect_results()
-```
-
-#### VSS
-> Not available yet
 
 ---
 > 2021, RobôCIn

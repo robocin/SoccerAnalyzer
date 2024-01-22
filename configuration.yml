@@ -14,7 +14,7 @@ analysis:
   intercept_counter: boolean
   stamina: boolean
   time_after_events: boolean
-  heatmap: string
+  heatmap: boolean
   shooting: boolean
   speed: boolean
   find_goals: boolean
