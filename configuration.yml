@@ -1,6 +1,6 @@
-category: ssl
+category: string
 logs_folder: string
-file_path: objPositions.csv
+file_path: string
 analysis:
   tester_2d: boolean
   ball_possession: boolean
@@ -14,7 +14,7 @@ analysis:
   intercept_counter: boolean
   stamina: boolean
   time_after_events: boolean
-  heatmap: true
+  heatmap: string
   shooting: boolean
   speed: boolean
   find_goals: boolean

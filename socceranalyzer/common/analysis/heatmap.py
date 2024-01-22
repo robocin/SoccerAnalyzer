@@ -129,7 +129,7 @@ class Heatmap(AbstractAnalysis):
 
     def _background(self, field, ax):
         dimensions = HeatmapDimensions()
-        image_path = self.__select_background_image()
+        image_path = f'{os.getcwd()}/socceranalyzer/images/{self.__category.NAME}_field.png'
         module_path = os.path.dirname(os.path.abspath(__file__))
         absolute_image_path = os.path.join(module_path, image_path)
         soccer_pitch = plt.imread(absolute_image_path)
@@ -139,21 +139,6 @@ class Heatmap(AbstractAnalysis):
         ax.set_ylim(-field.width, field.width)
         ax.set_xticks([dimensions.l_side_end, dimensions.l_side_second_mark, dimensions.l_side_first_mark , dimensions.center, dimensions.r_side_first_mark, dimensions.r_side_second_mark, dimensions.r_side_end])
         ax.set_yticks([dimensions.d_side_end, dimensions.d_side_second_mark,dimensions.d_side_first_mark, dimensions.center, dimensions.u_side_first_mark, dimensions.u_side_second_mark , dimensions.u_side_side_end])
-        
-    def __select_background_image(self):
-        background_image = None
-        match self.__category_v2:
-            case Category.SSL:
-                background_image = "../../images/ssl-pitch.png"
-            case Category.SIM2D:
-                background_image = ""
-            case Category.VSS:
-                background_image = ""
-            case _:
-                raise ValueError
-            
-        print(f'selected the image at: {background_image}')
-        return background_image
     
     def describe(self):
         raise NotImplementedError

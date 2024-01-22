@@ -11,6 +11,7 @@ class SIM2D(Enum):
         
         All parameters are strings
     """
+    NAME = "sim2d"
     GAME_TIME = "show_time"
     PLAYMODE = "playmode"
     RUNNING_GAME = "play_on"

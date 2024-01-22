@@ -12,7 +12,7 @@ class SSL(Enum):
     
     All parameters are strings
     """
-
+    NAME = "ssl"
     GAME_TIME = "showtime"
     PLAYMODE = "game_state_name"
     RUNNING_GAME = "GameRunning"
