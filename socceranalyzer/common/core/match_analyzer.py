@@ -1,8 +1,8 @@
 from time import time
 from socceranalyzer.common.analysis.speed import Speed
 
-from socceranalyzer.common.chore.abstract_factory import AbstractFactory
-from socceranalyzer.common.chore.builder import Builder
+from socceranalyzer.common.core.abstract_factory import AbstractFactory
+from socceranalyzer.common.core.builder import Builder
 
 from socceranalyzer.common.basic.match import Match
 from socceranalyzer.common.collections.collections import EvaluatorCollection

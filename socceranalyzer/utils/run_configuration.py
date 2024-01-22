@@ -53,7 +53,14 @@ class RunConfiguration:
         self.speed = self.handle_input(info["analysis"]["speed"])
         self.goalkeeper = self.handle_input(info["analysis"]["goalkeeper"])
         self.find_goals = self.handle_input(info["analysis"]["find_goals"])
-        self.kick_in = self.handle_input(info["analysys"]["kick_in"])
-        self.kick_in_occurrencies = self.kick_in_occurrencies(info["analysis"]["kick_in_occurrencies"])
+        self.kick_in = self.handle_input(info["analysis"]["kick_in"])
+        self.kick_in_occurrences = self.handle_input(info["analysis"]["kick_in_occurrences"])
+
+        return True
+    
+    def handle_input(self, parameter):
+        """Misspelling check from user input"""
+        if parameter != True:
+            return False
 
         return True

@@ -1,3 +1,4 @@
+# deprecated
 def kick(cycle, team, df, player_who_kicked=False):
     for player_num in range(1,12):
         if cycle != 0:

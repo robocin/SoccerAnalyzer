@@ -7,7 +7,7 @@ from socceranalyzer.common.enums.ssl import SSL
 from socceranalyzer.common.basic.field import Field
 from socceranalyzer.common.basic.ball import Ball
 from socceranalyzer.common.basic.team import Team
-from socceranalyzer.common.chore.builder import Builder
+from socceranalyzer.common.core.builder import Builder
 from socceranalyzer.agent2D.agent import Agent2D
 from socceranalyzer.utils.logger import Logger
 

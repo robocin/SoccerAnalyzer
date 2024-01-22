@@ -1,21 +1,23 @@
-category: ssl
-logs_folder: path/to/unified/logs
-file_path: /home/emilly/github/SoccerAnalyzer/socceranalyzer/objPositions.csv
+category: string
+logs_folder: string
+file_path: string
 analysis:
-  tester_2d: false
-  ball_possession: false
-  foul_charge: false
-  playmodes: false
-  ball_history: false
-  penalty: false
-  passing_accuracy: false
-  corners_occurrencies: false
-  tester_free_kick: false
-  intercept_counter: false
-  stamina: false
-  time_after_events: false
-  heatmap: true
-  shooting: false
-  speed: false
-  find_goals: false
-  goalkeeper: false
+  tester_2d: boolean
+  ball_possession: boolean
+  foul_charge: boolean
+  playmodes: boolean
+  ball_history: boolean
+  penalty: boolean
+  passing_accuracy: boolean
+  corners_occurrencies: boolean
+  tester_free_kick: boolean
+  intercept_counter: boolean
+  stamina: boolean
+  time_after_events: boolean
+  heatmap: boolean
+  shooting: boolean
+  speed: boolean
+  find_goals: boolean
+  goalkeeper: boolean
+  kick_in: boolean
+  kick_in_occurrences: boolean
