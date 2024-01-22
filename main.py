@@ -1,5 +1,6 @@
 import pandas as pd
 import argparse
+
 from socceranalyzer import Match, MatchAnalyzer,YamlReader, RunConfiguration
 
 def setup():
@@ -21,3 +22,6 @@ if __name__ == "__main__":
     dataframe = pd.read_csv(config.file_path)
     match = Match(dataframe, config.category)
     match_analyzer = MatchAnalyzer(match,run_config=config)
+    
+    adapter = JupyterAdapter(match_analyzer)
+    adapter.goalkeeper()

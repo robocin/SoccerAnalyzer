@@ -225,7 +225,14 @@ class JupyterAdapter:
         plt.plot(player_speed)
         plt.show()
 
+    def goalkeeper(self, fig_dimensions:tuple[float, float] = (40,5)):
+        sns.set()
 
+        _, ax = plt.subplots(figsize=fig_dimensions)
+        magnitude_error = self.__match_analyzer.goalkeeper.results()
+
+        plt.plot(magnitude_error)
+        plt.show()
 
     def heatmap(self, left_players_unum: list[int] = [], 
                         right_players_unum: list[int] = [],  

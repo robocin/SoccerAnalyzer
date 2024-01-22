@@ -10,10 +10,12 @@ class RunConfiguration:
         self.ball_possession = False
         self.tester_free_kick = False
         self.foul_charge = False
+        self.kick_in = False
         self.penalty = False
         self.playmodes = False
         self.corners_occurrencies = False
         self.intercept_counter = False
+        self.kick_in_occurrences = False
         self.passing_accuracy = False
         self.time_after_events = False
         self.ball_history = False
@@ -51,11 +53,7 @@ class RunConfiguration:
         self.speed = self.handle_input(info["analysis"]["speed"])
         self.goalkeeper = self.handle_input(info["analysis"]["goalkeeper"])
         self.find_goals = self.handle_input(info["analysis"]["find_goals"])
-
-
-    def handle_input(self, parameter):
-        """Misspelling check from user input"""
-        if parameter != True:
-            return False
+        self.kick_in = self.handle_input(info["analysys"]["kick_in"])
+        self.kick_in_occurrencies = self.kick_in_occurrencies(info["analysis"]["kick_in_occurrencies"])
 
         return True
