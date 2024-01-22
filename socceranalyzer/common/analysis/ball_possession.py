@@ -1,6 +1,13 @@
+import pandas as pd
+
 from socceranalyzer.common.enums.sim2d import SIM2D
-from socceranalyzer.common.evaluators.ball_holder import BallHolderEvaluator
+from socceranalyzer.common.enums.ssl import SSL
 from socceranalyzer.utils.logger import Logger
+from socceranalyzer.common.chore.mediator import Mediator
+from socceranalyzer.common.geometric.point import Point
+from socceranalyzer.common.operations.measures import distance_sqrd
+
+pd.options.mode.chained_assignment = None # disable warnings
 
 class BallPossession:
     """
@@ -42,6 +49,11 @@ class BallPossession:
         self.__current_game_log = data_frame
         self.__total = 0
 
+        # Left players stand for RoboCIn team in SSL category
+        self.__players_left = Mediator.players_left_position(self.category)
+        self.__players_right = Mediator.players_right_position(self.category)
+        self.__ball_range = 10 ** 2
+
         try:
             self.__calculate()
         except Exception as err:
@@ -65,30 +77,71 @@ class BallPossession:
 
     def __calculate(self):
         """
-            Uses socceranalyzer.common.evaluators.ball_holder to populate left_team_possession and right_team_possession
+            Populates left_team_possession and right_team_possession using the ball_holder method
         """
-        filtered_game = self.__filter_playmode('play_on')
+        filtered_game = self.__filter_playmode(str(self.category.RUNNING_GAME))
 
-        ball_holder_analysis = BallHolderEvaluator(filtered_game, self.category)
+        filtered_game['ball_possession'] = filtered_game.apply(self.__ball_holder, axis=1)
 
-        for current_cycle, row in filtered_game.iterrows():
-            closest_side = ball_holder_analysis.at(current_cycle)[2]
-
-            if closest_side == 'left':
-                self.__left_team_possession += 1
-            else:
-                self.__right_team_possession += 1
+        self.__left_team_possession = filtered_game['ball_possession'].value_counts()['L']
+        self.__right_team_possession = filtered_game['ball_possession'].value_counts()['R']
 
         self.__total = self.__right_team_possession + self.__left_team_possession
 
+    def __ball_holder(self, df_row):
+        """
+            Receives a dataframe's row as argument and calculates the closest player to the ball to compute
+            who has its possession. If two enemy players are within ball range, none receive its holder
+            status
+        """
+        left_distance = float('inf')
+        right_distance = float('inf')
+
+        ball_x = df_row[str(self.category.BALL_X)]
+        ball_y = df_row[str(self.category.BALL_Y)]
+        ball_position = Point(ball_x, ball_y)
+
+        for i in range(len(self.__players_left.items)):
+            player_x = df_row[self.__players_left.items[i].x]
+            player_y = df_row[self.__players_left.items[i].y]
+
+            player_position = Point(player_x, player_y)
+
+            player_distance = distance_sqrd(player_position, ball_position)
+
+            if (player_distance < left_distance):
+                left_distance = player_distance
+
+        for i in range(len(self.__players_right.items)):
+            player_x = df_row[self.__players_right.items[i].x]
+            player_y = df_row[self.__players_right.items[i].y]
+
+            player_position = Point(player_x, player_y)
+
+            player_distance = distance_sqrd(player_position, ball_position)
+
+            if (player_distance < right_distance):
+                right_distance = player_distance
+        
+        if (abs(left_distance - right_distance) <= self.__ball_range):
+            return 'D' # ball in dispute
+        elif (left_distance < right_distance):
+            return 'L'
+        elif (right_distance < left_distance):
+            return 'R'
+        
     def results(self):
         return (self.__left_team_possession / self.__total, self.__right_team_possession / self.__total)
 
     def describe(self):
-        name_l = self.__current_game_log.loc[1, str(self.category.TEAM_LEFT)]
-        name_r = self.__current_game_log.loc[1, str(self.category.TEAM_RIGHT)]
-        print(f'{name_l}: {self.__left_team_possession/self.__total}\n' 
-                f'{name_r}: {self.__right_team_possession/self.__total}')
+        if (self.category == SIM2D):
+            name_l = self.__current_game_log.loc[1, str(self.category.TEAM_LEFT)]
+            name_r = self.__current_game_log.loc[1, str(self.category.TEAM_RIGHT)]
+            print(f'{name_l}: {self.__left_team_possession/self.__total}\n' 
+                    f'{name_r}: {self.__right_team_possession/self.__total}')
+        elif (self.category == SSL):
+            print(f'RoboCIN: {(self.__left_team_possession/self.__total * 100):.2f}%\n' 
+                    f'Enemy: {(self.__right_team_possession/self.__total * 100):.2f}%')
 
     def serialize(self):
         raise NotImplementedError

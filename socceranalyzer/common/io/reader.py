@@ -1,14 +1,16 @@
 import json
+import sys
+import yaml
+
+from abc import abstractmethod
+from betterproto import Casing
 from socceranalyzer.utils.logger import Logger
 from socceranalyzer.utils.run_configuration import RunConfiguration
+#from socceranalyzer.RobotSSL.pyrecordio.compressed_proto_record_reader import CompressedProtoRecordReader as ProtoRecordReader
+#from socceranalyzer.RobotSSL.proto_compiler import auto_generate_proto
+#from socceranalyzer.RobotSSL.protobuf.generated import RCLog
 
-import sys
 sys.path.append('socceranalyzer/RobotSSL/')
-
-from socceranalyzer.RobotSSL.pyrecordio.compressed_proto_record_reader import CompressedProtoRecordReader as ProtoRecordReader
-from betterproto import Casing
-from socceranalyzer.RobotSSL.proto_compiler import auto_generate_proto
-from socceranalyzer.RobotSSL.protobuf.generated import RCLog as ProtoRCLog
 
 class Reader:
     def __init__(self, games=None, games_count=0):
@@ -85,4 +87,28 @@ class GzReader:
 
         except Exception as err:
             Logger.error(f"Could not open {path}: {err}")
+            return
+
+class YamlReader:
+    @staticmethod
+    def read(path:str):
+        try:
+            with open(path) as file:
+                data = yaml.load(file, Loader=yaml.loader.SafeLoader)
+                information_dict = {}
+                for key, values in data.items():
+                    if values == "":
+                        Logger.warn(f'{key}:{values} has empty value')
+                    elif type(values) == dict:
+                        for ikey, ivalue in values.items():
+                            if ivalue == "":
+                                Logger.warn(f'{path}:{key}.{ikey} has empty value')
+                    
+                    information_dict[key] = values
+
+                Logger.success(f"{path} parsed")
+                return information_dict
+
+        except Exception as err:
+            Logger.error(f"Could not open {path} with YamlReader: {err}")
             return

@@ -35,10 +35,18 @@ class Mediator:
 
             return slp
 
-        elif category is VSS:
-            raise NotImplementedError
-
+        # For SSL this is the RoboCIn team
         elif category is SSL:
+            if gkeeper:
+                for i in range(0, 6):
+                    slp.items.append(StringListItem(f'ally_{i}_position_x', f'ally_{i}_position_y'))
+            else:
+                for i in range(1, 6):
+                    slp.items.append(StringListItem(f'ally_{i}_position_x', f'ally_{i}_position_y'))
+
+            return slp
+
+        elif category is VSS:
             raise NotImplementedError
 
     @staticmethod
@@ -55,11 +63,39 @@ class Mediator:
                     slp.items.append(StringListItem(f'player_r{i}_x', f'player_r{i}_y'))
 
             return slp
+        
+        # For SSL this is the enemy team
+        elif category is SSL:
+            if gkeeper:
+                for i in range(0, 6):
+                    slp.items.append(StringListItem(f'enemy_{i}_position_x', f'enemy_{i}_position_y'))
+            else:
+                for i in range(1, 6):
+                    slp.items.append(StringListItem(f'enemy_{i}_position_x', f'enemy_{i}_position_y'))
+
+            return slp
+
         elif category is VSS:
             raise NotImplementedError
 
-        elif category is SSL:
+    @staticmethod
+    def ball_position(category):
+
+        slp = StringListPositions()
+
+        if category is SIM2D:
             raise NotImplementedError
+            
+        
+        # For SSL this is the enemy team
+        elif category is SSL:
+            slp.items.append(StringListItem(f'position_x', f'position_y'))
+
+            return slp
+
+        elif category is VSS:
+            raise NotImplementedError
+
 
     @staticmethod
     def players_left_stamina_attr(category):

@@ -1,4 +1,7 @@
 from socceranalyzer.common.enums.sim2d import SIM2D
+from socceranalyzer.common.enums.ssl import SSL
+from socceranalyzer.common.enums.vss import VSS
+
 class RunConfiguration:
     def __init__(self) -> False:
         self.logs_dir = None
@@ -23,29 +26,34 @@ class RunConfiguration:
         self.goalkeeper = False
         self.find_goals = False
 
-    def parse(self, json_info):
-        if json_info["category"].upper() == "SIM2D":
+    def parse(self, info):
+        if info["category"].upper() == "SIM2D":
             self.category = SIM2D
+        elif info["category"].upper() == "SSL":
+            self.category = SSL
+        elif info["category"].upper() == "VSS":
+            self.category = VSS
 
-        self.logs_dir = json_info["logs_folder"]
-        self.file_path = json_info["file_path"]
-        self.tester_2d = json_info["analysis"]["tester_2d"]
-        self.ball_possession = json_info["analysis"]["ball_possession"]
-        self.tester_free_kick = json_info["analysis"]["tester_free_kick"]
-        self.foul_charge = json_info["analysis"]["foul_charge"]
-        self.kick_in = json_info["analysys"]["kick_in"]
-        self.penalty = json_info["analysis"]["penalty"]
-        self.playmodes = json_info["analysis"]["playmodes"]
-        self.corners_occurrencies = json_info["analysis"]["corners_occurrencies"]
-        self.kick_in = json_info["analysis"]["kick_in_occurrencies"]
-        self.intercept_counter = json_info["analysis"]["intercept_counter"]
-        self.passing_accuracy = json_info["analysis"]["passing_accuracy"]
-        self.time_after_events = json_info["analysis"]["time_after_events"]
-        self.ball_history = json_info["analysis"]["ball_history"]
-        self.stamina = json_info["analysis"]["stamina"]
-        self.shooting = json_info["analysis"]["shooting"]
-        self.heatmap = json_info["analysis"]["heatmap"]
-        self.speed = json_info["analysis"]["speed"]
-        self.goalkeeper = json_info["analysis"]["goalkeeper"]
-        self.find_goals = json_info["analysis"]["find_goals"]
+        self.logs_dir = info["logs_folder"]
+        self.file_path = info["file_path"]
+        self.tester_2d = self.handle_input(info["analysis"]["tester_2d"])
+        self.ball_possession = self.handle_input(info["analysis"]["ball_possession"])
+        self.tester_free_kick = self.handle_input(info["analysis"]["tester_free_kick"])
+        self.foul_charge = self.handle_input(info["analysis"]["foul_charge"])
+        self.penalty = self.handle_input(info["analysis"]["penalty"])
+        self.playmodes = self.handle_input(info["analysis"]["playmodes"])
+        self.corners_occurrencies = self.handle_input(info["analysis"]["corners_occurrencies"])
+        self.intercept_counter = self.handle_input(info["analysis"]["intercept_counter"])
+        self.passing_accuracy = self.handle_input(info["analysis"]["passing_accuracy"])
+        self.time_after_events = self.handle_input(info["analysis"]["time_after_events"])
+        self.ball_history = self.handle_input(info["analysis"]["ball_history"])
+        self.stamina = self.handle_input(info["analysis"]["stamina"])
+        self.shooting = self.handle_input(info["analysis"]["shooting"])
+        self.heatmap = self.handle_input(info["analysis"]["heatmap"])
+        self.speed = self.handle_input(info["analysis"]["speed"])
+        self.goalkeeper = self.handle_input(info["analysis"]["goalkeeper"])
+        self.find_goals = self.handle_input(info["analysis"]["find_goals"])
+        self.kick_in = self.handle_input(info["analysys"]["kick_in"])
+        self.kick_in_occurrencies = self.kick_in_occurrencies(info["analysis"]["kick_in_occurrencies"])
 
+        return True

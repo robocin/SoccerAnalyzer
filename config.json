@@ -1,24 +1,25 @@
 {
     "logs_folder":"path/to/unified/logs",
-    "file_path":"./20221115151248-RoboCIn_0-vs-otherTeam_0.rcg.csv",
-    "category":"sim2d",
+    "file_path":"/home/emilly/github/SoccerAnalyzer/socceranalyzer/objPositions.csv",
+    "category":"ssl",
     "analysis": {
-        "tester_2d": true,
-        "ball_possession": true,
-        "foul_charge": true,
-        "playmodes": true,
-        "penalty": true,
-        "ball_history": true,
-        "corners_occurrencies": true,
-        "passing_accuracy": true,
-        "intercept_counter": true,
-        "tester_free_kick": true,
-        "time_after_events": true,
-        "stamina": true,
-        "shooting": true,
+        "tester_2d": false,
+        "ball_possession": false,
+        "foul_charge": false,
+        "playmodes": false,
+        "penalty": false,
+        "ball_history": false,
+        "corners_occurrencies": false,
+        "passing_accuracy": false,
+        "intercept_counter": false,
+        "tester_free_kick": false,
+        "time_after_events": false,
+        "stamina": false,
+        "shooting": false,
         "heatmap": true,
         "speed": false,
-        "find_goals": true,
-        "goalkeeper": true
+        "find_goals": false,
+        "goalkeeper": false
     }
 }
+
