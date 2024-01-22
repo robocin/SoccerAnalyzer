@@ -24,6 +24,8 @@ class SIM2D(Enum):
     TEAM_RIGHT_SCORE = "team_score_r"
     TEAM_LEFT_CORNER = "corner_kick_l"
     TEAM_RIGHT_CORNER = "corner_kick_r"
+    TEAM_LEFT_KICK_IN = "kick_in_l"
+    TEAM_RIGHT_KICK_IN = "kick_in_r"
     PENALTY_TO_LEFT = "penalty_ready_l"
     PENALTY_TO_RIGHT = "penalty_ready_r"
     FK_LEFT = "free_kick_l"
