@@ -1,6 +1,6 @@
-category: string
+category: ssl
 logs_folder: string
-file_path: string
+file_path: objPositions.csv
 analysis:
   tester_2d: boolean
   ball_possession: boolean
@@ -19,3 +19,5 @@ analysis:
   speed: boolean
   find_goals: boolean
   goalkeeper: boolean
+  kick_in: boolean
+  kick_in_occurrences: boolean

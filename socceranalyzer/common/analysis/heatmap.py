@@ -3,21 +3,26 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import os
 
-from socceranalyzer.common.basic.match import Match
 from socceranalyzer.common.analysis.abstract_analysis import AbstractAnalysis
 from socceranalyzer.common.core.mediator import Mediator
 from socceranalyzer.common.enums.sim2d import SIM2D
 from socceranalyzer.common.enums.ssl import SSL
 from socceranalyzer.common.enums.vss import VSS
-from socceranalyzer.common.geometric.point import Point
+from socceranalyzer.common.enums.category import Category
 from socceranalyzer.utils.logger import Logger
 from socceranalyzer.common.basic.field import Field
 
 class HeatmapDimensions:
-    """ l = left
-        r = right
-        d = down
-        u = up
+    """ 
+        Used to hold values to matplotlib.pyplot axes dimensions.
+        Values assigned here are used in Heatmap.plot() method.
+
+        Atrtibute prepends
+        -------- 
+        Left  (l)
+        Right (r)
+        Upper (u)
+        Down  (d)
     """
     def __init__(self):
         self.l_side_end = -4500
@@ -33,12 +38,24 @@ class HeatmapDimensions:
         self.d_side_first_mark = -1000
         self.u_side_first_mark = 1000
         self.u_side_second_mark = 2000
-        self.u_side_side_end = 3000
+        self.u_side_side_end = 3000 
 
 class Heatmap(AbstractAnalysis):
-    def __init__(self, dataframe: pandas.DataFrame, category: SSL | SIM2D | VSS, debug, plot_players = True) -> None:
+    def __init__(self, 
+            dataframe: pandas.DataFrame, 
+            category: SSL | SIM2D | VSS, 
+            debug, 
+            plot_players = True, 
+            category_v2: Category = Category.SSL
+        ) -> None:
+
         self.__dataframe = dataframe
         self.__category = category
+
+        #todo(fnap):
+        # refactor this usage with current category in all analysis. Needed due to name capture in match pattern matching.
+        # https://stackoverflow.com/questions/67525257/capture-makes-remaining-patterns-unreachable
+        self.__category_v2 = category_v2 
 
         self.left_players_x = []
         self.left_players_y = []
@@ -59,6 +76,7 @@ class Heatmap(AbstractAnalysis):
                 raise
         else:
             Logger.success("Heatmap has results.")
+
     @property
     def dataframe(self):
         return self.__dataframe
@@ -95,9 +113,8 @@ class Heatmap(AbstractAnalysis):
         
     def plot(self):
         fig, ax = plt.subplots(figsize=(13.5, 8))
-        image = "../../images/ssl-pitch.png"
         field = Field(width = 3000, length = 4500) 
-        self._background(field, image, ax)
+        self._background(field, ax)
 
         if self.__plot_players:
             sns.kdeplot(x=self.left_players_x, y=self.left_players_y, fill=True, thresh=0.05, n_levels = 7, alpha=0.5, cmap='Greens')
@@ -110,21 +127,39 @@ class Heatmap(AbstractAnalysis):
 
         plt.show()
 
-    def _background(self, field, image_path, ax):
+    def _background(self, field, ax):
+        dimensions = HeatmapDimensions()
+        image_path = self.__select_background_image()
         module_path = os.path.dirname(os.path.abspath(__file__))
         absolute_image_path = os.path.join(module_path, image_path)
         soccer_pitch = plt.imread(absolute_image_path)
+        
         ax.imshow(soccer_pitch, extent=[-field.length, field.length, -field.width, field.width])
         ax.set_xlim(-field.length, field.length)
         ax.set_ylim(-field.width, field.width)
-        dimensions = HeatmapDimensions()
         ax.set_xticks([dimensions.l_side_end, dimensions.l_side_second_mark, dimensions.l_side_first_mark , dimensions.center, dimensions.r_side_first_mark, dimensions.r_side_second_mark, dimensions.r_side_end])
         ax.set_yticks([dimensions.d_side_end, dimensions.d_side_second_mark,dimensions.d_side_first_mark, dimensions.center, dimensions.u_side_first_mark, dimensions.u_side_second_mark , dimensions.u_side_side_end])
+        
+    def __select_background_image(self):
+        background_image = None
+        match self.__category_v2:
+            case Category.SSL:
+                background_image = "../../images/ssl-pitch.png"
+            case Category.SIM2D:
+                background_image = ""
+            case Category.VSS:
+                background_image = ""
+            case _:
+                raise ValueError
+            
+        print(f'selected the image at: {background_image}')
+        return background_image
+    
     def describe(self):
         raise NotImplementedError
 
     def results(self, config: dict[str, list[int]], ball: bool):
-        pass
+        raise NotImplementedError
 
     def serialize(self):
         raise NotImplementedError
