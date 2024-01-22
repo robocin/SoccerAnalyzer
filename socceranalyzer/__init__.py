@@ -11,7 +11,7 @@ from socceranalyzer.common.basic.field import Field, Field2D
 # Abstract
 from socceranalyzer.common.analysis.abstract_analysis import AbstractAnalysis
 from socceranalyzer.common.entity.abstract_player import AbstractPlayer
-from socceranalyzer.common.chore.abstract_factory import AbstractFactory
+from socceranalyzer.common.core.abstract_factory import AbstractFactory
 
 # Entities
 from socceranalyzer.common.basic.team import Team
@@ -26,8 +26,8 @@ from socceranalyzer.common.enums.vss import VSS
 from socceranalyzer.common.enums.ssl import SSL
 
 # Chore
-from socceranalyzer.common.chore.match_analyzer import MatchAnalyzer
-from socceranalyzer.common.chore.mediator import Mediator
+from socceranalyzer.common.core.match_analyzer import MatchAnalyzer
+from socceranalyzer.common.core.mediator import Mediator
 
 # Collections
 from socceranalyzer.common.collections.collections import PlayersCollection

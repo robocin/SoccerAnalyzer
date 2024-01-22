@@ -9,7 +9,7 @@ import os
 
 import socceranalyzer
 from socceranalyzer.common.analysis.speed import Speed
-from socceranalyzer.common.chore.match_analyzer import MatchAnalyzer
+from socceranalyzer.common.core.match_analyzer import MatchAnalyzer
 from socceranalyzer.common.enums.sim2d import Landmarks
 
 
