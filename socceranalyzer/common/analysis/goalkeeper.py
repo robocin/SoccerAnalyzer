@@ -1,4 +1,5 @@
 import pandas
+import math
 from socceranalyzer.common.enums.sim2d import SIM2D
 from socceranalyzer.common.enums.ssl import SSL
 from socceranalyzer.common.enums.vss import VSS
@@ -58,6 +59,7 @@ class GoalkeeperAnalysis:
         self.__max_distance = 0
         self.__average_distance = 0
         self.__catches = None
+        self.__error_magnitude = []
         self.__debug = debug
 
         try:
@@ -68,8 +70,8 @@ class GoalkeeperAnalysis:
                 raise
         else:
             Logger.success("GoalkeeperAnalysis has results.")
-
-    def _analyze(self) -> None:
+    
+    def __analyze_default(self):
         """
             For each enemy goal, consults the dataframe and populates goalie_positions, ball_positions and distances.
         """
@@ -128,14 +130,41 @@ class GoalkeeperAnalysis:
                 self.__max_distance = dist
         
         adversary_goal_quantity = max(1, len(enemy_goals))
-        self.__average_distance = self.__average_distance / adversary_goal_quantity
+        self.__average_distance = self.__average_distance / adversary_goal_quantity        
+
+    def __calculate_absolute_error(self, play_on_dataframe, goalie_ball_position_dataframe):
+        play_on_dataframe.reset_index(inplace=True)
+        x_error_list = play_on_dataframe["ball_x"] - goalie_ball_position_dataframe["ball_x"]
+        y_error_list = play_on_dataframe["ball_y"] - goalie_ball_position_dataframe["ball_y"]
+        
+        error_magnitude = []
+        for x_error, y_error in zip(x_error_list, y_error_list):
+            magnitude = math.sqrt(math.pow(x_error,2) + math.pow(y_error,2))
+            error_magnitude.append(magnitude)
+        
+        return error_magnitude
+
+    def __analyze_ball_position_error(self):
+        goalie_ball_position_dataframe = pandas.read_csv("gk_ball_position.csv", header=None)
+        goalie_ball_position_dataframe.columns =['unum', 'show_time', 'ball_x', 'ball_y']
+
+        play_on_dataframe = self.__dataframe[self.__dataframe["playmode"] == "play_on"]
+        play_on_dataframe = play_on_dataframe[["show_time","ball_x","ball_y"]]
+        
+        self.__error_magnitude = self.__calculate_absolute_error(play_on_dataframe, goalie_ball_position_dataframe)
+
+    def _analyze(self) -> None:
+        # self.__analyze_default()
+        self.__analyze_ball_position_error()
+
         
     def results(self) -> tuple:
         """
             Returns:
                     tuple: (distances, ball_positions, goalie_positions)
         """
-        return (self.__distances, self.__ball_positions, self.__goalie_positions)
+        #return (self.__distances, self.__ball_positions, self.__goalie_positions)
+        return self.__error_magnitude
 
     def describe(self) -> None:
         """
